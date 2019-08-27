@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %} 注册 {% endblock %}
+{% block body %}
+<!---
+intoj 系统注册原理：
+注册时，前端会随机生成一个 [0,10^9) 之间的整数 $salt，并将
+username, sha256(intoj$password$salt), sha256(intoj$repeat_password$salt), $salt 发送到服务器上
+--->
+<div class="column item-centered ivory" style="width: 30%">
+	<h1> 注册 </h1>
+	<div class="row item-centered" style="width: 100%;">
+		<div class="column item-centered" style="width: 80%">
+			<div class="row item-centered login-input" style="width: 100%">
+				<i class="icon-user icon-large" style="margin-right: 10px;"></i>
+				<input class="login-input" type="text" id="username" autofocus placeholder="用户名" maxlength="15">
+			</div>
+			<div class="row item-centered login-input" style="width: 100%">
+				<i class="icon-lock icon-large" style="margin-right: 10px;"></i>
+				<input class="login-input" type="password" id="password" placeholder="密码">
+			</div>
+			<div class="row item-centered login-input" style="width: 100%">
+				<i class="icon-lock icon-large" style="margin-right: 10px;"></i>
+				<input class="login-input" type="password" id="repeat_password" placeholder="确认密码">
+			</div>
+			<div class="row item-centered">
+				<p style="font-size: 14px; color: #999">
+					更多个人信息（如邮箱），可以在注册后更改。
+				</p>
+			</div>
+			<div class="row item-centered">
+				<button id="submit" class="button button-rounded button-action button-action-flat">
+					提交
+				</button>
+			</div>
+			<div class="row item-centered">
+				<p style="font-size: 14px; color: #999">
+					已有账号？<a href="/login"> 登录 </a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+$("#submit").click(function(){
+	salt = Math.floor(Math.random()*1000000000).toString()
+	$.ajax({
+		url: "/register",
+		type: "POST",
+		data: {
+			username: $("#username").val(),
+			password: sha256("intoj"+$("#password").val()+salt),
+			repeat_password: sha256("intoj"+$("#repeat_password").val()+salt),
+			salt: salt
+		},
+		error: function(message){
+			console.log('错误：');
+			console.log(message);
+			layer.alert('网络异常，注册失败。<br />详细信息请查看控制台。',{
+				title: '错误',
+				icon: 2
+			})
+		},
+		success: function(data){
+			if( data.success == true ){
+				layer.alert(data.message,{
+					title: '注册成功',
+					icon: 1,
+					yes: function(){
+						window.location.href = '/login'
+					}
+				})
+			}else{
+				layer.alert(data.message,{
+					title: '注册失败',
+					icon: 2
+				})
+			}
+		}
+	})
+})
+</script>
+{% endblock %}

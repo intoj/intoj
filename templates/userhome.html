@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %} {{user.username}} {% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 50%">
+	<div class="row" id="main-container">
+		<div class="column" style="width: calc( 40% - 10px ); margin-right: 10px;">
+			<img src="https://cdn.v2ex.com/gravatar/{{GravatarEmailHash(user.username,user.email)}}?s=512&d=identicon" style="width: 100%;" id="avatar"> </img>
+		</div>
+		<div class="column item-centered ivory" style="width: 60%;" id="right-container">
+			<div class="row item-centered">
+				<h1 style="letter-spacing: 3px;"> {{user.username}} </h1>
+			</div>
+			{% if user.motto != None and len(user.motto.strip()) != 0 %}
+				<div class="row item-centered">
+					<p style="max-width: 80%; word-wrap: break-word;"> {{user.motto}} </p>
+				</div>
+			{% endif %}
+			<div class="row item-centered">
+				<p> Rating: <b>{{user.rating}}</b> </p>
+			</div>
+		</div>
+		<script>
+			window.onload = function(){
+				console.log("Fuck Google Chrome.")
+				$("#right-container").css("height",$("#main-container").css("height"))
+			}
+		</script>
+	</div>
+	{% if nowuser == user.username %}
+		<div class="row item-centered ivory" style="margin-top: 10px; width: auto">
+			<a href="/user/{{user.username}}/edit" class="button button button-primary"> 修改个人信息 </a>
+			<button id="logout" class="button button button-highlight"> 登出 </button>
+		</div>
+	{% endif %}
+</div>
+<script>
+	$("#logout").click(function(){
+		document.cookie = "username=deleted; expires=Wed, 21 Aug 2019 09:28:41 GMT; path=/"
+		layer.alert('已成功登出。<br />再见，{{user.username}}。',{
+			title: '登出成功',
+			icon: 1,
+			yes: function(){
+				location.reload()
+			}
+		})
+	})
+</script>
+{% endblock %}

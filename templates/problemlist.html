@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} 题目列表 {% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 70%">
+	<div class="row ivory">
+		<h1 style="color: #55bbee; margin-left: 40px;"> 题目列表 </h1>
+	</div>
+	<div class="row ivory" style="margin-top: 10px">
+		<div class="column">
+			{% for problem in problems %}
+				<div class="row">
+
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %}

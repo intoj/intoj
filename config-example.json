@@ -1,0 +1,15 @@
+{
+	"database": {
+		"name": "intoj",
+        "user": "root",
+        "host": "localhost",
+        "pass": ""
+	},
+	"site": {
+		"static_files_location": "offline",
+		"secret_key": "233",
+		"per_page": {
+			"problem_list": 10
+		}
+	},
+}

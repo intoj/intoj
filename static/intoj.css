@@ -1,0 +1,112 @@
+a{
+	text-decoration: none;
+	color: #55bbee;
+	transition: .14s;
+}
+a:hover{
+	color: #feae1b;
+}
+h1,h2,h3,h4,h5,h6{
+	font-weight: 400;
+	margin: 12px;
+}
+h1{
+	font-size: 36px;
+	letter-spacing: 2px;
+}
+input{
+	font-size: 18px;
+	outline: none;
+	border: none;
+}
+p{
+	margin: 10px 0px;
+}
+
+body{
+	background-image: url('/static/img/bg.jpg');
+	background-attachment: fixed;
+	background-position: left top;
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin: 0;
+}
+body,p,h1,h2,h3,h4,h5,h6{
+	font-family: Lato;
+}
+
+.ivory{
+	background-color: #fafafa;
+	background-color: #ffffffdd !important;
+}
+.grey{
+	background-color: #eee;
+	background-color: #eeeeeedd !important;
+}
+.rounded{
+	border-radius: 4px;
+}
+
+.topbar-item{
+	width: 140px;
+	font-size: 18px;
+	height: 100%;
+	letter-spacing: 1px;
+	color: inherit;
+}
+.topbar-item>i{
+	margin-right: 6px;
+	position: relative;
+	top: 1px;
+}
+
+div.login-input{
+	margin: 10px 0px;
+	transition: .2s;
+	border-bottom: 1px solid #ccc;
+}
+div.login-input:hover{
+	border-bottom: 1px solid #000;
+}
+input.login-input{
+	width: 90%;
+	background-color: #ffffff00;
+	caret-color: #aaa;
+}
+input.login-input:hover{
+	caret-color: #666;
+}
+
+.button{
+	border-color: #ffffff00;
+	border-style: dashed;
+	border-width: 1px;
+	font-size: 18px !important;
+	font-weight: 500;
+}
+.button.button-border{
+	border-color: inherit !important;
+	border-style: solid;
+	border-width: 1px;
+}
+.button.button:hover{
+	background-color: #ffffff00;
+	border-style: dashed;
+	border-width: 1px;
+}
+.button-primary:hover{
+	color: #4cb0f9;
+	border-color: #4cb0f9 !important;
+}
+.button-action:hover{
+	color: #a5de37;
+	border-color: #a5de37 !important;
+}
+.button-highlight:hover{
+	color: #fec04e;
+	border-color: #fec04e !important;
+}
+.button-caution:hover{
+	color: #ff7680;
+	border-color: #ff7680 !important;
+}

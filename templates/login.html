@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %} 登录 {% endblock %}
+{% block body %}
+<div class="column item-centered ivory" style="width: 30%">
+	<h1> 登录 </h1>
+	<div class="row item-centered" style="width: 100%;">
+		<div class="column item-centered" style="width: 80%">
+			<div class="row item-centered login-input" style="width: 100%">
+				<i class="icon-user icon-large" style="margin-right: 10px;"></i>
+				<input class="login-input" type="text" id="username" autofocus placeholder="用户名" maxlength="15">
+			</div>
+			<div class="row item-centered login-input" style="width: 100%">
+				<i class="icon-lock icon-large" style="margin-right: 10px;"></i>
+				<input class="login-input" type="password" id="password" placeholder="密码">
+			</div>
+			<div class="row item-centered">
+				<button id="submit" class="button button-rounded button-action">
+					提交
+				</button>
+			</div>
+			<div class="row item-centered">
+				<p style="font-size: 16px; color: #777;">
+					第一次来？<a href="/register"> 前去注册 </a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+$("#submit").click(function(){
+	$.ajax({
+		url: "/login",
+		type: "POST",
+		data: {
+			username: $("#username").val(),
+			password: $("#password").val()
+		},
+		error: function(message){
+			console.log('错误：');
+			console.log(message);
+			layer.alert('网络异常，登录失败。<br />详细信息请查看控制台。',{
+				title: '错误',
+				icon: 2
+			})
+		},
+		success: function(data){
+			if( data.success == true ){
+				layer.alert(data.message,{
+					title: '登录成功',
+					icon: 1,
+					yes: function(){
+						document.cookie = "username="+data.username+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
+						document.cookie = "client_key="+data.client_key+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
+						window.location.href = '/'
+					}
+				})
+			}else{
+				layer.alert(data.message,{
+					title: '登录失败',
+					icon: 2
+				})
+			}
+		}
+	})
+})
+</script>
+{% endblock %}

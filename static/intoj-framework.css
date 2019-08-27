@@ -1,0 +1,38 @@
+.column{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+.row{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+.item-vertical-centered:not(.column){	/* 竖直方向上居中 */
+	display: flex;
+	align-items: center;
+}
+.item-horizontal-centered:not(.column){	/* 水平方向上居中 */
+	display: flex;
+	justify-content: center;
+}
+.item-centered{			/* 两个方向上同时居中 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+.item-vertical-centered.column{	/* 竖直方向上居中 */
+	display: flex;
+	justify-content: center;
+}
+.item-horizontal-centered.column{	/* 水平方向上居中 */
+	display: flex;
+	align-items: center;
+}
+.animation{
+	transition: .14s ease;
+}
+.hover-animation:hover{
+	background-color: #dddddd;
+}

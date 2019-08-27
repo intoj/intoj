@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title> {% block title %}{% endblock %} - intoj </title>
+	{% block head %}{% endblock %}
+	{% if config['site']['use_resource'] == 'online' %}
+		{% include "base_online.html" %}
+	{% else %}
+		{% include "base_offline.html" %}
+	{% endif %}
+</head>
+<body style="margin: 0px; border: 0px; padding: 0px;">
+	{% for error in get_flashed_messages(category_filter=["error"]) %}
+		<script>
+			layer.alert('{{error}}',{
+				title: '出锅了',
+				icon: 2
+			})
+		</script>
+	{% endfor %}
+	{% for ok in get_flashed_messages(category_filter=["ok"]) %}
+		<script>
+			layer.alert('{{ok}}',{
+				title: '成功了',
+				icon: 1
+			})
+		</script>
+	{% endfor %}
+	<div class="column">
+		<div class="row item-centered ivory" style="position: absolute; height: 50px; background-color: #ffffffe5 !important">
+			<a href="/" class="topbat-item"> <img src="/static/img/icon1.png" style="height: 50px; position: relative; top: 2px;"></img> </a>
+			<a href="/" class="topbar-item item-centered animation hover-animation"> <i class="icon-home"></i> 主页 </a>
+			<a href="/problems" class="topbar-item item-centered animation hover-animation"> <i class="icon-list"></i> 题库 </a>
+			<a href="/contests" class="topbar-item item-centered animation hover-animation"> <i class="icon-fire"></i> 比赛 </a>
+			<a href="/submissions" class="topbar-item item-centered animation hover-animation"> <i class="icon-tasks"></i> 评测 </a>
+			<a href="/help" class="topbar-item item-centered animation hover-animation"> <i class="icon-question-sign"></i> 帮助 </a>
+			<span class="topbar-item"> </span>
+			{% set nowuser = GetCurrentOperator() %}
+			{% if nowuser == None %}
+				<a href="/login" class="topbar-item item-centered animation hover-animation"> <i class="icon-signin"></i> 登录 </a>
+			{% else %}
+				<a href="/user/{{nowuser}}" class="topbar-item item-centered animation hover-animation" style="width: auto; padding: 0px 20px;"> {{nowuser}} </a>
+			{% endif %}
+		</div>
+		<div class="row item-centered" style="margin-top: 70px">
+			{% block body %}{% endblock %}
+		</div>
+	</div>
+	{% if nowuser != None %}
+		{% set background_url = dbExecute('SELECT `background-url` FROM users WHERE username=%s',nowuser)[0]['background-url'] %}
+		<script>
+			{% if background_url not in [None,''] %}
+				{% if background_url[0] == '#' %}
+					$("body").css('background-color','{{background_url}}')
+					$("body").css('background-image','initial')
+				{% else %}
+					var img = new Image();
+					img.src = '{{background_url}}'
+					img.onload = function(){
+						$("body").css('background-image','url("{{background_url}}")')
+					}
+				{% endif %}
+			{% endif %}
+		</script>
+	{% endif %}
+</body>
+</html>

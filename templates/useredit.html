@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %} 修改个人信息 {% endblock %}
+{% block head %}
+<style>
+p.notice{
+	color: #999;
+	margin: 0px 0px;
+	font-size: 12px;
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 50%">
+	<form method="POST" class="row item-centered" autocomplete="new-password" style="align-items: flex-start">
+		<div class="column" style="width: calc( 40% - 10px ); margin-right: 10px; align-items: flex-start">
+			<div class="row item-centered">
+				<img src="https://cdn.v2ex.com/gravatar/{{GravatarEmailHash(user.username,user.email)}}?s=512&d=identicon" style="width: 100%; "> </img>
+			</div>
+			<div class="row item-centered ivory">
+				<h1> {{user.username}} </h1>
+			</div>
+			<div class="row item-centered" style="margin-top: 10px;">
+				<div class="column ivory item-centered" style="width: 100%; padding-bottom: 5px;">
+					<h2 style="margin: 16px 0px 4px 0px;"> 输入密码以验证身份 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="password" name="password" placeholder="密码" autocomplete="new-password" required> </input>
+					</div>
+					<p class="notice"> 当前登录的用户的密码 </p>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px; width: 100%;">
+				<button type="submit" class="button button-action" style="width: 100%;"> 提交 </button>
+			</div>
+		</div>
+		<div class="column item-horizontal-centered" style="width: 60%">
+			<div class="row item-centered ivory">
+				<div class="column item-centered" style="padding-top: 20px; padding-bottom: 10px; width: 100%">
+					<h2> 电子邮件 </h2>
+					<p class="notice"> 将用来获取 <a href="https://cn.gravatar.com"> Gravatar </a> 头像 </p>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="email" name="email" placeholder="" value="{{user.email}}"> </input>
+					</div>
+					<h2> 真实姓名 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="text" name="realname" placeholder="" maxlength="10" value="{{user.realname}}"> </input>
+					</div>
+					<h2> 格言 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="text" name="motto" placeholder="" value="{{user.motto}}"> </input>
+					</div>
+					<h2> 背景图片网址 </h2>
+					<p class="notice">
+						可以使用网址或 RGB 颜色，如 #66ccff <br />
+						如果想使用本地图片, 请先将图片上传到图床 <br />
+						留空以使用默认背景
+					</p>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="text" name="background-url" placeholder="" value="{{user['background-url']}}"> </input>
+					</div>
+					<p class="notice"> 希望你不是在 JFCA </p>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px">
+				<div class="column item-centered" style="padding-top: 10px; padding-bottom: 10px; width: 100%;">
+					<h2> 更改密码 </h2>
+					<p class="notice"> 不想更改请留空 </p>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="password" name="new_password" placeholder="新密码" autocomplete="new-password"> </input>
+					</div>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="password" name="repeat_new_password" placeholder="确认新密码" autocomplete="new-password"> </input>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}
