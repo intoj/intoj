@@ -15,6 +15,8 @@ def Run():
 
 		registered_username = db.Execute('SELECT username FROM users WHERE username=%s',username)[0]['username']
 		client_key = hashlib.sha256((str(random.randint(1,10000000000))+username+password+"intoj").encode('utf-8')).hexdigest()
+		if session.get('client_keys') == None:
+			session['client_keys'] = {}
 		session['client_keys'][client_key] = registered_username
 		session.update()
 

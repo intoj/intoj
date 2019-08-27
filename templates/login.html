@@ -27,7 +27,7 @@
 	</div>
 </div>
 <script>
-$("#submit").click(function(){
+function DoLogin(){
 	$.ajax({
 		url: "/login",
 		type: "POST",
@@ -62,6 +62,11 @@ $("#submit").click(function(){
 			}
 		}
 	})
-})
+}
+$("#submit").click(function(){DoLogin()})
+$(document).keydown(function(event){
+	if( event.keyCode == 13 )
+		DoLogin()
+});
 </script>
 {% endblock %}

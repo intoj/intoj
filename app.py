@@ -19,15 +19,14 @@ app.add_template_global(len,'len')
 
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')
-app.add_template_global(sites.modules.GravatarEmailHash,'GravatarEmailHash')
+app.add_template_global(sites.modules.GetGravatarEmailHash,'GetGravatarEmailHash')
+app.add_template_global(sites.modules.GetGravatarAddress,'GetGravatarAddress')
 app.add_template_global(sites.modules.GetCurrentOperator,'GetCurrentOperator')
 app.add_template_global(sites.modules.ValidatePassword,'ValidatePassword')
 app.add_template_global(sites.modules.ValidateClientkey,'ValidateClientkey')
 
 @app.route('/')
 def Index():
-	# TODO: Auto init
-	sites.init.Init()
 	return sites.index.Run()
 
 @app.route('/register',methods=['GET','POST'])
@@ -41,11 +40,15 @@ def Login():
 @app.route('/problems')
 def ProblemList():
 	return sites.problems.ProblemListRun()
-	
+
+@app.route('/users')
+def UserList():
+	return sites.users.UserListRun()
+
 @app.route('/user/<string:username>')
 def UserHome(username):
-	return sites.user.UserHomeRun(username)
+	return sites.users.UserHomeRun(username)
 
 @app.route('/user/<string:username>/edit',methods=['GET','POST'])
 def UserEdit(username):
-	return sites.user.UserEditRun(username)
+	return sites.users.UserEditRun(username)

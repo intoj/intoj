@@ -9,7 +9,8 @@
 		"static_files_location": "offline",
 		"secret_key": "233",
 		"per_page": {
-			"problem_list": 10
+			"problem_list": 10,
+			"user_ranklist": 30
 		}
 	},
 }

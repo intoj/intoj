@@ -14,7 +14,7 @@ p.notice{
 	<form method="POST" class="row item-centered" autocomplete="new-password" style="align-items: flex-start">
 		<div class="column" style="width: calc( 40% - 10px ); margin-right: 10px; align-items: flex-start">
 			<div class="row item-centered">
-				<img src="https://cdn.v2ex.com/gravatar/{{GravatarEmailHash(user.username,user.email)}}?s=512&d=identicon" style="width: 100%; "> </img>
+				<img src="{{GetGravatarAddress(user.username,user.email,512)}}?s=512&d=identicon" style="width: 100%; "> </img>
 			</div>
 			<div class="row item-centered ivory">
 				<h1> {{user.username}} </h1>

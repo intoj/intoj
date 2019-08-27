@@ -41,7 +41,7 @@ username, sha256(intoj$password$salt), sha256(intoj$repeat_password$salt), $salt
 	</div>
 </div>
 <script>
-$("#submit").click(function(){
+function DoRegister(){
 	salt = Math.floor(Math.random()*1000000000).toString()
 	$.ajax({
 		url: "/register",
@@ -77,6 +77,11 @@ $("#submit").click(function(){
 			}
 		}
 	})
-})
+}
+$("#submit").click(function(){DoRegister()})
+$(document).keydown(function(event){
+	if( event.keyCode == 13 )
+		DoRegister()
+});
 </script>
 {% endblock %}

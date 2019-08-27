@@ -1,6 +1,6 @@
 #coding:utf-8
 from flask import *
-import db, modules
+import db, modules, config
 import hashlib
 
 def GetUserInfo(username):
@@ -16,6 +16,12 @@ def GetUserInfo(username):
 		'background-url': res['background-url'],
 		'rating': res['rating']
 	}
+
+def UserListRun():
+	per_page = config.config['site']['per_page']['user_ranklist']
+	current_page = modules.GetCurrentPage()
+	users = db.Execute('SELECT * FROM users ORDER BY rating DESC LIMIT %s OFFSET %s',(per_page,per_page*(current_page-1)))
+	return render_template('userlist.html',users=users,current_page=current_page)
 
 def UserHomeRun(username):
 	userinfo = GetUserInfo(username)

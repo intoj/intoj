@@ -34,5 +34,6 @@
 	transition: .14s ease;
 }
 .hover-animation:hover{
+	transition: .14s ease;
 	background-color: #dddddd;
 }
