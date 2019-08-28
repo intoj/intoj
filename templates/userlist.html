@@ -1,15 +1,36 @@
 {% extends 'base.html' %}
 {% block title %} 用户排行榜 {% endblock %}
 {% block body %}
-<div class="column item-centered" style="width: 70%">
-	<div class="row ivory">
-		<h1 style="color: #55bbee; margin-left: 40px;"> 排行榜 </h1>
+<div class="column item-centered" style="width: 60%">
+	<div class="row ivory item-vertical-centered" style="justify-content: space-between">
+		<h1 style="color: #55bbee; margin-left: 100px;"> 排行榜 </h1>
+		<div class="column item-centered" style="margin-right: 70px;">
+			<div class="row item-centered" style="border: 1px solid #bbb; border-radius: 2px;">
+				<input id="search-user-input" style="background-color: #ffffff99; width: 200px; font-size: 18px; padding-left: 10px; caret-color: #999; height: 28px;"> </input>
+				<button id="search-user" class="button button-small button-square row item-centered"><i class="icon-search"></i></button>
+				<script>
+					function DoSearchUser(){
+						console.log('233')
+						window.location.href = "/user/" + $("#search-user-input").val()
+					}
+					var is_input_focusing = false
+					$("#search-user-input").focus(function(){ is_input_focusing = true; })
+					$("#search-user-input").blur(function(){ is_input_focusing = false; })
+					$("#search-user").click(function(){DoSearchUser()})
+					$(document).keydown(function(event){
+						if( event.keyCode == 13 && is_input_focusing )
+							DoSearchUser()
+					});
+				</script>
+			</div>
+		</div>
 	</div>
 	<div class="row ivory item-centered" style="margin-top: 10px">
 		<div class="column" style="width: 95%; padding-top: 24px;">
 			<div class="row item-centered" style="height: 30px; font-size: 16px; font-weight: 500;">
 				<span class="column" style="width: 8%"> </span>
-				<span class="column item-centered" style="width: calc(18% + 55px)"> 用户 </span>
+				<span class="column item-centered" style="width: 40px; min-width: 40px; margin-right: 15px;"> </span>
+				<span class="column item-verticle-centered" style="width: 18%; align-items: flex-start;"> 用户 </span>
 				<span class="column item-centered" style="width: 7%"> Rating </span>
 				<span class="column item-centered" style="width: 70%"> 个性签名 </span>
 				<span class="column" style="width: 5%"> </span>
