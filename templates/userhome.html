@@ -5,6 +5,10 @@
 	<div class="row" id="main-container">
 		<div class="column" style="width: calc( 40% - 10px ); margin-right: 10px;">
 			<img src="{{GetGravatarAddress(user.username,user.email,512)}}" style="width: 100%;" id="avatar"> </img>
+			<script>
+				var avatar_width = $("#avatar").css("width")
+				$("#avatar").css("height",avatar_width)
+			</script>
 		</div>
 		<div class="column item-centered ivory" style="width: 60%;" id="right-container">
 			<div class="row item-centered">
