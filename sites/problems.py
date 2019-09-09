@@ -2,16 +2,21 @@
 from flask import *
 import db, modules, config
 
-def GetPorblemInfo(problem_id):
-	res = db.Execute('SELECT * FROM problems WHERE problem_id=%s',problem_id)
+def GetProblemInfo(problem_id):
+	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
 	if len(res) == 0: return None
 	res = res[0]
 	return {
-		'id': problem_id,
+		'id': int(problem_id),
 		'title': res['title'],
+		'background': res['background'],
 		'description': res['description'],
 		'input_format': res['input_format'],
-		'output_format': res['output_format']
+		'output_format': res['output_format'],
+		'limit_and_hint': res['limit_and_hint'],
+		'time_limit': int(res['time_limit']),
+		'memory_limit': int(res['memory_limit']),
+		'is_public': bool(res['is_public'])
 	}
 
 def ProblemListRun():
@@ -20,4 +25,6 @@ def ProblemListRun():
 	problems = db.Execute('SELECT * FROM problems LIMIT %s OFFSET %s',(per_page,per_page*(current_page-1)))
 	return render_template('problemlist.html',problems=problems,current_page=current_page)
 
-def ProblemRun():
+def ProblemRun(problem_id):
+	probleminfo = GetProblemInfo(problem_id)
+	return render_template('problem.html',problem=probleminfo)

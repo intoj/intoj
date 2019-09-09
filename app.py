@@ -42,9 +42,9 @@ def ProblemList():
 	return sites.problems.ProblemListRun()
 
 @app.route('/problem/<int:problem_id>')
-def Problem():
-	return sites.problems.ProblemRun()
-	
+def Problem(problem_id):
+	return sites.problems.ProblemRun(problem_id)
+
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
