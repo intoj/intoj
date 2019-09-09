@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block title %} 题目列表 {% endblock %}
 {% block body %}
-<div class="column item-centered" style="width: 70%">
+<div class="column item-centered" style="width: 60%">
 	<div class="row ivory">
-		<h1 style="color: #55bbee; margin-left: 40px;"> 题目列表 </h1>
+		<h1 style="color: #55bbee; margin-left: 100px;"> 题目列表 </h1>
 	</div>
-	<div class="row ivory" style="margin-top: 10px">
-		<div class="column">
-			{% for problem in problems %}
-				<div class="row">
-
-				</div>
-			{% endfor %}
+	<div class="row ivory item-centered" style="margin-top: 10px">
+		<div class="column" style="width: 90%; padding-top: 24px;">
+			<div class="row" style="height: 30px; font-size: 18px; font-weight: 500;">
+				<span class="column item-centered" style="width: 5%;"> # </span>
+				<span class="column item-centered" style="width: 5%;">  </span>
+				<span class="column item-vertical-centered" style="width: 20%; align-items: flex-start"> 题目名称 </span>
+			</div>
 		</div>
 	</div>
 </div>
