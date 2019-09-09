@@ -24,6 +24,7 @@ CREATE TABLE user_privileges(
 CREATE TABLE problems(
 	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`title` VARCHAR(100),
+	`background` MEDIUMTEXT,
 	`description` MEDIUMTEXT,
 	`input_format` MEDIUMTEXT,
 	`output_format` MEDIUMTEXT,
@@ -31,5 +32,5 @@ CREATE TABLE problems(
 	`limit_and_hint` MEDIUMTEXT,
 	`time_limit` INT,
 	`memory_limit` INT,
-	`is_public` TINYINT(1) DEFAULT 1
+	`is_public` TINYINT(1) DEFAULT 0
 );

@@ -41,6 +41,10 @@ def Login():
 def ProblemList():
 	return sites.problems.ProblemListRun()
 
+@app.route('/problem/<int:problem_id>')
+def Problem():
+	return sites.problems.ProblemRun()
+	
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
