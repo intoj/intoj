@@ -3,6 +3,9 @@ from flask import *
 import json, hashlib
 import db, config
 
+def IsEmpty(s):
+	return s == None or s.strip() == ''
+
 def ReturnJSON(data):
 	return Response(json.dumps(data),mimetype='application/json')
 def RedirectBack( error_message = None , ok_message = None ):

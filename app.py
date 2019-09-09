@@ -19,6 +19,7 @@ app.add_template_global(len,'len')
 
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')
+app.add_template_global(sites.modules.IsEmpty,'IsEmpty')
 app.add_template_global(sites.modules.GetGravatarEmailHash,'GetGravatarEmailHash')
 app.add_template_global(sites.modules.GetGravatarAddress,'GetGravatarAddress')
 app.add_template_global(sites.modules.GetCurrentOperator,'GetCurrentOperator')

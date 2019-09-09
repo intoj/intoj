@@ -1,3 +1,6 @@
+div,span,p{
+	font-size: 18px;
+}
 a{
 	text-decoration: none;
 	color: #44aadd;
@@ -13,6 +16,13 @@ h1,h2,h3,h4,h5,h6{
 h1{
 	font-size: 36px;
 	letter-spacing: 2px;
+}
+h2{
+	font-size: 30px;
+	letter-spacing: 2px;
+}
+.title{
+	color: #55bbee;
 }
 input{
 	font-size: 18px;
@@ -41,7 +51,7 @@ body,p,h1,h2,h3,h4,h5,h6{
 }
 .grey{
 	background-color: #eee;
-	background-color: #eeeeeedd !important;
+	background-color: #00000011 !important;
 }
 .rounded{
 	border-radius: 4px;

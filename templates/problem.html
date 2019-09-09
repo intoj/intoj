@@ -2,8 +2,14 @@
 {% block title %} #{{problem.id}} {{problem.title}} {% endblock %}
 {% block body %}
 <div class="column item-centered ivory" style="width: 60%">
-	<div class="row"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
-	<div class="row" style="width: 90%; grey">
-	</div>
+	<div class="row item-centered"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
+	{% if not IsEmpty(problem.background) %}
+		<div class="row item-centered">
+			<div class="column" style="width: 90%;">
+				<h2 class="row title"> 题目背景 </h2>
+				<div class="row grey rounded" style="align-items: flex-start; padding: 10px 10px;"> {{problem.background}} </div>
+			</div>
+		</div>
+	{% endif %}
 </div>
 {% endblock %}
