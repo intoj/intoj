@@ -33,7 +33,7 @@ def ProblemRun(problem_id):
 def ProblemEditRun(problem_id):
 	operator = modules.GetCurrentOperator()
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
-		return modules.RedirectBack(error='无此权限')
+		return modules.RedirectBack(error_message='无此权限')
 	if request.method == 'GET':
 		probleminfo = GetProblemInfo(problem_id)
 		return render_template('problemedit.html',problem=probleminfo)
