@@ -16,7 +16,8 @@ def GetProblemInfo(problem_id):
 		'limit_and_hint': res['limit_and_hint'],
 		'time_limit': int(res['time_limit']),
 		'memory_limit': int(res['memory_limit']),
-		'is_public': bool(res['is_public'])
+		'is_public': bool(res['is_public']),
+		'provider': res['provider']
 	}
 
 def ProblemListRun():
@@ -28,3 +29,11 @@ def ProblemListRun():
 def ProblemRun(problem_id):
 	probleminfo = GetProblemInfo(problem_id)
 	return render_template('problem.html',problem=probleminfo)
+
+def ProblemEditRun(problem_id):
+	operator = modules.GetCurrentOperator()
+	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
+		return modules.RedirectBack(error='无此权限')
+	if request.method == 'GET':
+		probleminfo = GetProblemInfo(problem_id)
+		return render_template('problemedit.html',problem=probleminfo)

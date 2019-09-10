@@ -6,6 +6,27 @@ import db, config
 def IsEmpty(s):
 	return s == None or s.strip() == ''
 
+def CheckPrivilege(username,privileges):
+	def Have(username,privilege):
+		return db.Execute('SELECT COUNT(*) FROM user_privileges WHERE username=%s AND privilege=%s',(username,privilege))[0]['COUNT(*)'] >= 1
+	if username == None: return False
+	if isinstance(privileges,str):
+		privileges = [privileges]
+	privileges.append('system_admin')
+	for privilege in privileges:
+		if Have(username,privilege):
+			return True
+	return False
+def CheckPrivilegeOfProblem(username,problem_id):
+	ok_privileges = ['problemset_manager']
+	problems = db.Execute('SELECT provider FROM problems WHERE id=%s',problem_id)
+	if len(problems) == 0:
+		return False
+	problem_provider = problems[0]['provider']
+	if problem_provider == username:
+		ok_privileges.append('problem_owner')
+	return CheckPrivilege(username,ok_privileges)
+
 def ReturnJSON(data):
 	return Response(json.dumps(data),mimetype='application/json')
 def RedirectBack( error_message = None , ok_message = None ):
@@ -19,16 +40,19 @@ def RedirectBack( error_message = None , ok_message = None ):
 
 def ParseInt( s , default = 0 , limit_l = int(-1e9) ,limit_r = int(1e9) ):
 	if s == None or not s.isdigit(): return default
-	s = int(s)
-	if s < limit_l or s > limit_r: return default
-	return s
+	try:
+		s = int(s)
+		if s < limit_l or s > limit_r: return default
+		return s
+	except:
+		return default
 def GetCurrentPage():
 	return ParseInt(request.args.get('page'),1,1,1e9)
 
 def IsVaildUsername(username):
 	if len(username) == 0 or len(username) > 15:
 		return False
-	banned_chars = ['\n','\r','\b','\t','<','>','/','\\','\'','"','&','#','?','%','$','#','@','!','(',')','[',']','{','}']
+	banned_chars = ['\n','\r',' ','\b','\t','<','>','/','\\','\'','"','&','#','?','%','$','#','@','!','(',')','[',']','{','}']
 	for char in banned_chars:
 		if username.count(char) != 0:
 			return False

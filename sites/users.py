@@ -34,16 +34,17 @@ def UserEditRun(username):
 	username = userinfo['username']
 	if userinfo == None:
 		return modules.RedirectBack('无此用户')
+
 	operator = modules.GetCurrentOperator()
 	if operator == None:
 		return modules.RedirectBack('请先登录')
-	if operator != username:
+	if operator != username and not modules.CheckPrivilege(operator,'user_manager'):
 		return modules.RedirectBack('无此权限')
 
 	if request.method == 'GET':
 		return render_template('useredit.html',user=userinfo)
 	else:
-		if not modules.ValidatePassword(request.cookies.get('username'),request.form['password'])['success']:
+		if not modules.ValidatePassword(operator,request.form['password'])['success']:
 			return modules.RedirectBack('密码错误（密码应是当前登录的用户的密码）')
 		if len(request.form['new_password'].strip()) != 0:
 			new_password = request.form['new_password'].strip()

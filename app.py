@@ -25,6 +25,8 @@ app.add_template_global(sites.modules.GetGravatarAddress,'GetGravatarAddress')
 app.add_template_global(sites.modules.GetCurrentOperator,'GetCurrentOperator')
 app.add_template_global(sites.modules.ValidatePassword,'ValidatePassword')
 app.add_template_global(sites.modules.ValidateClientkey,'ValidateClientkey')
+app.add_template_global(sites.modules.CheckPrivilege,'CheckPrivilege')
+app.add_template_global(sites.modules.CheckPrivilegeOfProblem,'CheckPrivilegeOfProblem')
 
 @app.route('/')
 def Index():
@@ -45,6 +47,10 @@ def ProblemList():
 @app.route('/problem/<int:problem_id>')
 def Problem(problem_id):
 	return sites.problems.ProblemRun(problem_id)
+
+@app.route('/problem/<int:problem_id>/edit')
+def ProblemEdit(problem_id):
+	return sites.problems.ProblemEditRun(problem_id)
 
 @app.route('/users')
 def UserList():

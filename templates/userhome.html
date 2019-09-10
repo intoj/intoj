@@ -30,7 +30,7 @@
 			}
 		</script>
 	</div>
-	{% if nowuser == user.username %}
+	{% if nowuser == user.username or CheckPrivilege(nowuser,'user_manager') %}
 		<div class="row item-centered ivory" style="margin-top: 10px; width: auto">
 			<a href="/user/{{user.username}}/edit" class="button button button-primary"> 修改个人信息 </a>
 			<button id="logout" class="button button button-highlight"> 登出 </button>

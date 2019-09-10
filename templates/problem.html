@@ -10,7 +10,7 @@
 					<div class="row item-centered">
 						<div class="column item-centered" style="width: 92%;">
 							<h2 class="row title" style="margin-left: 10px;"> {{name}} </h2>
-							<div class="row grey rounded havemarkdown" style="width: calc( 100% - 20px ); align-items: flex-start; padding: 10px 10px; font-size: 20px; overflow: auto"> {{- content|e -}} </div>
+							<div class="grey rounded havemarkdown" style="width: calc( 100% - 20px ); text-align: left; padding: 10px 10px; font-size: 20px; overflow: auto"> {{- content|e -}} </div>
 						</div>
 					</div>
 				{% endif %}
@@ -21,22 +21,32 @@
 			{{ContentBlock('输出格式',problem.output_format)}}
 			{{ContentBlock('数据范围与提示',problem.limit_and_hint)}}
 		</div>
-		<div class="column item-centered" style="width: 24%; height: auto !important; opacity: 0.9">
+		<div class="column item-centered" style="width: 24%; height: auto !important; opacity: 0.92">
 			<div class="row item-centered">
 				<div class="column item-centered ivory" style="width: 100%;">
-					<h2 class="title" style="margin-bottom: 6px;"> 时空限制 </h2>
+					<h2 class="title" style="margin-bottom: 9px;"> 相关信息 </h2>
 					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; letter-spacing: 1px;"> 时间限制: {{problem.time_limit}} ms </div>
-					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; margin-bottom: 5px; letter-spacing: 1px;"> 空间限制: {{problem.memory_limit}} MB </div>
+					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; letter-spacing: 1px;"> 空间限制: {{problem.memory_limit}} MB </div>
+					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; margin-bottom: 5px;"> 提供者: &nbsp;<a href="/user/{{problem.provider}}"> {{problem.provider}} </a> </div>
 				</div>
 			</div>
 			<div class="row item-centered" style="margin-top: 10px;">
 				<div class="column item-centered ivory" style="width: 100%">
-					<a class="button button-primary" style="width: 100%;" href="#submit"> 提交代码 </a>
-					<a class="button button-action" style="width: 100%;" href="/submissions?problem_id={{problem.id}}"> 提交记录 </a>
-					<a class="button button-highlight" style="width: 100%;" href="/problem/{{problem.id}}/statistics"> 统计信息 </a>
-					<a class="button button-royal" style="width: 100%;" href="/problem/{{problem.id}}/ranklist"> 排行榜 </a>
+					<a class="button button-primary" style="width: 100%;" href="#submit"> <i class="fa fa-upload fa-fw"></i> 提交代码 </a>
+					<a class="button button-action" style="width: 100%;" href="/submissions?problem_id={{problem.id}}"> <i class="fa fa-list fa-fw"></i> 提交记录 </a>
+					<a class="button button-highlight" style="width: 100%;" href="/problem/{{problem.id}}/statistics"> <i class="fa fa-pie-chart fa-fw"></i> 统计信息 </a>
+					<a class="button button-royal" style="width: 100%;" href="/problem/{{problem.id}}/ranklist"> <i class="fa fa-signal fa-fw"></i> 排行榜 </a>
 				</div>
 			</div>
+			{% if CheckPrivilegeOfProblem(nowuser,problem.id) %}
+				<div class="row item-centered" style="margin-top: 10px;">
+					<div class="column item-centered ivory" style="width: 100%;">
+						<h2 class="title" style="margin-bottom: 5px; margin-top: 5px;"> 管理 </h2>
+						<a class="button button-primary" style="width: 100%" href="/problem/{{problem.id}}/edit"> <i class="fa fa-edit fa-fw"></i> 编辑题目 </a>
+						<a class="button button-primary" style="width: 100%" href="/problem/{{problem.id}}/manage"> <i class="fa fa-suitcase fa-fw"></i> 管理配置 </a>
+					</div>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 </div>

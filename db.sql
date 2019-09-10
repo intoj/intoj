@@ -17,12 +17,19 @@ CREATE TABLE users(
 
 CREATE TABLE user_privileges(
 	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	`username` VARCHAR(30),
-	`is_admin` INT(1) DEFAULT 0,
-	`is_user_manager` INT(1) DEFAULT 0,
-	`is_problem_manager` INT(1) DEFAULT 0,
-	`is_problem_tag_manager` INT(1) DEFAULT 0,
+	`username` VARCHAR(30) NOT NULL,
+	`privilege` VARCHAR(32)
 );
+/*
+权限列表：
+system_admin
+problemset_manager
+problem_owner
+problem_tag_manager
+user_manager
+contest_manager
+contest_owner
+*/
 
 CREATE TABLE problems(
 	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -34,5 +41,6 @@ CREATE TABLE problems(
 	`limit_and_hint` MEDIUMTEXT,
 	`time_limit` INT,
 	`memory_limit` INT,
-	`is_public` TINYINT(1) DEFAULT 0
+	`is_public` TINYINT(1) DEFAULT 0,
+	`provider` VARCHAR(30)
 );
