@@ -16,6 +16,11 @@
 	display: flex;
 	justify-content: center;
 }
+.item-left-aligned:not(.column){
+	display: flex;
+	justify-content: flex-start;
+}
+
 .item-centered{			/* 两个方向上同时居中 */
 	display: flex;
 	align-items: center;
@@ -32,6 +37,10 @@ code{
 .item-horizontal-centered.column{	/* 水平方向上居中 */
 	display: flex;
 	align-items: center;
+}
+.item-left-aligned.column{
+	display: flex;
+	align-items: flex-end;
 }
 .animation{
 	transition: .14s ease;

@@ -3,7 +3,7 @@
 {% block body %}
 <div class="column item-centered" style="width: 1100px;">
 	<div class="row item-centered" style="align-items: flex-start">
-		<div class="column item-centered ivory" style="width: 76%; margin-right: 10px; padding-bottom: 20px;">
+		<div class="column item-centered ivory" style="width: 76%; margin-right: 10px; padding-bottom: 20px; height: auto; align-item: flex-start;">
 			<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
 			{% macro ContentBlock(name,content) %}
 				{% if not IsEmpty(content) %}

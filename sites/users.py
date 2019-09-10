@@ -31,9 +31,9 @@ def UserHomeRun(username):
 
 def UserEditRun(username):
 	userinfo = GetUserInfo(username)
-	username = userinfo['username']
 	if userinfo == None:
 		return modules.RedirectBack('无此用户')
+	username = userinfo['username']
 
 	operator = modules.GetCurrentOperator()
 	if operator == None:
@@ -46,6 +46,8 @@ def UserEditRun(username):
 	else:
 		if not modules.ValidatePassword(operator,request.form['password'])['success']:
 			return modules.RedirectBack('密码错误（密码应是当前登录的用户的密码）')
+		if len(request.form['realname']) > 16:
+			return modules.RedirectBack('真实姓名过长（限制为 16 字符）')
 		if len(request.form['new_password'].strip()) != 0:
 			new_password = request.form['new_password'].strip()
 			if new_password != request.form['repeat_new_password'].strip():

@@ -1,6 +1,6 @@
-CREATE DATABASE `intoj_rebuild` CHARACTER SET utf8;
+CREATE DATABASE `intoj` CHARACTER SET utf8;
 
-use intoj_rebuild;
+use intoj;
 
 CREATE TABLE users(
 	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,

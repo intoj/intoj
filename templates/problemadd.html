@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} 添加题目 {% endblock %}
+{% block head %}
+<style>
+p.notice{
+	color: #999;
+	margin: 0px 0px;
+	font-size: 12px;
+}
+</style>
+{% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 440px;">
+	<div class="row item-centered">
+		<form class="column ivory item-centered" method="POST">
+			<h1 class="title"> 新建题目 </h1>
+			<div class="row item-centered login-input" style="width: 70%">
+				<input class="login-input item-centered" type="text" name="title" placeholder="题目标题" required> </input>
+			</div>
+			<button type="submit" class="button button-action button-rounded" style="margin: 10px 0px;"> 提交 </button>
+			<p class="notice" style="margin-bottom: 10px;"> 将自动跳转到新建的题目的界面。 <br /> 更多设置（如题面），请在新建题目后进行「编辑」或「管理」。</p>
+		</form>
+	</div>
+</div>
+{% endblock %}

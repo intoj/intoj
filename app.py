@@ -48,7 +48,11 @@ def ProblemList():
 def Problem(problem_id):
 	return sites.problems.ProblemRun(problem_id)
 
-@app.route('/problem/<int:problem_id>/edit')
+@app.route('/problemadd',methods=['GET','POST'])
+def ProblemAdd():
+	return sites.problems.ProblemAddRun()
+
+@app.route('/problem/<int:problem_id>/edit',methods=['GET','POST'])
 def ProblemEdit(problem_id):
 	return sites.problems.ProblemEditRun(problem_id)
 

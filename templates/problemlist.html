@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block title %} 题目列表 {% endblock %}
 {% block body %}
-<div class="column item-centered" style="width: 60%">
-	<div class="row ivory">
+<div class="column item-centered" style="width: 1100px;">
+	<div class="row ivory item-vertical-centered" style="justify-content: space-between">
 		<h1 style="margin-left: 100px;" class="title"> 题目列表 </h1>
+		{% if CheckPrivilege(nowuser,['problemset_manager','problem_owner']) %}
+			<div class="column item-centered">
+				<div class="row item-centered">
+					<a href="/problemadd" class="button button-primary button-small button-rounded" style="margin-right: 50px;"> 添加题目 </a>
+				</div>
+			</div>
+		{% endif %}
 	</div>
 	<div class="row ivory item-centered" style="margin-top: 10px">
 		<div class="column" style="width: 90%; padding-top: 24px;">

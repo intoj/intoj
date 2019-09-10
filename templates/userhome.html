@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} {{user.username}} {% endblock %}
 {% block body %}
-<div class="column item-centered" style="width: 50%">
+<div class="column item-centered" style="width: 900px;">
 	<div class="row" id="main-container">
 		<div class="column ivory" style="width: calc( 40% - 10px ); margin-right: 10px;">
 			<img src="{{GetGravatarAddress(user.username,user.email,512)}}" style="width: 100%;" id="avatar"> </img>

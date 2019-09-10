@@ -30,6 +30,20 @@ def ProblemRun(problem_id):
 	probleminfo = GetProblemInfo(problem_id)
 	return render_template('problem.html',problem=probleminfo)
 
+def ProblemAddRun():
+	operator = modules.GetCurrentOperator()
+	if not modules.CheckPrivilege(operator,['prblemset_manager','problem_owner']):
+		return modules.RedirectBack(error_message='无此权限')
+	if request.method == 'GET':
+		return render_template('problemadd.html')
+	else:
+		id = db.Execute('SELECT MAX(id) FROM problems')[0]['MAX(id)']
+		id = 1 if id == None else int(id)+1
+		default_time_limit = config.config['default']['problem']['time_limit']
+		default_memory_limit = config.config['default']['problem']['memory_limit']
+		db.Execute('INSERT INTO problems(id,title,provider,time_limit,memory_limit) VALUES(%s,%s,%s,%s,%s)',(id,request.form['title'],operator,default_time_limit,default_memory_limit))
+		return redirect('/problem/%d'%id)
+
 def ProblemEditRun(problem_id):
 	operator = modules.GetCurrentOperator()
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
