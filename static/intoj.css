@@ -18,7 +18,7 @@ h1{
 	letter-spacing: 2px;
 }
 h2{
-	font-size: 30px;
+	font-size: 24px;
 	letter-spacing: 2px;
 }
 .title{
@@ -31,6 +31,9 @@ input{
 }
 p{
 	margin: 10px 0px;
+}
+pre{
+	margin: 0px;
 }
 
 body{
@@ -119,4 +122,8 @@ input.login-input:hover{
 .button-caution:hover{
 	color: #ff7680;
 	border-color: #ff7680 !important;
+}
+.button-royal:hover{
+	color: #a49ef0;
+	border-color: #a49ef0 !important;
 }

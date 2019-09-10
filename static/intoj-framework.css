@@ -22,6 +22,9 @@
 	justify-content: center;
 	text-align: center;
 }
+code{
+	text-align: initial;
+}
 .item-vertical-centered.column{	/* 竖直方向上居中 */
 	display: flex;
 	justify-content: center;

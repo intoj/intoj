@@ -18,7 +18,10 @@ CREATE TABLE users(
 CREATE TABLE user_privileges(
 	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` VARCHAR(30),
-	`privilege` VARCHAR(60)
+	`is_admin` INT(1) DEFAULT 0,
+	`is_user_manager` INT(1) DEFAULT 0,
+	`is_problem_manager` INT(1) DEFAULT 0,
+	`is_problem_tag_manager` INT(1) DEFAULT 0,
 );
 
 CREATE TABLE problems(
@@ -28,7 +31,6 @@ CREATE TABLE problems(
 	`description` MEDIUMTEXT,
 	`input_format` MEDIUMTEXT,
 	`output_format` MEDIUMTEXT,
-	`example` MEDIUMTEXT,
 	`limit_and_hint` MEDIUMTEXT,
 	`time_limit` INT,
 	`memory_limit` INT,

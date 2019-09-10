@@ -1,15 +1,43 @@
 {% extends 'base.html' %}
 {% block title %} #{{problem.id}} {{problem.title}} {% endblock %}
 {% block body %}
-<div class="column item-centered ivory" style="width: 60%">
-	<div class="row item-centered"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
-	{% if not IsEmpty(problem.background) %}
-		<div class="row item-centered">
-			<div class="column" style="width: 90%;">
-				<h2 class="row title"> 题目背景 </h2>
-				<div class="row grey rounded" style="align-items: flex-start; padding: 10px 10px;"> {{problem.background}} </div>
+<div class="column item-centered" style="width: 1100px;">
+	<div class="row item-centered" style="align-items: flex-start">
+		<div class="column item-centered ivory" style="width: 76%; margin-right: 10px; padding-bottom: 20px;">
+			<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
+			{% macro ContentBlock(name,content) %}
+				{% if not IsEmpty(content) %}
+					<div class="row item-centered">
+						<div class="column item-centered" style="width: 92%;">
+							<h2 class="row title" style="margin-left: 10px;"> {{name}} </h2>
+							<div class="row grey rounded havemarkdown" style="width: calc( 100% - 20px ); align-items: flex-start; padding: 10px 10px; font-size: 20px; overflow: auto"> {{- content|e -}} </div>
+						</div>
+					</div>
+				{% endif %}
+			{% endmacro %}
+			{{ContentBlock('题目背景',problem.background)}}
+			{{ContentBlock('题目描述',problem.description)}}
+			{{ContentBlock('输入格式',problem.input_format)}}
+			{{ContentBlock('输出格式',problem.output_format)}}
+			{{ContentBlock('数据范围与提示',problem.limit_and_hint)}}
+		</div>
+		<div class="column item-centered" style="width: 24%; height: auto !important; opacity: 0.9">
+			<div class="row item-centered">
+				<div class="column item-centered ivory" style="width: 100%;">
+					<h2 class="title" style="margin-bottom: 6px;"> 时空限制 </h2>
+					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; letter-spacing: 1px;"> 时间限制: {{problem.time_limit}} ms </div>
+					<div class="row item-centered" style="width: 100%; align-items: flex-start; font-size: 16px; margin-bottom: 5px; letter-spacing: 1px;"> 空间限制: {{problem.memory_limit}} MB </div>
+				</div>
+			</div>
+			<div class="row item-centered" style="margin-top: 10px;">
+				<div class="column item-centered ivory" style="width: 100%">
+					<a class="button button-primary" style="width: 100%;" href="#submit"> 提交代码 </a>
+					<a class="button button-action" style="width: 100%;" href="/submissions?problem_id={{problem.id}}"> 提交记录 </a>
+					<a class="button button-highlight" style="width: 100%;" href="/problem/{{problem.id}}/statistics"> 统计信息 </a>
+					<a class="button button-royal" style="width: 100%;" href="/problem/{{problem.id}}/ranklist"> 排行榜 </a>
+				</div>
 			</div>
 		</div>
-	{% endif %}
+	</div>
 </div>
 {% endblock %}
