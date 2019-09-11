@@ -1,11 +1,31 @@
 {% extends 'base.html' %}
-{% block title %} 编辑题目 #{{problem.id}} {{problem.title}} {% endblock %}
+{% block title %} 编辑 #{{problem.id}}. {{problem.title}} {% endblock %}
 {% block body %}
 <div class="column item-centered" style="width: 1100px;">
 	<div class="row item-centered" style="align-items: flex-start">
 		<div class="column item-centered" style="width: 24%; height: auto !important; margin-right: 10px;">
-			<div class="row item-centered ivory" style="height: 70px">
-				<h2 class="title" style="font-size: 30px;"> 编辑题目 - #{{problem.id}} </h2>
+			<div class="row item-centered ivory">
+				<div class="column item-centered">
+					<h2 class="title" style="font-size: 30px;"> 编辑题目 - #{{problem.id}} </h2>
+					<a class="button button-primary button-small" style="margin-bottom: 5px; width: 70%;" href="/problem/{{problem.id}}" target="_blank"> 打开前台 </a>
+					<button class="button button-caution button-small" style="margin-bottom: 12px; width: 70%;" id="delete-problem"> 删除此题 </button>
+					<script>
+						$("#delete-problem").click(function(){
+							var rand_num = Math.random()*233333333	// 防止浏览器记住地址
+							layer.alert('是否真的要删除<br />#{{problem.id}}. {{problem.title}}?',{
+								title: '确认删除',
+								icon: 3,
+								btn: ['确认删除','还是算了'],
+								yes: function(){
+									window.location.href = '/problem/{{problem.id}}/delete?_=' + rand_num.toString()
+								},
+								btn2: function(){
+									return
+								}
+							})
+						})
+					</script>
+				</div>
 			</div>
 			<div class="row item-centered ivory" style="margin-top: 10px;">
 				<div class="column item-centered">
@@ -46,7 +66,28 @@
 			</div>
 			<div class="row item-centered ivory" style="margin-top: 10px;">
 				<p style="color: #666; font-size: 12px; margin: 10px 10px;">
-					Tips: 您可以使用编辑器右上角的功能性按钮来进行全屏编辑
+					Tips: 您可以使用编辑器右上角的功能性按钮来进行全屏编辑 <br />
+					<a id="toggle-more-tips"> More Tips... </a>
+					<script>
+						var tips = `
+						<h3> 更多小 Tips </h3>
+						<ul>
+							<li> 首先，如果你遇到了提交失败的情况，别担心，您输入的数据不会丢。 </li>
+							<li> 提交后您可以选择「继续编辑」，所以，记得多保存。 </li>
+							<li> python3 代码请使用 <pre>\`\`\`python</pre> 而不是 <pre>\`\`\`python3</pre> </li>
+							<li> 不会用 markdown? 编辑器上方的功能键可以满足大部分需要 </li>
+							<li> 界面太小？点击编辑器上方的功能键可以全屏编辑 </li>
+						</ul>
+						`
+						$("#toggle-more-tips").click(function(){
+							layer.open({
+								title: 'More Tips...',
+								type: 1,
+								area: ['420px', '240px'],
+								content: tips
+							});
+						})
+					</script>
 				</p>
 			</div>
 			<div class="row item-centered ivory" style="margin-top: 10px;">
@@ -84,11 +125,71 @@
 			{{ContentBlock('数据范围与提示',problem.limit_and_hint,'limit_and_hint')}}
 			<button class="button button-primary" style="width: 96%;" id="back-to-top"> 返回顶部 </button>
 			<script>
-				$("#back-to-top").click(function(){
+				function ScrollToTop(){
 					window.scrollTo(0,0)
-				})
+				}
+				$("#back-to-top").click(function(){ScrollToTop()})
+				$(document).ready(function(){setTimeout(function(){ScrollToTop()},100)})
 			</script>
 		</div>
 	</div>
 </div>
+<script>
+var DoCollectInput = function(){
+	var new_problem_id = $("#new-problem-id").val()
+	var new_title = $("#new-title").val()
+	var new_background = $("#editor-background-markdown").val()
+	var new_description = $("#editor-description-markdown").val()
+	var new_input_format = $("#editor-input_format-markdown").val()
+	var new_output_format = $("#editor-output_format-markdown").val()
+	var new_limit_and_hint = $("#editor-limit_and_hint-markdown").val()
+	var new_is_public = $("#new-is-public").is(":checked") ? 1 : 0
+	return {
+		new_problem_id: new_problem_id,
+		new_title: new_title,
+		new_background: new_background,
+		new_description: new_description,
+		new_input_format: new_input_format,
+		new_output_format: new_output_format,
+		new_limit_and_hint: new_limit_and_hint,
+		new_is_public: new_is_public
+	}
+}
+var DoSubmit = function(){
+	var datapack = DoCollectInput()
+	$.ajax({
+		type: "POST",
+		data: datapack,
+		error: function(message){
+			console.log('错误：');
+			console.log(message);
+			layer.alert('出锅了，提交失败<br />详细信息请查看控制台。<br />不过，输入的数据应该还没丢。',{
+				title: '错误',
+				icon: 2
+			})
+		},
+		success: function(data){
+			if( data.success == true ){
+				layer.alert(data.message,{
+					title: '提交成功',
+					icon: 1,
+					btn: ['查看题目','继续编辑'],
+					yes: function(){
+						window.location.href = '/problem/'+datapack['new_problem_id']
+					},
+					btn2: function(){
+						return
+					}
+				})
+			}else{
+				layer.alert(data.message,{
+					title: '提交失败',
+					icon: 2
+				})
+			}
+		}
+	})
+}
+$("#submit").click(function(){DoSubmit()})
+</script>
 {% endblock %}

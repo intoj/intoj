@@ -47,8 +47,38 @@ def ProblemAddRun():
 
 def ProblemEditRun(problem_id):
 	operator = modules.GetCurrentOperator()
+	probleminfo = GetProblemInfo(problem_id)
+	if probleminfo == None:
+		return modules.RedirectBack(error_message='无此题目')
+
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
 		return modules.RedirectBack(error_message='无此权限')
 	if request.method == 'GET':
-		probleminfo = GetProblemInfo(problem_id)
 		return render_template('problemedit.html',problem=probleminfo)
+	else:
+		new_problem_id = int(request.form['new_problem_id'])
+		if new_problem_id != problem_id:
+			is_duplicate = db.Execute('SELECT COUNT(*) FROM problems WHERE id=%s',new_problem_id)[0]['COUNT(*)']
+			if is_duplicate:
+				return modules.ReturnJSON({ 'success': False, 'message': '新 id 已存在' })
+		db.Execute('UPDATE problems SET id=%s, title=%s, background=%s, \
+					description=%s, input_format=%s, output_format=%s, \
+					limit_and_hint=%s, is_public=%s WHERE id=%s',
+					(new_problem_id,
+					request.form['new_title'],
+					request.form['new_background'],
+					request.form['new_description'],
+					request.form['new_input_format'],
+					request.form['new_output_format'],
+					request.form['new_limit_and_hint'],
+					request.form['new_is_public'],
+					problem_id))
+		return modules.ReturnJSON({ 'success': True, 'message': '提交成功！' })
+
+def ProblemDeleteRun(problem_id):
+	operator = modules.GetCurrentOperator()
+	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
+		return modules.RedirectBack(error_message='无此权限')
+	db.Execute('DELETE FROM problems WHERE id=%s',problem_id)
+	flash('成功删除题目 #%d'%problem_id,'ok')
+	return redirect('/problems')

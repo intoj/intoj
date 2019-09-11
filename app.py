@@ -56,6 +56,10 @@ def ProblemAdd():
 def ProblemEdit(problem_id):
 	return sites.problems.ProblemEditRun(problem_id)
 
+@app.route('/problem/<int:problem_id>/delete',methods=['GET','POST'])
+def ProblemDelete(problem_id):
+	return sites.problems.ProblemDeleteRun(problem_id)
+
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
