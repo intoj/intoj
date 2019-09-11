@@ -3,26 +3,86 @@
 {% block body %}
 <div class="column item-centered" style="width: 1100px;">
 	<div class="row item-centered" style="align-items: flex-start">
-		<div class="column item-centered" style="width: 24%; height: auto !important;">
-			
+		<div class="column item-centered" style="width: 24%; height: auto !important; margin-right: 10px;">
+			<div class="row item-centered ivory" style="height: 70px">
+				<h2 class="title" style="font-size: 30px;"> 编辑题目 - #{{problem.id}} </h2>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<div class="column item-centered">
+					<h2 class="title"> 题目 id </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="number" id="new-problem-id" value="{{problem.id}}"> </input>
+					</div>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<div class="column item-centered">
+					<h2 class="title"> 题目标题 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<input class="login-input item-centered" type="text" id="new-title" value="{{problem.title}}"> </input>
+					</div>
+				</div>
+			</div>
+			<!-- <div class="row item-centered ivory" style="margin-top: 10px;">
+				<div class="column item-centered">
+					<h2 class="title"> 时空限制 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<i class="fa fa-clock-o fa-fw"></i>
+						<input class="login-input item-centered" style="width: 70%;" type="number" id="new-time-limit" value="{{problem.time_limit}}"> </input>
+						<span style="width: 40px;"> ms </span>
+					</div>
+					<div class="row item-centered login-input" style="width: 90%">
+						<i class="fa fa-microchip fa-fw"></i>
+						<input class="login-input item-centered" style="width: 70%;" type="number" id="new-memory-limit" value="{{problem.memory_limit}}"> </input>
+						<span style="width: 40px;"> MB </span>
+					</div>
+				</div>
+			</div> -->
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<div class="column item-centered">
+					<h2 class="title"> 公开 </h2>
+					<input type="checkbox" id="new-is-public" {{'checked' if problem.is_public else ''}} style="margin-bottom: 12px;"> </input>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<button class="button button-action" id="submit" style="width: 100%"> 提交 </button>
+			</div>
 		</div>
 		<div class="column item-centered ivory" style="width: 76%; margin-right: 10px; padding-bottom: 20px;">
 			<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
-			{% macro ContentBlock(name,content) %}
-				{% if not IsEmpty(content) %}
-					<div class="row item-centered">
-						<div class="column item-centered" style="width: 92%;">
-							<h2 class="row title" style="margin-left: 10px;"> {{name}} </h2>
-							<div class="row grey rounded havemarkdown" style="width: calc( 100% - 20px ); align-items: flex-start; padding: 10px 10px; font-size: 20px; overflow: auto"> {{- content|e -}} </div>
+			{% macro ContentBlock(name,content,tagname) %}
+				<div class="row item-centered">
+					<div class="column item-centered" style="width: 96%;">
+						<h2 class="row title" style="margin-left: 10px; font-size: 30px; color: #44aadd"> {{name}} </h2>
+						<div id="editor-{{tagname}}">
+							<textarea class="editormd-markdown-textarea" id="editor-{{tagname}}-markdown">{{content|e}}</textarea>
+							<textarea class="editormd-html-textarea" id="editor-{{tagname}}-htmlcode"></textarea>
 						</div>
+						<script>
+							var editor = editormd("editor-{{tagname}}",{
+					            width  : "100%",
+					            height : "500px",
+					            path: "/static/modules/editormd/lib/",
+								toolbarAutoFixed: false,
+								tex: true,
+								saveHTMLToTextarea: true,
+								toolbarIcons: "simple"
+					        });
+						</script>
 					</div>
-				{% endif %}
+				</div>
 			{% endmacro %}
-			{{ContentBlock('题目背景',problem.background)}}
-			{{ContentBlock('题目描述',problem.description)}}
-			{{ContentBlock('输入格式',problem.input_format)}}
-			{{ContentBlock('输出格式',problem.output_format)}}
-			{{ContentBlock('数据范围与提示',problem.limit_and_hint)}}
+			{{ContentBlock('题目背景',problem.background,'background')}}
+			{{ContentBlock('题目描述',problem.description,'description')}}
+			{{ContentBlock('输入格式',problem.input_format,'input_format')}}
+			{{ContentBlock('输出格式',problem.output_format,'output_format')}}
+			{{ContentBlock('数据范围与提示',problem.limit_and_hint,'limit_and_hint')}}
+			<button class="button button-primary" style="width: 96%;" id="back-to-top"> 返回顶部 </button>
+			<script>
+				$("#back-to-top").click(function(){
+					window.scrollTo(0,0)
+				})
+			</script>
 		</div>
 	</div>
 </div>

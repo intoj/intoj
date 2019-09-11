@@ -6,14 +6,15 @@ def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
 	if len(res) == 0: return None
 	res = res[0]
+	def F(s): return '' if s == None else s
 	return {
 		'id': int(problem_id),
 		'title': res['title'],
-		'background': res['background'],
-		'description': res['description'],
-		'input_format': res['input_format'],
-		'output_format': res['output_format'],
-		'limit_and_hint': res['limit_and_hint'],
+		'background': F(res['background']),
+		'description': F(res['description']),
+		'input_format': F(res['input_format']),
+		'output_format': F(res['output_format']),
+		'limit_and_hint': F(res['limit_and_hint']),
 		'time_limit': int(res['time_limit']),
 		'memory_limit': int(res['memory_limit']),
 		'is_public': bool(res['is_public']),
