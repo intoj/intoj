@@ -74,9 +74,10 @@
 						<ul>
 							<li> 首先，如果你遇到了提交失败的情况，别担心，您输入的数据不会丢。 </li>
 							<li> 提交后您可以选择「继续编辑」，所以，记得多保存。 </li>
-							<li> python3 代码请使用 <pre>\`\`\`python</pre> 而不是 <pre>\`\`\`python3</pre> </li>
 							<li> 不会用 markdown? 编辑器上方的功能键可以满足大部分需要 </li>
 							<li> 界面太小？点击编辑器上方的功能键可以全屏编辑 </li>
+							<li> 编辑时表格中的数学公式不能显示，但别担心，切换到前台后会正常渲染的 </li>
+							<li> python3 代码请使用 <pre>\`\`\`python</pre> 而不是 <pre>\`\`\`python3</pre> </li>
 						</ul>
 						`
 						$("#toggle-more-tips").click(function(){
@@ -123,7 +124,40 @@
 			{{ContentBlock('输入格式',problem.input_format,'input_format')}}
 			{{ContentBlock('输出格式',problem.output_format,'output_format')}}
 			{{ContentBlock('数据范围与提示',problem.limit_and_hint,'limit_and_hint')}}
-			<button class="button button-primary" style="width: 96%;" id="back-to-top"> 返回顶部 </button>
+			<div class="row item-centered">
+				<div class="column item-centered" style="width: 96%;" id="examples-container">
+					<h2 class="row title" style="margin-left: 10px; font-size: 30px; color: #44aadd"> 样例 </h2>
+					<div class="row item-centered">
+						<h3 style="width: 7%; " class="title item-centered"> # </h3>
+						<h3 style="width: 31%;" class="title item-left-aligned"> 输入 </h3>
+						<h3 style="width: 31%;" class="title item-left-aligned"> 输出 </h3>
+						<h3 style="width: 31%;" class="title item-left-aligned"> 解释 </h3>
+					</div>
+					<script>
+						window.examplescnt = 0
+						var AddNewExamples = function(input,output,explanation){
+							window.examplescnt += 1
+							var kth = window.examplescnt
+							$("#examples-container").append(
+								`<div class="row" id="example-${kth}" style="margin-bottom: 10px;">
+									<h3 class="title" style="width: 7%;"> #${kth} </h3>
+									<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-${kth}-input" placeholder="样例输入">${input}</textarea>
+									<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-${kth}-output" placeholder="样例输出">${output}</textarea>
+									<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-${kth}-explanation" placeholder="样例解释">${explanation}</textarea>
+								</div>`
+							)
+							return kth
+						}
+						{% for example in problem.examples %}
+							AddNewExamples('{{example.input|replace("\n", "\\n")|replace("\r", "\\r")|e}}','{{example.output|replace("\n", "\\n")|replace("\r", "\\r")|e}}','{{example.explanation|replace("\n", "\\n")|replace("\r", "\\r")|e}}')
+						{% endfor %}
+					</script>
+				</div>
+			</div>
+			<div class="row item-centered">
+				<button class="button button-primary" onclick="AddNewExamples('','','')"> 添加一组样例 </button>
+			</div>
+			<button class="button button-primary" style="width: 96%; margin-top: 20px;" id="back-to-top"> 返回顶部 </button>
 			<script>
 				function ScrollToTop(){
 					window.scrollTo(0,0)
@@ -144,6 +178,14 @@ var DoCollectInput = function(){
 	var new_output_format = $("#editor-output_format-markdown").val()
 	var new_limit_and_hint = $("#editor-limit_and_hint-markdown").val()
 	var new_is_public = $("#new-is-public").is(":checked") ? 1 : 0
+	var examples = []
+	for( var i = 1 ; i <= window.examplescnt ; ++i ){
+		examples.push({
+			input: $(`#example-${i}-input`).val(),
+			output: $(`#example-${i}-output`).val(),
+			explanation: $(`#example-${i}-explanation`).val()
+		})
+	}
 	return {
 		new_problem_id: new_problem_id,
 		new_title: new_title,
@@ -152,7 +194,8 @@ var DoCollectInput = function(){
 		new_input_format: new_input_format,
 		new_output_format: new_output_format,
 		new_limit_and_hint: new_limit_and_hint,
-		new_is_public: new_is_public
+		new_is_public: new_is_public,
+		examples: JSON.stringify(examples)
 	}
 }
 var DoSubmit = function(){

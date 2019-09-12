@@ -8,7 +8,7 @@
 			{% macro ContentBlock(name,content) %}
 				{% if not IsEmpty(content) %}
 					<div class="row item-centered">
-						<div class="column item-centered" style="width: 92%;">
+						<div class="column item-centered" style="width: 94%;">
 							<h2 class="row title" style="margin-left: 10px;"> {{name}} </h2>
 							<div class="grey rounded havemarkdown" style="width: calc( 100% - 20px ); text-align: left; padding: 10px 10px; font-size: 20px; overflow: auto"> {{- content|e -}} </div>
 						</div>
@@ -20,6 +20,30 @@
 			{{ContentBlock('输入格式',problem.input_format)}}
 			{{ContentBlock('输出格式',problem.output_format)}}
 			{{ContentBlock('数据范围与提示',problem.limit_and_hint)}}
+			<div class="row item-centered">
+				<div class="column item-centered" style="width: 94%;">
+					<h2 class="row title" style="margin-left: 10px; margin-bottom: 0px"> 样例 </h2>
+					{% for example in problem.examples %}
+						<div class="row item-centered">
+							<div class="column item-centered" style="width: 94%;">
+								<h3 class="row title" style="margin-left: 10px;"> 样例 {{loop.index}} </h3>
+								<div class="row item-centered">
+									{% macro ExampleWordBlock(name,content) %}
+										<div class="column" style="width: 48%; margin-right: 2%;">
+											<pre><code class="hljs plaintext" style="background-color: #ddd;">{{content|e}}</code></pre>
+										</div>
+									{% endmacro %}
+									{{ExampleWordBlock('输入',example.input)}}
+									{{ExampleWordBlock('输出',example.output)}}
+								</div>
+								{% if not IsEmpty(example.explanation) %}
+									<div class="row item-left-aligned havemarkdown" style="margin-top: 5px;">样例解释：{{- example.explanation|e -}}</div>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
 		</div>
 		<div class="column item-centered" style="width: 24%; height: auto !important; opacity: 0.92">
 			<div class="row item-centered">

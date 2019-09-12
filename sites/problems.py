@@ -1,5 +1,6 @@
 #coding:utf-8
 from flask import *
+import json
 import db, modules, config
 
 def GetProblemInfo(problem_id):
@@ -20,6 +21,9 @@ def GetProblemInfo(problem_id):
 		'is_public': bool(res['is_public']),
 		'provider': res['provider']
 	}
+def GetProblemExamples(problem_id):
+	res = db.Execute('SELECT kth,input,output,explanation FROM problem_examples WHERE problem_id=%s ORDER BY kth ASC',problem_id)
+	return res
 
 def ProblemListRun():
 	per_page = config.config['site']['per_page']['problem_list']
@@ -29,6 +33,9 @@ def ProblemListRun():
 
 def ProblemRun(problem_id):
 	probleminfo = GetProblemInfo(problem_id)
+	if probleminfo == None:
+		return modules.RedirectBack(error_message='无此题目')
+	probleminfo['examples'] = GetProblemExamples(problem_id)
 	return render_template('problem.html',problem=probleminfo)
 
 def ProblemAddRun():
@@ -50,6 +57,7 @@ def ProblemEditRun(problem_id):
 	probleminfo = GetProblemInfo(problem_id)
 	if probleminfo == None:
 		return modules.RedirectBack(error_message='无此题目')
+	probleminfo['examples'] = GetProblemExamples(problem_id)
 
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
 		return modules.RedirectBack(error_message='无此权限')
@@ -73,6 +81,13 @@ def ProblemEditRun(problem_id):
 					request.form['new_limit_and_hint'],
 					request.form['new_is_public'],
 					problem_id))
+		examples = json.loads(request.form['examples'])
+		db.Execute('DELETE FROM problem_examples WHERE problem_id=%s',problem_id)
+		now_kth = 0
+		for example in examples:
+			now_kth += 1
+			db.Execute('INSERT INTO problem_examples(problem_id,kth,input,output,explanation) VALUE(%s,%s,%s,%s,%s)',
+					   (new_problem_id,now_kth,example['input'],example['output'],example['explanation']))
 		return modules.ReturnJSON({ 'success': True, 'message': '提交成功！' })
 
 def ProblemDeleteRun(problem_id):

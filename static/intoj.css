@@ -50,7 +50,7 @@ body,p,h1,h2,h3,h4,h5,h6{
 
 .ivory{
 	background-color: #fafafa;
-	background-color: #ffffffdd !important;
+	background-color: #ffffffee !important;
 }
 .grey{
 	background-color: #eee;
@@ -88,6 +88,18 @@ input.login-input{
 }
 input.login-input:hover{
 	caret-color: #666;
+}
+
+table{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+td, th{
+	border: 1px solid #888;
+	padding: 2px 10px 1px 10px;
+}
+th{
+	background-color: #ccc;
 }
 
 .button{

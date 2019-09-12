@@ -44,3 +44,12 @@ CREATE TABLE problems(
 	`is_public` TINYINT(1) DEFAULT 0,
 	`provider` VARCHAR(30)
 );
+
+CREATE TABLE problem_examples(
+	`id` INT UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`problem_id` INT,
+	`kth` INT,
+	`input` MEDIUMTEXT,
+	`output` MEDIUMTEXT,
+	`explanation` MEDIUMTEXT
+);
