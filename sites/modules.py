@@ -5,6 +5,16 @@ import db, config
 
 def IsEmpty(s):
 	return s == None or s.strip() == ''
+def ScoreRounding(score):
+	if score == None: return 0
+	return int(score) if float(score) - int(score) < 0.01 else float(score)
+def GetArgsAsString(ignore=[]):
+	arg = ""
+	for key,value in request.args.items():
+		if key in ignore: continue
+		if arg != "": arg += "&"
+		arg += "%s=%s" % (escape(key),escape(value))
+	return arg
 
 def CheckPrivilege(username,privileges):
 	def Have(username,privilege):

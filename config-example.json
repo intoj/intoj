@@ -11,6 +11,7 @@
 		"gravatar_prefix": "https://0.gravatar.com/avatar/",
 		"per_page": {
 			"problem_list": 10,
+			"submission_list": 10,
 			"user_ranklist": 30
 		},
 	},

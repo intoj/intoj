@@ -53,3 +53,20 @@ CREATE TABLE problem_examples(
 	`output` MEDIUMTEXT,
 	`explanation` MEDIUMTEXT
 );
+
+CREATE TABLE submissions(
+	`id`			INT NOT NULL PRIMARY KEY auto_increment,
+	`problem_id`	INT NOT NULL,
+	`contest_id`	INT DEFAULT 0,
+	`submitter`		VARCHAR(30),
+	`submit_time`	DATETIME,
+	`language`		VARCHAR(20),
+	`status`		INT,
+	`score`			DOUBLE DEFAULT 0,
+	`detail`		LONGTEXT DEFAULT '',
+	`time_usage`	INT,
+	`memory_usage`	INT,
+	`code`			MEDIUMTEXT,
+	`compilier_message`	LONGTEXT DEFAULT '',
+	`system_message`	TEXT DEFAULT ''
+);

@@ -20,6 +20,8 @@ app.add_template_global(len,'len')
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')
 app.add_template_global(sites.modules.IsEmpty,'IsEmpty')
+app.add_template_global(sites.modules.ScoreRounding,'ScoreRounding')
+app.add_template_global(sites.modules.GetArgsAsString,'GetArgsAsString')
 app.add_template_global(sites.modules.GetGravatarEmailHash,'GetGravatarEmailHash')
 app.add_template_global(sites.modules.GetGravatarAddress,'GetGravatarAddress')
 app.add_template_global(sites.modules.GetCurrentOperator,'GetCurrentOperator')
@@ -27,6 +29,10 @@ app.add_template_global(sites.modules.ValidatePassword,'ValidatePassword')
 app.add_template_global(sites.modules.ValidateClientkey,'ValidateClientkey')
 app.add_template_global(sites.modules.CheckPrivilege,'CheckPrivilege')
 app.add_template_global(sites.modules.CheckPrivilegeOfProblem,'CheckPrivilegeOfProblem')
+app.add_template_global(sites.submissions.id_to_word,'id_to_word')
+app.add_template_global(sites.submissions.id_to_sign,'id_to_sign')
+app.add_template_global(sites.submissions.id_to_color,'id_to_color')
+app.add_template_global(sites.submissions.GetColorOfScore,'GetColorOfScore')
 
 @app.route('/')
 def Index():
@@ -59,6 +65,10 @@ def ProblemEdit(problem_id):
 @app.route('/problem/<int:problem_id>/delete',methods=['GET','POST'])
 def ProblemDelete(problem_id):
 	return sites.problems.ProblemDeleteRun(problem_id)
+
+@app.route('/submissions')
+def SubmissionList():
+	return sites.submissions.SubmissionListRun()
 
 @app.route('/users')
 def UserList():

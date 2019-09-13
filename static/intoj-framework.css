@@ -40,7 +40,7 @@ code{
 }
 .item-left-aligned.column{
 	display: flex;
-	align-items: flex-end;
+	align-items: flex-start;
 }
 .animation{
 	transition: .14s ease;

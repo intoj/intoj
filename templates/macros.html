@@ -1,0 +1,27 @@
+{% macro Pagination(per,cur,tot) %}
+	{% set args = GetArgsAsString(ignore=['page']) %}
+	{% set baseurl = request.base_url %}
+	<div class="button-group">{{args}}
+		<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page={{max(1,cur-1)}}&{{args}}"> <i class="fa fa-angle-left"></i> </a>
+		{% set l = max(cur-2,1) %}
+		{% set r = min(cur+2,tot) %}
+		{% if l != 1 %}
+			<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page=1&{{args}}"> 1 </a>
+			{% if l != 2 %}
+				<a class="button button-rounded button-square button-grey item-centered"> . . . </a>
+			{% endif %}
+		{% endif %}
+		{% for page in range(l,r+1) %}
+			<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page={{page}}&{{args}}" {% if page==cur %} style="background-color: #ddd" {% endif %}> {{page}} </a>
+		{% endfor %}
+		{% if r != tot %}
+			{% if r != tot-1 %} <a class="button button-rounded button-square button-grey item-centered"> . . . </a> {% endif %}
+			<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page={{tot}}&{{args}}"> {{tot}} </a>
+		{% endif %}
+		<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page={{min(tot,cur+1)}}&{{args}}"> <i class="fa fa-angle-right"> </i> </a>
+	</div>
+{% endmacro %}
+{% macro AutoPagination(pageinfo) %}
+	{% set cur = request.args.get('page',1)|int %}
+	{{Pagination(pageinfo.per,cur,pageinfo.tot)}}
+{% endmacro %}

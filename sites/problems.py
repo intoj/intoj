@@ -27,8 +27,8 @@ def GetProblemExamples(problem_id):
 
 def ProblemListRun():
 	per_page = config.config['site']['per_page']['problem_list']
-	current_page = modules.ParseInt(request.args.get('page'),1,1,1e9)
-	problems = db.Execute('SELECT * FROM problems LIMIT %s OFFSET %s',(per_page,per_page*(current_page-1)))
+	current_page = modules.GetCurrentPage()
+	problems = db.Execute('SELECT id,title,is_public FROM problems LIMIT %s OFFSET %s',(per_page,per_page*(current_page-1)))
 	return render_template('problemlist.html',problems=problems,current_page=current_page)
 
 def ProblemRun(problem_id):
