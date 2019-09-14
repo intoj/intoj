@@ -20,28 +20,88 @@
 			{{ContentBlock('输入格式',problem.input_format)}}
 			{{ContentBlock('输出格式',problem.output_format)}}
 			{{ContentBlock('数据范围与提示',problem.limit_and_hint)}}
-			<div class="row item-centered">
-				<div class="column item-centered" style="width: 94%;">
-					<h2 class="row title" style="margin-left: 10px; margin-bottom: 0px"> 样例 </h2>
-					{% for example in problem.examples %}
-						<div class="row item-centered">
-							<div class="column item-centered" style="width: 94%;">
-								<h3 class="row title" style="margin-left: 10px;"> 样例 {{loop.index}} </h3>
-								<div class="row item-centered">
-									{% macro ExampleWordBlock(name,content) %}
-										<div class="column" style="width: 48%; margin-right: 2%;">
-											<pre><code class="hljs plaintext" style="background-color: #ddd;">{{content|e}}</code></pre>
-										</div>
-									{% endmacro %}
-									{{ExampleWordBlock('输入',example.input)}}
-									{{ExampleWordBlock('输出',example.output)}}
+			{% if len(problem.examples) != 0 %}
+				<div class="row item-centered">
+					<div class="column item-centered" style="width: 94%;">
+						<h2 class="row title" style="margin-left: 10px; margin-bottom: 0px"> 样例 </h2>
+						{% for example in problem.examples %}
+							<div class="row item-centered">
+								<div class="column item-centered" style="width: 94%;">
+									<h3 class="row title" style="margin-left: 10px;"> 样例 {{loop.index}} </h3>
+									<div class="row item-centered">
+										{% macro ExampleWordBlock(name,content) %}
+											<div class="column" style="width: 48%; margin-right: 2%;">
+												<pre><code class="hljs plaintext" style="background-color: #ddd;">{{content|e}}</code></pre>
+											</div>
+										{% endmacro %}
+										{{ExampleWordBlock('输入',example.input)}}
+										{{ExampleWordBlock('输出',example.output)}}
+									</div>
+									{% if not IsEmpty(example.explanation) %}
+										<div class="row item-left-aligned havemarkdown" style="margin-top: 5px;">样例解释：{{- example.explanation|e -}}</div>
+									{% endif %}
 								</div>
-								{% if not IsEmpty(example.explanation) %}
-									<div class="row item-left-aligned havemarkdown" style="margin-top: 5px;">样例解释：{{- example.explanation|e -}}</div>
-								{% endif %}
 							</div>
-						</div>
-					{% endfor %}
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			<div class="row item-centered" id="submit">
+				<div class="column item-left-aligned" style="width: 94%;">
+					<h2 class="row title" style="margin-left: 10px; margin-bottom: 10px"> 提交代码 </h2>
+					<textarea id="code-editor" style="width: 100%;"></textarea>
+					<script>
+						window.code_editor = CodeMirror.fromTextArea(document.getElementById("code-editor"),{
+							mode: "text/x-c++src",
+							lineNumbers: true,
+							theme: "solarized light",
+							lineWrapping: true,
+							foldGutter: true,
+							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+							matchBrackets: true,
+							indentUnit: 4,
+							indentWithTabs: true,
+							cursorHeight: 0.85
+						});
+						code_editor.setSize('100%','300px');
+					</script>
+					<div class="row item-centered" style="margin-top: 10px;">
+						<button class="button button-action button-rounded item-centered" id="submit-button"> <i class="fa fa-upload fa-fw"></i> 提交代码 </button>
+					</div>
+					<script>
+						var DoSubmitCode = function(){
+							var code = window.code_editor.getValue()
+							$.ajax({
+								method: "POST",
+								data: {
+									code: code,
+									lang: 'cpp'
+								},
+								error: function(message){
+									console.log('错误：');
+									console.log(message);
+									layer.alert('出锅了，提交失败<br />详细信息请查看控制台。<br />不过，代码应该还没丢。',{
+										title: '错误',
+										icon: 2
+									})
+								},
+								success: function(data){
+									if( data.success == true ){
+										layer.msg('提交成功！');
+										setTimeout(function(){
+											window.location.href = `/submission/${data.submission_id}`
+										},400)
+									}else{
+										layer.alert(data.message,{
+											title: '提交失败',
+											icon: 2
+										})
+									}
+								}
+							})
+						}
+						$("#submit-button").click(function(){ DoSubmitCode(); })
+					</script>
 				</div>
 			</div>
 		</div>

@@ -19,6 +19,7 @@
 .item-left-aligned:not(.column){
 	display: flex;
 	justify-content: flex-start;
+	text-align: left;
 }
 
 .item-centered{			/* 两个方向上同时居中 */
@@ -41,6 +42,7 @@ code{
 .item-left-aligned.column{
 	display: flex;
 	align-items: flex-start;
+	text-align: left;
 }
 .animation{
 	transition: .14s ease;

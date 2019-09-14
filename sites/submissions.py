@@ -1,5 +1,6 @@
 #coding:utf-8
 from flask import *
+import datetime
 import db, modules, config
 
 def SubmissionListRun():
@@ -10,6 +11,30 @@ def SubmissionListRun():
 							 (per_page,per_page*(current_page-1)))
 	return render_template('submissionlist.html',submissions=submissions,pageinfo={ 'per': per_page, 'tot': total_page })
 
+def NewSubmission(problem_id,contest_id=0):
+	code, language = request.form['code'], request.form['lang']
+	submitter = modules.GetCurrentOperator()
+	submit_time = datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S')
+
+	if len(code.strip()) == 0:
+		return modules.ReturnJSON({ 'success': False, 'message': '你这么短？emmm....' })
+	if len(code) > config.config['limits']['max_code_length']*1024:
+		return modules.ReturnJSON({ 'success': False, 'message': '代码过长（代码长度限制为 %d KB）'%config.config['limits']['max_code_length'] })
+
+	id = db.Execute('SELECT MAX(id) FROM submissions')[0]['MAX(id)']
+	id = 1 if id == None else int(id)+1
+	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,submitter,submit_time,language,code) VALUES(%s,%s,%s,%s,%s,%s,%s)',
+				(id,problem_id,contest_id,submitter,submit_time,language,code))
+	return modules.ReturnJSON({ 'success': True, 'message': '提交成功', 'submission_id': id })
+
+def GetSubmissionInfo(submission_id):
+	res = db.Execute('SELECT * FROM submissions WHERE id=%s',submission_id)
+	if len(res) == 0: return None
+	return res[0]
+
+def SubmissionRun(submission_id):
+	submission_info = GetSubmissionInfo(submission_id)
+	return render_template('submission.html',submission=submission_info)
 # statics
 
 def GetColorOfScore(a,fullscore=100):

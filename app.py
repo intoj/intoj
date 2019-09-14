@@ -50,9 +50,12 @@ def Login():
 def ProblemList():
 	return sites.problems.ProblemListRun()
 
-@app.route('/problem/<int:problem_id>')
+@app.route('/problem/<int:problem_id>',methods=['GET','POST'])
 def Problem(problem_id):
-	return sites.problems.ProblemRun(problem_id)
+	if request.method == 'GET':
+		return sites.problems.ProblemRun(problem_id)
+	else:
+		return sites.submissions.NewSubmission(problem_id)
 
 @app.route('/problemadd',methods=['GET','POST'])
 def ProblemAdd():
@@ -70,6 +73,10 @@ def ProblemDelete(problem_id):
 def SubmissionList():
 	return sites.submissions.SubmissionListRun()
 
+@app.route('/submission/<int:submission_id>')
+def Submission(submission_id):
+	return sites.submissions.SubmissionRun(submission_id)
+	
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()

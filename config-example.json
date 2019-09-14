@@ -13,12 +13,15 @@
 			"problem_list": 10,
 			"submission_list": 10,
 			"user_ranklist": 30
-		},
+		}
 	},
 	"default": {
 		"problem": {
 			"time_limit": 1000,
 			"memory_limit": 256
 		}
+	},
+	"limits": {
+		"max_code_length": 100
 	}
 }
