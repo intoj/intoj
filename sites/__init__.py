@@ -3,6 +3,7 @@ from . import db
 from . import index
 from . import login
 from . import problems
+from . import reedis
 from . import register
 from . import submissions
 from . import users

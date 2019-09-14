@@ -7,28 +7,28 @@
 	</div>
 	<div class="row ivory item-centered" style="margin-top: 10px">
 		<div class="column" style="width: 92%; padding-top: 24px;">
-			<div class="row" style="height: 30px; font-size: 18px; font-weight: 500; margin-bottom: 5px;">
-				<span class="column item-centered" style="width: 5%;"> # </span>
-				<span class="column item-centered" style="width: 28%;"> 题目 </span>
-				<span class="column item-centered" style="width: 31%;"> 状态 </span>
+			<div class="row item-centered" style="height: 30px; font-size: 18px; font-weight: 500; margin-bottom: 5px;">
+				<span class="column item-centered" style="width: 8%;"> # </span>
+				<span class="column item-centered" style="width: 27%;"> 题目 </span>
+				<span class="column item-centered" style="width: 29%;"> 状态 </span>
 				<span class="column item-centered" style="width: 6%;"> 分数 </span>
 				<span class="column item-centered" style="width: 15%;"> 提交者 </span>
 				<span class="column item-centered" style="width: 13%;"> 提交时间 </span>
 				<span class="column item-centered" style="width: 2%;"> </span>
 			</div>
 			{% for submission in submissions %}
-				<div class="row hover-animation" style="height: 50px;">
-					<span class="column item-centered" style="width: 5%;">
+				<div class="row hover-animation item-centered" style="height: 50px;">
+					<span class="column item-centered" style="width: 8%;">
 						<a href="/submission/{{submission.id}}">
 							{{submission.id}}
 						</a>
 					</span>
-					<span class="column item-centered" style="width: 28%; font-size: 17px;">
+					<span class="column item-centered" style="width: 27%; font-size: 17px;">
 						<a href="/problem/{{submission.problem_id}}">
 							#{{submission.problem_id}}. {{dbExecute('SELECT title FROM problems WHERE id=%s',submission.problem_id)[0].get('title')}}
 						</a>
 					</span>
-					<span class="column item-centered" style="width: 31%;">
+					<span class="column item-centered" style="width: 29%;">
 						<a href="/submission/{{submission.id}}" style="color: {{id_to_color[submission.status]}}" class="item-centered">
 							<i class="{{id_to_sign[submission.status]}}" style="margin-right: 2px;"> </i>
 							{{id_to_word[submission.status]}}
@@ -45,7 +45,7 @@
 						</a>
 					</span>
 					<span class="column item-centered" style="width: 13%;">
-						<a href="/submission/{{submission.id}}" style="font-size: 13px;">
+						<a href="/submission/{{submission.id}}" style="font-size: 12px;">
 							{{submission.submit_time}}
 						</a>
 					</span>

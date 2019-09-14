@@ -5,6 +5,11 @@
         "host": "localhost",
         "pass": ""
 	},
+	"redis": {
+		"host": "localhost",
+        "port": "6379",
+        "pass": ""
+	},
 	"site": {
 		"static_files_location": "offline",
 		"secret_key": "233",

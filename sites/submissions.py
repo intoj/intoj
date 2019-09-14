@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import *
 import datetime
-import db, modules, config
+import db, modules, config, reedis
 
 def SubmissionListRun():
 	per_page = config.config['site']['per_page']['submission_list']
@@ -11,6 +11,25 @@ def SubmissionListRun():
 							 (per_page,per_page*(current_page-1)))
 	return render_template('submissionlist.html',submissions=submissions,pageinfo={ 'per': per_page, 'tot': total_page })
 
+def GetSubmissionInfo(submission_id):
+	res = db.Execute('SELECT * FROM submissions WHERE id=%s',submission_id)
+	if len(res) == 0: return None
+	res = res[0]
+	res['length'] = 2333
+	return res
+
+def SubmissionRun(submission_id):
+	submission_info = GetSubmissionInfo(submission_id)
+	return render_template('submission.html',submission=submission_info)
+
+'''
+intoj 评测流程
+1. 当用户发起一发新提交时，前端中 NewSubmission() 将会把此次评测的相关信息写入数据库，并将 submission_id 扔到 redis 队列 intoj-waiting-judge 内
+2. 评测后端轮询 redis 队列 intoj-waiting-judge，当有新的 submission_id 时便开始评测
+3. 评测后端一旦要变更 submission 信息，就会更新数据库，同时把 submission_id 放进 redis 队列 intoj-judgestatus-refreshed 内
+4. 前端轮询 redis 队列 intoj-judgestatus-refreshed，若有变更就通过 websocket 告知客户端
+5. 客户端进行相应处理
+'''
 def NewSubmission(problem_id,contest_id=0):
 	code, language = request.form['code'], request.form['lang']
 	submitter = modules.GetCurrentOperator()
@@ -25,16 +44,12 @@ def NewSubmission(problem_id,contest_id=0):
 	id = 1 if id == None else int(id)+1
 	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,submitter,submit_time,language,code) VALUES(%s,%s,%s,%s,%s,%s,%s)',
 				(id,problem_id,contest_id,submitter,submit_time,language,code))
+
+	redis = reedis.NewConnection()
+	redis.rpush('intoj-waiting-judge',id)
+
 	return modules.ReturnJSON({ 'success': True, 'message': '提交成功', 'submission_id': id })
 
-def GetSubmissionInfo(submission_id):
-	res = db.Execute('SELECT * FROM submissions WHERE id=%s',submission_id)
-	if len(res) == 0: return None
-	return res[0]
-
-def SubmissionRun(submission_id):
-	submission_info = GetSubmissionInfo(submission_id)
-	return render_template('submission.html',submission=submission_info)
 # statics
 
 def GetColorOfScore(a,fullscore=100):

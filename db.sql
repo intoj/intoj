@@ -64,8 +64,8 @@ CREATE TABLE submissions(
 	`status`        INT DEFAULT 1,
 	`score`         DOUBLE DEFAULT 0,
 	`detail`        LONGTEXT DEFAULT '',
-	`time_usage`    INT,
-	`memory_usage`  INT,
+	`time_usage`    INT DEFAULT 0,
+	`memory_usage`  INT DEFAULT 0,
 	`code`          MEDIUMTEXT,
 	`compilier_message` LONGTEXT DEFAULT '',
 	`system_message`    TEXT DEFAULT ''

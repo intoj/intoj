@@ -16,6 +16,7 @@ app.secret_key = sites.config.config['site']['secret_key']
 app.add_template_global(min,'min')
 app.add_template_global(max,'max')
 app.add_template_global(len,'len')
+app.add_template_global(round,'round')
 
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')
@@ -76,7 +77,7 @@ def SubmissionList():
 @app.route('/submission/<int:submission_id>')
 def Submission(submission_id):
 	return sites.submissions.SubmissionRun(submission_id)
-	
+
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
