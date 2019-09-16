@@ -133,8 +133,17 @@
 						<h3 style="width: 31%;" class="title item-left-aligned"> 输出 </h3>
 						<h3 style="width: 31%;" class="title item-left-aligned"> 解释 </h3>
 					</div>
+					{% for example in problem.examples %}
+						{% set kth = loop.index %}
+						<div class="row" id="example-{{kth}}" style="margin-bottom: 10px;">
+							<h3 class="title" style="width: 7%;"> #{{kth}} </h3>
+							<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-{{kth}}-input" placeholder="样例输入">{{example.input|e}}</textarea>
+							<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-{{kth}}-output" placeholder="样例输出">{{example.output|e}}</textarea>
+							<textarea style="width: 31%; height: 150px; padding: 10px;" id="example-{{kth}}-explanation" placeholder="样例解释">{{example.explanation|e}}</textarea>
+						</div>
+					{% endfor %}
 					<script>
-						window.examplescnt = 0
+						window.examplescnt = {{len(example)}}
 						var AddNewExamples = function(input,output,explanation){
 							window.examplescnt += 1
 							var kth = window.examplescnt
@@ -148,9 +157,6 @@
 							)
 							return kth
 						}
-						{% for example in problem.examples %}
-							AddNewExamples('{{example.input|replace("\n", "\\n")|replace("\r", "\\r")|e}}','{{example.output|replace("\n", "\\n")|replace("\r", "\\r")|e}}','{{example.explanation|replace("\n", "\\n")|replace("\r", "\\r")|e}}')
-						{% endfor %}
 					</script>
 				</div>
 			</div>

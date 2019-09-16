@@ -20,6 +20,8 @@ def GetSubmissionInfo(submission_id):
 
 def SubmissionRun(submission_id):
 	submission_info = GetSubmissionInfo(submission_id)
+	if submission_info == None:
+		return modules.RedirectBack(error_message='无此提交')
 	return render_template('submission.html',submission=submission_info)
 
 '''
@@ -35,6 +37,8 @@ def NewSubmission(problem_id,contest_id=0):
 	submitter = modules.GetCurrentOperator()
 	submit_time = datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S')
 
+	if submitter == None:
+		return modules.ReturnJSON({ 'success': False, 'message': '请先登录' })
 	if len(code.strip()) == 0:
 		return modules.ReturnJSON({ 'success': False, 'message': '你这么短？emmm....' })
 	if len(code) > config.config['limits']['max_code_length']*1024:
@@ -74,7 +78,8 @@ id_to_word = {
 	8: 'Memory Limit Exceeded',
 	9: 'Runtime Error',
 	10: 'Partially Accepted',
-	11: 'Accepted'
+	11: 'Accepted',
+	12: 'Compilation Passed'
 }
 id_to_sign = {
 	0: 'fa fa-fw fa-spinner fa-spin',
@@ -88,7 +93,8 @@ id_to_sign = {
 	8: 'fa fa-fw fa-microchip',
 	9: 'fa fa-fw fa-exclamation',
 	10: 'fa fa-fw fa-adjust',
-	11: 'fa fa-fw fa-check'
+	11: 'fa fa-fw fa-check',
+	12: 'fa fa-fw fa-check'
 }
 id_to_color = {
 	0: '#66ccff',
@@ -102,5 +108,6 @@ id_to_color = {
 	8: 'orange',
 	9: 'purple',
 	10: '#19d960',
-	11: '#1eff1e'
+	11: '#1eff1e',
+	12: '#19d960'
 }

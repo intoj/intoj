@@ -66,7 +66,11 @@
 						code_editor.setSize('100%','300px');
 					</script>
 					<div class="row item-centered" style="margin-top: 10px;">
-						<button class="button button-action button-rounded item-centered" id="submit-button"> <i class="fa fa-upload fa-fw"></i> 提交代码 </button>
+						{% if nowuser == None %}
+							<button class="button button-rounded item-centered" id="submit-button" disabled> <i class="fa fa-upload fa-fw"></i> 登录后提交 </button>
+						{% else %}
+							<button class="button button-action button-rounded item-centered" id="submit-button"> <i class="fa fa-upload fa-fw"></i> 提交代码 </button>
+						{% endif %}
 					</div>
 					<script>
 						var DoSubmitCode = function(){

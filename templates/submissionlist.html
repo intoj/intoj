@@ -29,9 +29,9 @@
 						</a>
 					</span>
 					<span class="column item-centered" style="width: 29%;">
-						<a href="/submission/{{submission.id}}" style="color: {{id_to_color[submission.status]}}" class="item-centered">
+						<a href="/submission/{{submission.id}}" style="color: {{id_to_color[submission.status]}}; align-items: flex-end;" class="">
 							<i class="{{id_to_sign[submission.status]}}" style="margin-right: 2px;"> </i>
-							{{id_to_word[submission.status]}}
+							<span style="font-size: 19px;"> {{id_to_word[submission.status]}} </span>
 						</a>
 					</span>
 					<span class="column item-centered" style="width: 6%;">
