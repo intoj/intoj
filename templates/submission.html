@@ -54,6 +54,33 @@
 		</div>
 	</div>
 	<div class="row item-centered ivory" style="margin-top: 5px;">
+		<div class="column item-left-aligned" style="width: 96%;">
+			<h2 class="row title item-left-aligned" style="margin-left: 30px;"> 测试点信息 </h2>
+			<div class="row item-centered">
+				<div class="column item-centered" style="width: 98%; margin-bottom: 5px;">
+					{% for case in submission.detail %}
+						<div class="row hover-animation item-centered" style="height: 48px; flex-grow: 233; justify-content: space-around">
+							<span style="width: 6%; text-align: left;"> #{{loop.index}} </span>
+							<span style="width: 26%; color: {{id_to_color[case.status]}}; align-items: flex-end;">
+								<i class="{{id_to_sign[case.status]}}" style="margin-right: 2px;"> </i>
+								<span style="font-size: 19px;"> {{id_to_word[case.status]}} </span>
+							</span>
+							<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
+								{{ScoreRounding(case.score)}}
+							</span>
+							<span class="column item-centered" style="width: 8%; font-size: 16px;">
+								{{case.time_usage}}ms
+							</span>
+							<span class="column item-centered" style="width: 8%; font-size: 16px;">
+								{{case.memory_usage}}K
+							</span>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row item-centered ivory" style="margin-top: 5px;">
 		<div class="column item-left-aligned" style="width: 92%;">
 			<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 源代码 </h2>
 			<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>

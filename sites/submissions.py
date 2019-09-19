@@ -1,6 +1,6 @@
 #coding:utf-8
 from flask import *
-import datetime
+import datetime, json
 import db, modules, config, reedis
 
 def SubmissionListRun():
@@ -15,7 +15,8 @@ def GetSubmissionInfo(submission_id):
 	res = db.Execute('SELECT * FROM submissions WHERE id=%s',submission_id)
 	if len(res) == 0: return None
 	res = res[0]
-	res['length'] = 2333
+	res['length'] = len(res['code'])
+	res['detail'] = json.loads(res['detail'])
 	return res
 
 def SubmissionRun(submission_id):
@@ -108,6 +109,6 @@ id_to_color = {
 	8: 'orange',
 	9: 'purple',
 	10: '#19d960',
-	11: '#1eff1e',
+	11: '#1eee1e',
 	12: '#19d960'
 }
