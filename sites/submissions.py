@@ -47,7 +47,7 @@ def NewSubmission(problem_id,contest_id=0):
 
 	id = db.Execute('SELECT MAX(id) FROM submissions')[0]['MAX(id)']
 	id = 1 if id == None else int(id)+1
-	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,submitter,submit_time,language,code) VALUES(%s,%s,%s,%s,%s,%s,%s)',
+	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,submitter,submit_time,language,code,detail) VALUES(%s,%s,%s,%s,%s,%s,%s,"{}")',
 				(id,problem_id,contest_id,submitter,submit_time,language,code))
 
 	redis = reedis.NewConnection()

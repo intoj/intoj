@@ -16,6 +16,7 @@ app.secret_key = sites.config.config['site']['secret_key']
 app.add_template_global(min,'min')
 app.add_template_global(max,'max')
 app.add_template_global(len,'len')
+app.add_template_global(str,'str')
 app.add_template_global(round,'round')
 
 app.add_template_global(sites.config.config,'config')

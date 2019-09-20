@@ -1,7 +1,7 @@
 {% macro Pagination(per,cur,tot) %}
 	{% set args = GetArgsAsString(ignore=['page']) %}
 	{% set baseurl = request.base_url %}
-	<div class="button-group">{{args}}
+	<div class="button-group">
 		<a class="button button-rounded button-square button-grey item-centered" href="{{baseurl}}?page={{max(1,cur-1)}}&{{args}}"> <i class="fa fa-angle-left"></i> </a>
 		{% set l = max(cur-2,1) %}
 		{% set r = min(cur+2,tot) %}

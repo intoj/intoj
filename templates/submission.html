@@ -53,28 +53,78 @@
 			</div>
 		</div>
 	</div>
+	{% if not IsEmpty(submission.system_message) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 系统信息 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.system_message|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
 	<div class="row item-centered ivory" style="margin-top: 5px;">
 		<div class="column item-left-aligned" style="width: 96%;">
 			<h2 class="row title item-left-aligned" style="margin-left: 30px;"> 测试点信息 </h2>
 			<div class="row item-centered">
-				<div class="column item-centered" style="width: 98%; margin-bottom: 5px;">
+				<div class="column item-centered" style="width: 98%; margin-top: 10px; margin-bottom: 20px;">
 					{% for case in submission.detail %}
-						<div class="row hover-animation item-centered" style="height: 48px; flex-grow: 233; justify-content: space-around">
+						<div id="{{loop.index}}-trigger" class="row hover-animation item-centered" style="height: 48px; flex-grow: 233; justify-content: space-around">
 							<span style="width: 6%; text-align: left;"> #{{loop.index}} </span>
 							<span style="width: 26%; color: {{id_to_color[case.status]}}; align-items: flex-end;">
 								<i class="{{id_to_sign[case.status]}}" style="margin-right: 2px;"> </i>
 								<span style="font-size: 19px;"> {{id_to_word[case.status]}} </span>
 							</span>
-							<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
-								{{ScoreRounding(case.score)}}
-							</span>
-							<span class="column item-centered" style="width: 8%; font-size: 16px;">
-								{{case.time_usage}}ms
-							</span>
-							<span class="column item-centered" style="width: 8%; font-size: 16px;">
-								{{case.memory_usage}}K
-							</span>
+							{% if case.status not in [0,1] %}
+								<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
+									{{ScoreRounding(case.score)}}
+								</span>
+								<span class="column item-centered" style="width: 8%; font-size: 16px;">
+									{{case.time_usage}}ms
+								</span>
+								<span class="column item-centered" style="width: 8%; font-size: 16px;">
+									{{case.memory_usage}}K
+								</span>
+							{% else %}
+								<span class="column item-centered" style="width: 8%;"> </span>
+								<span class="column item-centered" style="width: 8%;"> </span>
+								<span class="column item-centered" style="width: 8%;"> </span>
+							{% endif %}
 						</div>
+						<div id="{{loop.index}}-details" style="display: none; width: 100%;" class="item-centered">
+							<div class="row grey item-centered" style="width: 90%; margin-top: 2px; margin-bottom: 10px;">
+								{% macro Previews(name,text,width='30%') %}
+									<div class="column item-horizontal-centered" style="width: {{width}}; margin-bottom: 10px;">
+										<h3 class="row item-left-aligned title" style="margin-left: 10px;"> &nbsp;{{name}} </h3>
+										<pre style="width: 100%;"><code class="hljs plaintext">{{text|e}}</code></pre>
+									</div>
+								{% endmacro %}
+								<div class="column item-centered" style="width: 100%;">
+									<div class="row" style="justify-content: space-around">
+										{{Previews('输入文件',case.get('input_preview',''))}}
+										{{Previews('答案文件',case.get('output_preview',''))}}
+										{{Previews('用户输出',case.get('stdout_preview',''))}}
+									</div>
+									<div class="row" style="justify-content: space-around">
+										{% set width_left = 94 %}
+										{% if not IsEmpty(case.get('runner_message','')) %}
+											{{Previews('运行时信息',case.get('runner_message',''))}}
+											{% set width_left = width_left - 30 %}
+										{% endif %}
+										{% if not IsEmpty(case.get('judger_message','')) %}
+											{{Previews('比较器信息',case.get('judger_message',''))}}
+											{% set width_left = width_left - 30 %}
+										{% endif %}
+										{% if not IsEmpty(case.get('stderr_preview','')) %}
+											{{Previews('标准错误流',case.get('stderr_preview',''),str(width_left)+'%')}}
+										{% endif %}
+									</div>
+								</div>
+							</div>
+						</div>
+						<script>
+							$("#{{loop.index}}-trigger").click(function(){
+								$("#{{loop.index}}-details").slideToggle("fast")
+							})
+						</script>
 					{% endfor %}
 				</div>
 			</div>
@@ -91,14 +141,6 @@
 			<div class="column item-left-aligned" style="width: 92%;">
 				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 编译信息 </h2>
 				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.compilier_message|e}}</code></pre>
-			</div>
-		</div>
-	{% endif %}
-	{% if not IsEmpty(submission.system_message) %}
-		<div class="row item-centered ivory" style="margin-top: 5px;">
-			<div class="column item-left-aligned" style="width: 92%;">
-				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 系统信息 </h2>
-				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.system_message|e}}</code></pre>
 			</div>
 		</div>
 	{% endif %}
