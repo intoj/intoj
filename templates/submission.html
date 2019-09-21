@@ -36,7 +36,8 @@
 					</a>
 				</span>
 				<span class="column item-centered" style="width: 16%; font-size: 16px;">
-					{{submission.time_usage}} ms / {{submission.memory_usage}} M <br />
+					{{submission.time_usage}} ms /
+					{% if submission.memory_usage >= 1024 %} {{round(submission.memory_usage/1024.0,1)}} M {% else %} {{submission.memory_usage}} K {% endif %} <br />
 					{{submission.language}} /
 					{% if submission.length >= 1024 %} {{round(submission.length/1024.0,1)}} K {% else %} {{submission.length}} B {% endif %}
 				</span>
@@ -53,6 +54,14 @@
 			</div>
 		</div>
 	</div>
+	{% if not IsEmpty(submission.compilier_message) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 编译信息 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.compilier_message|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
 	{% if not IsEmpty(submission.system_message) %}
 		<div class="row item-centered ivory" style="margin-top: 5px;">
 			<div class="column item-left-aligned" style="width: 92%;">
@@ -63,7 +72,55 @@
 	{% endif %}
 	<div class="row item-centered ivory" style="margin-top: 5px;">
 		<div class="column item-left-aligned" style="width: 96%;">
-			<h2 class="row title item-left-aligned" style="margin-left: 30px;"> 测试点信息 </h2>
+			<div class="row item-vertical-centered" style="justify-content: space-between">
+				<h2 class="title" style="margin-left: 30px;"> 测试点信息 </h2>
+				{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
+					<button class="button button-primary button-small" id="rejudge-button"> 重新测试 </button>
+					<script>
+						$("#rejudge-button").click(function(){
+							layer.alert('重测提交 #{{submission.id}} by {{submission.submitter}}?',{
+								title: '确认重测',
+								icon: 3,
+								btn: ['确认','算了'],
+								yes: function(){
+									$.ajax({
+										url: '/submission/{{submission.id}}/rejudge',
+										method: 'GET',
+										error: function(message){
+											console.log('错误：');
+											console.log(message);
+											layer.alert('出现异常。<br />详细信息请查看控制台。',{
+												title: '错误',
+												icon: 2
+											})
+										},
+										success: function(data){
+											if( data.success == true ){
+												layer.alert(data.message,{
+													title: '成功重测',
+													icon: 1,
+													yes: function(){
+														window.location.href = '/submission/{{submission.id}}'
+													}
+												})
+											}else{
+												layer.alert(data.message,{
+													title: '重测失败',
+													icon: 2
+												})
+											}
+										}
+									})
+
+								},
+								btn2: function(){
+									return
+								}
+							})
+						})
+					</script>
+				{% endif %}
+			</div>
 			<div class="row item-centered">
 				<div class="column item-centered" style="width: 98%; margin-top: 10px; margin-bottom: 20px;">
 					{% for case in submission.detail %}
@@ -91,30 +148,27 @@
 						</div>
 						<div id="{{loop.index}}-details" style="display: none; width: 100%;" class="item-centered">
 							<div class="row grey item-centered" style="width: 90%; margin-top: 2px; margin-bottom: 10px;">
-								{% macro Previews(name,text,width='30%') %}
-									<div class="column item-horizontal-centered" style="width: {{width}}; margin-bottom: 10px;">
+								{% macro Previews(name,id,text,width="30%") %}
+									<div id="{{loop.index}}-{{id}}" class="column item-horizontal-centered" style="width: {{width}}; flex-grow: 2; margin: 0px 5px 10px 5px;">
 										<h3 class="row item-left-aligned title" style="margin-left: 10px;"> &nbsp;{{name}} </h3>
 										<pre style="width: 100%;"><code class="hljs plaintext">{{text|e}}</code></pre>
 									</div>
 								{% endmacro %}
-								<div class="column item-centered" style="width: 100%;">
-									<div class="row" style="justify-content: space-around">
-										{{Previews('输入文件',case.get('input_preview',''))}}
-										{{Previews('答案文件',case.get('output_preview',''))}}
-										{{Previews('用户输出',case.get('stdout_preview',''))}}
+								<div class="column item-centered" style="width: calc( 100% - 20px );">
+									<div class="row" style="justify-content: center">
+										{{Previews('输入文件','input',case.get('input_preview',''))}}
+										{{Previews('答案文件','output',case.get('output_preview',''))}}
+										{{Previews('用户输出','stdout',case.get('stdout_preview',''))}}
 									</div>
-									<div class="row" style="justify-content: space-around">
-										{% set width_left = 94 %}
+									<div class="row" style="justify-content: space-around;">
 										{% if not IsEmpty(case.get('runner_message','')) %}
-											{{Previews('运行时信息',case.get('runner_message',''))}}
-											{% set width_left = width_left - 30 %}
+											{{Previews('运行时信息','runner-message',case.get('runner_message',''))}}
 										{% endif %}
 										{% if not IsEmpty(case.get('judger_message','')) %}
-											{{Previews('比较器信息',case.get('judger_message',''))}}
-											{% set width_left = width_left - 30 %}
+											{{Previews('比较器信息','judger-message',case.get('judger_message',''))}}
 										{% endif %}
 										{% if not IsEmpty(case.get('stderr_preview','')) %}
-											{{Previews('标准错误流',case.get('stderr_preview',''),str(width_left)+'%')}}
+											{{Previews('标准错误流','stderr',case.get('stderr_preview',''))}}
 										{% endif %}
 									</div>
 								</div>
@@ -136,13 +190,5 @@
 			<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
 		</div>
 	</div>
-	{% if not IsEmpty(submission.compilier_message) %}
-		<div class="row item-centered ivory" style="margin-top: 5px;">
-			<div class="column item-left-aligned" style="width: 92%;">
-				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 编译信息 </h2>
-				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.compilier_message|e}}</code></pre>
-			</div>
-		</div>
-	{% endif %}
 </div>
 {% endblock %}

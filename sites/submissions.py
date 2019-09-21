@@ -55,6 +55,21 @@ def NewSubmission(problem_id,contest_id=0):
 
 	return modules.ReturnJSON({ 'success': True, 'message': '提交成功', 'submission_id': id })
 
+def SubmissionRejudgeRun(submission_id):
+	submission_info = GetSubmissionInfo(submission_id)
+	operator = modules.GetCurrentOperator()
+	if submission_info == None:
+		return modules.ReturnJSON({ 'success': False, 'message': '无此提交'})
+	if not modules.CheckPrivilegeOfProblem(operator,submission_info['problem_id']):
+		return modules.ReturnJSON({ 'success': False, 'message': '无此权限'})
+
+	db.Execute('UPDATE submissions SET status=1 WHERE id=%s',submission_id)
+
+	redis = reedis.NewConnection()
+	redis.rpush('intoj-waiting-judge',submission_id)
+
+	return modules.ReturnJSON({ 'success': True, 'message': '成功重测' })
+
 # statics
 
 def GetColorOfScore(a,fullscore=100):

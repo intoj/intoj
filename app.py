@@ -79,6 +79,10 @@ def SubmissionList():
 def Submission(submission_id):
 	return sites.submissions.SubmissionRun(submission_id)
 
+@app.route('/submission/<int:submission_id>/rejudge')
+def SubmissionRejudge(submission_id):
+	return sites.submissions.SubmissionRejudgeRun(submission_id)
+
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
