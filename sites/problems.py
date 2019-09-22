@@ -40,7 +40,7 @@ def ProblemRun(problem_id):
 
 def ProblemAddRun():
 	operator = modules.GetCurrentOperator()
-	if not modules.CheckPrivilege(operator,['prblemset_manager','problem_owner']):
+	if not modules.CheckPrivilege(operator,['problemset_manager','problem_owner']):
 		return modules.RedirectBack(error_message='无此权限')
 	if request.method == 'GET':
 		return render_template('problemadd.html')
