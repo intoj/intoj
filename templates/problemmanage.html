@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %} 管理 #{{problem.id}}. {{problem.title}} {% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 1100px;">
+	<form method="POST" class="row item-centered" style="align-items: flex-start">
+		<div class="column item-centered" style="width: 24%; height: auto !important; margin-right: 10px;">
+			<div class="row item-centered ivory">
+				<div class="column item-centered">
+					<h2 class="title" style="font-size: 30px;"> 管理题目 - #{{problem.id}} </h2>
+					<a class="button button-primary button-small" style="margin-bottom: 12px; width: 70%;" href="/problem/{{problem.id}}" target="_blank"> 打开前台 </a>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<div class="column item-centered">
+					<h2 class="title"> 时空限制 </h2>
+					<div class="row item-centered login-input" style="width: 90%">
+						<i class="fa fa-clock-o fa-fw"></i>
+						<input class="login-input item-centered" style="width: 70%;" type="number" name="new_time_limit" value="{{problem.time_limit}}"> </input>
+						<span style="width: 40px;"> ms </span>
+					</div>
+					<div class="row item-centered login-input" style="width: 90%">
+						<i class="fa fa-microchip fa-fw"></i>
+						<input class="login-input item-centered" style="width: 70%;" type="number" name="new_memory_limit" value="{{problem.memory_limit}}"> </input>
+						<span style="width: 40px;"> MB </span>
+					</div>
+				</div>
+			</div>
+			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<button class="button button-action" style="width: 100%" type="submit"> 提交 </button>
+			</div>
+		</div>
+		<div class="column item-centered ivory" style="width: 76%; height: auto !important">
+			<div class="row item-centered ivory">
+				<div class="column item-left-aligned" style="width: 96%">
+					<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
+					<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据 </h2>
+					<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据配置文件 </h2>
+					<textarea id="data-config-editor" name="new_data_config" style="width: 100%;">{{problem.data_config}}</textarea>
+					<script>
+						window.code_editor = CodeMirror.fromTextArea(document.getElementById("data-config-editor"),{
+							mode: "application/json",
+							lineNumbers: true,
+							theme: "solarized light",
+							lineWrapping: true,
+							foldGutter: true,
+							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+							matchBrackets: true,
+							indentUnit: 4,
+							indentWithTabs: true,
+							cursorHeight: 0.85
+						});
+						code_editor.setSize('100%','300px');
+					</script>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -62,13 +62,10 @@ function DoRegister(){
 		},
 		success: function(data){
 			if( data.success == true ){
-				layer.alert(data.message,{
-					title: '注册成功',
-					icon: 1,
-					yes: function(){
-						window.location.href = '/login'
-					}
-				})
+				layer.msg('注册成功!');
+				setTimeout(function(){
+					window.location.href = '/login'
+				},600)
 			}else{
 				layer.alert(data.message,{
 					title: '注册失败',

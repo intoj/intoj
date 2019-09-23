@@ -43,21 +43,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class="row item-centered ivory" style="margin-top: 10px;">
-				<div class="column item-centered">
-					<h2 class="title"> 时空限制 </h2>
-					<div class="row item-centered login-input" style="width: 90%">
-						<i class="fa fa-clock-o fa-fw"></i>
-						<input class="login-input item-centered" style="width: 70%;" type="number" id="new-time-limit" value="{{problem.time_limit}}"> </input>
-						<span style="width: 40px;"> ms </span>
-					</div>
-					<div class="row item-centered login-input" style="width: 90%">
-						<i class="fa fa-microchip fa-fw"></i>
-						<input class="login-input item-centered" style="width: 70%;" type="number" id="new-memory-limit" value="{{problem.memory_limit}}"> </input>
-						<span style="width: 40px;"> MB </span>
-					</div>
-				</div>
-			</div> -->
 			<div class="row item-centered ivory" style="margin-top: 10px;">
 				<div class="column item-centered">
 					<h2 class="title"> 公开 </h2>
@@ -103,7 +88,6 @@
 						<h2 class="row title" style="margin-left: 10px; font-size: 30px; color: #44aadd"> {{name}} </h2>
 						<div id="editor-{{tagname}}">
 							<textarea class="editormd-markdown-textarea" id="editor-{{tagname}}-markdown">{{content|e}}</textarea>
-							<textarea class="editormd-html-textarea" id="editor-{{tagname}}-htmlcode"></textarea>
 						</div>
 						<script>
 							var editor = editormd("editor-{{tagname}}",{
@@ -112,7 +96,6 @@
 					            path: "/static/modules/editormd/lib/",
 								toolbarAutoFixed: false,
 								tex: true,
-								saveHTMLToTextarea: true,
 								toolbarIcons: "simple"
 					        });
 						</script>
@@ -227,6 +210,8 @@ var DoSubmit = function(){
 						window.location.href = '/problem/'+datapack['new_problem_id']
 					},
 					btn2: function(){
+						if( datapack['new_problem_id'] != {{problem.id}} )
+							window.location.href = '/problem/'+datapack['new_problem_id']+'/edit'
 						return
 					}
 				})

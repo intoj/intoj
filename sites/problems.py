@@ -1,6 +1,6 @@
 #coding:utf-8
 from flask import *
-import json
+import json, os
 import db, modules, config
 
 def GetProblemInfo(problem_id):
@@ -42,6 +42,7 @@ def ProblemAddRun():
 	operator = modules.GetCurrentOperator()
 	if not modules.CheckPrivilege(operator,['problemset_manager','problem_owner']):
 		return modules.RedirectBack(error_message='无此权限')
+
 	if request.method == 'GET':
 		return render_template('problemadd.html')
 	else:
@@ -50,17 +51,18 @@ def ProblemAddRun():
 		default_time_limit = config.config['default']['problem']['time_limit']
 		default_memory_limit = config.config['default']['problem']['memory_limit']
 		db.Execute('INSERT INTO problems(id,title,provider,time_limit,memory_limit) VALUES(%s,%s,%s,%s,%s)',(id,request.form['title'],operator,default_time_limit,default_memory_limit))
+		os.system('mkdir %s'%os.path.join(config.config['data_path'],str(id)))
 		return redirect('/problem/%d'%id)
 
 def ProblemEditRun(problem_id):
 	operator = modules.GetCurrentOperator()
+	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
+		return modules.RedirectBack(error_message='无此权限')
 	probleminfo = GetProblemInfo(problem_id)
 	if probleminfo == None:
 		return modules.RedirectBack(error_message='无此题目')
 	probleminfo['examples'] = GetProblemExamples(problem_id)
 
-	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
-		return modules.RedirectBack(error_message='无此权限')
 	if request.method == 'GET':
 		return render_template('problemedit.html',problem=probleminfo)
 	else:
@@ -69,6 +71,10 @@ def ProblemEditRun(problem_id):
 			is_duplicate = db.Execute('SELECT COUNT(*) FROM problems WHERE id=%s',new_problem_id)[0]['COUNT(*)']
 			if is_duplicate:
 				return modules.ReturnJSON({ 'success': False, 'message': '新 id 已存在' })
+			os.system('mv %s %s'%
+						(os.path.join(config.config['data_path'],str(problem_id)),
+						os.path.join(config.config['data_path'],str(new_problem_id)))
+					)
 		db.Execute('UPDATE problems SET id=%s, title=%s, background=%s, \
 					description=%s, input_format=%s, output_format=%s, \
 					limit_and_hint=%s, is_public=%s WHERE id=%s',
@@ -94,6 +100,35 @@ def ProblemDeleteRun(problem_id):
 	operator = modules.GetCurrentOperator()
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
 		return modules.RedirectBack(error_message='无此权限')
+
 	db.Execute('DELETE FROM problems WHERE id=%s',problem_id)
+	os.system('rm -rf %s'%os.path.join(config.config['data_path'],str(problem_id)))
 	flash('成功删除题目 #%d'%problem_id,'ok')
 	return redirect('/problems')
+
+def ProblemManageRun(problem_id):
+	operator = modules.GetCurrentOperator()
+	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
+		return modules.RedirectBack(error_message='无此权限')
+	problem = GetProblemInfo(problem_id)
+	if problem == None:
+		return modules.RedirectBack(error_message='无此题目')
+
+	testdata_path = os.path.join(config.config['data_path'],str(problem_id))
+	if request.method == 'GET':
+		try: problem['data_config'] = open(os.path.join(testdata_path,'config.json'),'r').read()
+		except: problem['data_config'] = ''
+		return modules.render_template('problemmanage.html',problem=problem)
+	else:
+		open(os.path.join(testdata_path,'config.json'),'w').write(request.form['new_data_config'])
+		try:
+			_tmp = json.loads(request.form['new_data_config'])
+		except:
+			flash('json 格式有误','error')
+			return redirect('/problem/%d/manage'%problem_id)
+		db.Execute('UPDATE problems SET time_limit=%s, memory_limit=%s WHERE id=%s',
+					(request.form['new_time_limit'],
+					 request.form['new_memory_limit'],
+					 problem_id))
+		flash('修改成功','ok')
+		return redirect('/problem/%d/manage'%problem_id)

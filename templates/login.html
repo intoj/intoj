@@ -45,15 +45,12 @@ function DoLogin(){
 		},
 		success: function(data){
 			if( data.success == true ){
-				layer.alert(data.message,{
-					title: '登录成功',
-					icon: 1,
-					yes: function(){
-						document.cookie = "username="+data.username+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
-						document.cookie = "client_key="+data.client_key+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
-						window.location.href = '/'
-					}
-				})
+				document.cookie = "username="+data.username+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
+				document.cookie = "client_key="+data.client_key+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
+				layer.msg('登录成功!');
+				setTimeout(function(){
+					window.location.href = `/`
+				},600)
 			}else{
 				layer.alert(data.message,{
 					title: '登录失败',

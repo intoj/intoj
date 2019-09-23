@@ -12,6 +12,7 @@ import sites
 app = Flask('intoj')
 sites.config.ReadFromFile('config.json')
 app.secret_key = sites.config.config['site']['secret_key']
+sites.config.config['data_path'] = os.path.abspath('data')
 
 app.add_template_global(min,'min')
 app.add_template_global(max,'max')
@@ -67,9 +68,13 @@ def ProblemAdd():
 def ProblemEdit(problem_id):
 	return sites.problems.ProblemEditRun(problem_id)
 
-@app.route('/problem/<int:problem_id>/delete',methods=['GET','POST'])
+@app.route('/problem/<int:problem_id>/delete')
 def ProblemDelete(problem_id):
 	return sites.problems.ProblemDeleteRun(problem_id)
+
+@app.route('/problem/<int:problem_id>/manage',methods=['GET','POST'])
+def ProblemManage(problem_id):
+	return sites.problems.ProblemManageRun(problem_id)
 
 @app.route('/submissions')
 def SubmissionList():
