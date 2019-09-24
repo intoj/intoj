@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
 {% block title %} 管理 #{{problem.id}}. {{problem.title}} {% endblock %}
+{% block head %}
+<style>
+p.notice{
+	color: #999;
+	margin: 0px 0px;
+	font-size: 12px;
+}
+</style>
+{% endblock %}
 {% block body %}
 <div class="column item-centered" style="width: 1100px;">
-	<form method="POST" class="row item-centered" style="align-items: flex-start">
+	<form method="POST" class="row item-centered" style="align-items: flex-start" enctype=multipart/form-data>
 		<div class="column item-centered" style="width: 24%; height: auto !important; margin-right: 10px;">
 			<div class="row item-centered ivory">
 				<div class="column item-centered">
@@ -26,31 +35,64 @@
 				</div>
 			</div>
 			<div class="row item-centered ivory" style="margin-top: 10px;">
+				<input type="hidden" name="type" value="data_upload">
 				<button class="button button-action" style="width: 100%" type="submit"> 提交 </button>
 			</div>
 		</div>
 		<div class="column item-centered ivory" style="width: 76%; height: auto !important">
 			<div class="row item-centered ivory">
-				<div class="column item-left-aligned" style="width: 96%">
+				<div class="column item-centered" style="width: 96%">
 					<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
-					<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据 </h2>
-					<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据配置文件 </h2>
-					<textarea id="data-config-editor" name="new_data_config" style="width: 100%;">{{problem.data_config}}</textarea>
-					<script>
-						window.code_editor = CodeMirror.fromTextArea(document.getElementById("data-config-editor"),{
-							mode: "application/json",
-							lineNumbers: true,
-							theme: "solarized light",
-							lineWrapping: true,
-							foldGutter: true,
-							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-							matchBrackets: true,
-							indentUnit: 4,
-							indentWithTabs: true,
-							cursorHeight: 0.85
-						});
-						code_editor.setSize('100%','300px');
-					</script>
+					<div class="row item-centered">
+						<div class="column item-left-aligned" style="width: 100%">
+							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据 </h2>
+							<button class="button button-action" id="files-trigger"> 显示数据文件 </button>
+							<div class="row item-centered" id="files" style="display: none">
+								<div class="column item-centered" style="width: 100%;">
+									{% for file in problem.files %}
+									<div class="row hover-animation item-vertical-centered" style="height: 38px;">
+										<span class="row item-centered" style="width: 50%"> {{file}} </span>
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+							<script>
+								$("#files-trigger").click(function(e){
+									e.preventDefault()
+									$("#files").slideDown("fast")
+								})
+							</script>
+						</div>
+					</div>
+					<div class="row item-centered">
+						<div class="column item-left-aligned" style="width: 100%">
+							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据配置文件 </h2>
+							<textarea id="data-config-editor" name="new_data_config" style="width: 100%;">{{problem.data_config}}</textarea>
+							<script>
+								window.code_editor = CodeMirror.fromTextArea(document.getElementById("data-config-editor"),{
+									mode: "application/json",
+									lineNumbers: true,
+									theme: "solarized light",
+									lineWrapping: true,
+									foldGutter: true,
+									gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+									matchBrackets: true,
+									indentUnit: 4,
+									indentWithTabs: true,
+									cursorHeight: 0.85
+								});
+								code_editor.setSize('100%','300px');
+							</script>
+							<p class="notice"> 详细格式请见<a href="/help">帮助</a> </p>
+						</div>
+					</div>
+					<div class="row item-centered" style="margin-bottom: 14px;">
+						<div class="column item-left-aligned" style="width: 100%">
+							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据上传 </h2>
+							<input type="file" name="data">
+							<p class="notice"> 请使用 zip 格式，上传的数据将<b>完全取代</b>之前的。 </p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

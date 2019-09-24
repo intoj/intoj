@@ -11,8 +11,11 @@ import sites
 
 app = Flask('intoj')
 sites.config.ReadFromFile('config.json')
-app.secret_key = sites.config.config['site']['secret_key']
 sites.config.config['data_path'] = os.path.abspath('data')
+app.secret_key = sites.config.config['site']['secret_key']
+app.config['MAX_CONTENT_LENGTH'] = sites.config.config['limits']['max_data_package_size']*1024*1024
+sites.config.config['session_path'] = os.path.abspath('session')
+app.config['UPLOAD_FOLDER'] = os.path.abspath('session')
 
 app.add_template_global(min,'min')
 app.add_template_global(max,'max')

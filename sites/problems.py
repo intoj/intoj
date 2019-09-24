@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import *
 import json, os
-import db, modules, config
+import db, modules, config, random
 
 def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
@@ -118,17 +118,46 @@ def ProblemManageRun(problem_id):
 	if request.method == 'GET':
 		try: problem['data_config'] = open(os.path.join(testdata_path,'config.json'),'r').read()
 		except: problem['data_config'] = ''
+		files = sorted(os.listdir(testdata_path))
+		problem['files'] = files
 		return modules.render_template('problemmanage.html',problem=problem)
 	else:
-		open(os.path.join(testdata_path,'config.json'),'w').write(request.form['new_data_config'])
-		try:
-			_tmp = json.loads(request.form['new_data_config'])
-		except:
-			flash('json 格式有误','error')
+		if request.form['type'] == 'data_upload':
+			open(os.path.join(testdata_path,'config.json'),'w').write(request.form['new_data_config'])
+			try:
+				_tmp = json.loads(request.form['new_data_config'])
+			except:
+				flash('json 格式有误','error')
+				return redirect('/problem/%d/manage'%problem_id)
+
+			db.Execute('UPDATE problems SET time_limit=%s, memory_limit=%s WHERE id=%s',
+						(request.form['new_time_limit'],
+						 request.form['new_memory_limit'],
+						 problem_id))
+
+			file = request.files['data']
+			if file.filename != '':
+				if '.' not in file.filename or file.filename.rsplit('.', 1)[1] != 'zip':
+					flash('文件格式应为 zip','error')
+					return redirect('/problem/%d/manage'%problem_id)
+				filename = str(random.randint(1,10)) + '.zip'
+				filepath = os.path.join(config.config['session_path'],filename)
+				file.save(filepath)
+
+				check_ok = os.system('unzip -t -qq %s'%filepath)
+				if check_ok != 0:
+					flash('无效的 zip 格式','error')
+					return redirect('/problem/%d/manage'%problem_id)
+
+				testdata_path = os.path.join(config.config['data_path'],str(problem_id))
+				config_path = os.path.join(testdata_path,'config.json')
+				config_bkup_path = os.path.join(config.config['session_path'],'config.json.bkup')
+				os.system('cp %s %s'%(config_path,config_bkup_path))
+				os.system('rm -rf %s'%testdata_path)
+				os.system('mkdir %s'%testdata_path)
+				print('Extracting testdata for problem %d...'%problem_id)
+				os.system('unzip %s -d %s'%(filepath,testdata_path))
+				os.system('cp %s %s'%(config_bkup_path,config_path))
+
+			flash('修改成功','ok')
 			return redirect('/problem/%d/manage'%problem_id)
-		db.Execute('UPDATE problems SET time_limit=%s, memory_limit=%s WHERE id=%s',
-					(request.form['new_time_limit'],
-					 request.form['new_memory_limit'],
-					 problem_id))
-		flash('修改成功','ok')
-		return redirect('/problem/%d/manage'%problem_id)
