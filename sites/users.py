@@ -48,6 +48,8 @@ def UserEditRun(username):
 			return modules.RedirectBack('密码错误（密码应是当前登录的用户的密码）')
 		if len(request.form['realname']) > 16:
 			return modules.RedirectBack('真实姓名过长（限制为 16 字符）')
+		if not modules.IsVaildUsername(request.form['realname']):
+			return modules.RedirectBack('真实姓名中不能包含特殊符号')
 		if len(request.form['new_password'].strip()) != 0:
 			new_password = request.form['new_password'].strip()
 			if new_password != request.form['repeat_new_password'].strip():

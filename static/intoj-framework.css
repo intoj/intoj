@@ -2,11 +2,13 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	border-radius: 2px;
 }
 .row{
 	display: flex;
 	flex-direction: row;
 	width: 100%;
+	border-radius: 2px;
 }
 .item-vertical-centered:not(.column){	/* 竖直方向上居中 */
 	display: flex;

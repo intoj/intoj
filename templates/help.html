@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %} 帮助 {% endblock %}
+{% block body %}
+<div class="column item-centered ivory" style="width: 1020px;">
+	<h1 style="margin-top: 16px;"> 帮助 </h1>
+	<div class="row item-centered">
+		<div class="column havemarkdown item-left-aligned" style="width: 90%">
+
+## 编译器及编译参数
+
+目前只支持 c++ 语言，编译命令为 `g++ {source} -o {exe} -O2 -std=c++17 -fmax-errors=4 -w`。其中 `-fmax-errors=4` 表示编译器最多输出 4 条错误信息，`-w` 表示编译器不会输出任何警告信息。
+
+## 数据上传及配置
+
+目前上传数据时，请上传一个 `zip` 文件，里面**不要**包含文件夹。上传的 `zip` 文件中的内容将**完全替换**之前上传的，也就是说，之前该题的**所有数据**均会被删除。
+
+目前不支持 subtask 评测，数据配置文件有且只有一种格式：
+
+```json
+{
+	"testcasesCount": 2,
+	"prefix": "aplusb",
+	"inputSuffix": ".in",
+	"outputSuffix": ".out"
+}
+```
+
+`testcasesCount` 表示 一共有 `testcasesCount` 组数据，每组数据的输入文件的文件名是 `prefix+str(id)+inputSuffix`，输出文件的文件名是 `prefix+str(id)+outputSuffix`。`id` 的范围是 $[1,\mathrm{testcasesCount}]$
+
+上面那份配置文件所对应的数据就是 `aplusb1.in`，`aplusb1.out`，`aplusb2.in`，`aplusb2.out`。
+		</div>
+	</div>
+</div>
+{% endblock %}

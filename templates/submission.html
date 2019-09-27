@@ -75,9 +75,12 @@
 			<div class="row item-vertical-centered" style="justify-content: space-between">
 				<h2 class="title" style="margin-left: 30px;"> 测试点信息 </h2>
 				{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
-					<button class="button button-primary button-small" id="rejudge-button"> 重新测试 </button>
+					<div class="item-centered">
+						<button class="button button-primary button-small" id="rejudge-button"> 重新测试 </button>
+						<button class="button button-caution button-small" id="delete-button"> 删除这份提交 </button>
+					</div>
 					<script>
-						$("#rejudge-button").click(function(){
+						var DoRejudge = function(){
 							layer.alert('重测提交 #{{submission.id}} by {{submission.submitter}}?',{
 								title: '确认重测',
 								icon: 3,
@@ -117,7 +120,50 @@
 									return
 								}
 							})
-						})
+						}
+						var DoDeleteSubmission = function(){
+							layer.alert('删除提交 #{{submission.id}} by {{submission.submitter}}?',{
+								title: '确认删除',
+								icon: 3,
+								btn: ['确认','算了'],
+								yes: function(){
+									$.ajax({
+										url: '/submission/{{submission.id}}/delete',
+										method: 'GET',
+										error: function(message){
+											console.log('错误：');
+											console.log(message);
+											layer.alert('出现异常。<br />详细信息请查看控制台。',{
+												title: '错误',
+												icon: 2
+											})
+										},
+										success: function(data){
+											if( data.success == true ){
+												layer.alert(data.message,{
+													title: '成功删除',
+													icon: 1,
+													yes: function(){
+														window.location.href = '/submissions'
+													}
+												})
+											}else{
+												layer.alert(data.message,{
+													title: '删除失败',
+													icon: 2
+												})
+											}
+										}
+									})
+
+								},
+								btn2: function(){
+									return
+								}
+							})
+						}
+						$("#rejudge-button").click(function(){DoRejudge();})
+						$("#delete-button").click(function(){DoDeleteSubmission();})
 					</script>
 				{% endif %}
 			</div>

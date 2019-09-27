@@ -45,7 +45,7 @@ def RedirectBack( error_message = None , ok_message = None ):
 	if ok_message != None:
 		flash(ok_message,'ok')
 	url = request.referrer
-	if url == None or url == request.url: url = '/'
+	if url == None or ( request.method == 'GET' and url == request.url ): url = '/'
 	return redirect(url)
 
 def ParseInt( s , default = 0 , limit_l = int(-1e9) ,limit_r = int(1e9) ):

@@ -70,6 +70,17 @@ def SubmissionRejudgeRun(submission_id):
 
 	return modules.ReturnJSON({ 'success': True, 'message': '成功重测' })
 
+def SubmissionDeleteRun(submission_id):
+	submission_info = GetSubmissionInfo(submission_id)
+	operator = modules.GetCurrentOperator()
+	if submission_info == None:
+		return modules.ReturnJSON({ 'success': False, 'message': '无此提交'})
+	if not modules.CheckPrivilegeOfProblem(operator,submission_info['problem_id']):
+		return modules.ReturnJSON({ 'success': False, 'message': '无此权限'})
+
+	db.Execute('DELETE FROM submissions WHERE id=%s',submission_id)
+	return modules.ReturnJSON({ 'success': True, 'message': '成功删除' })
+
 # statics
 
 def GetColorOfScore(a,fullscore=100):

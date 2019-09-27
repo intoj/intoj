@@ -91,6 +91,10 @@ def Submission(submission_id):
 def SubmissionRejudge(submission_id):
 	return sites.submissions.SubmissionRejudgeRun(submission_id)
 
+@app.route('/submission/<int:submission_id>/delete')
+def SubmissionDelete(submission_id):
+	return sites.submissions.SubmissionDeleteRun(submission_id)
+
 @app.route('/users')
 def UserList():
 	return sites.users.UserListRun()
@@ -102,3 +106,7 @@ def UserHome(username):
 @app.route('/user/<string:username>/edit',methods=['GET','POST'])
 def UserEdit(username):
 	return sites.users.UserEditRun(username)
+
+@app.route('/help')
+def Help():
+	return render_template('help.html')
