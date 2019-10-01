@@ -1,6 +1,7 @@
 #coding:utf-8
 from flask import *
-import sys,os,time
+import werkzeug
+import sys, os, time
 reload(sys)
 sys.dont_write_bytecode = True
 sys.setdefaultencoding('utf-8')
@@ -25,6 +26,7 @@ app.add_template_global(round,'round')
 
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')
+app.add_template_global(sites.modules.GetColorOfScore,'GetColorOfScore')
 app.add_template_global(sites.modules.IsEmpty,'IsEmpty')
 app.add_template_global(sites.modules.ScoreRounding,'ScoreRounding')
 app.add_template_global(sites.modules.GetArgsAsString,'GetArgsAsString')
@@ -35,10 +37,23 @@ app.add_template_global(sites.modules.ValidatePassword,'ValidatePassword')
 app.add_template_global(sites.modules.ValidateClientkey,'ValidateClientkey')
 app.add_template_global(sites.modules.CheckPrivilege,'CheckPrivilege')
 app.add_template_global(sites.modules.CheckPrivilegeOfProblem,'CheckPrivilegeOfProblem')
-app.add_template_global(sites.submissions.id_to_word,'id_to_word')
-app.add_template_global(sites.submissions.id_to_sign,'id_to_sign')
-app.add_template_global(sites.submissions.id_to_color,'id_to_color')
-app.add_template_global(sites.submissions.GetColorOfScore,'GetColorOfScore')
+app.add_template_global(sites.static.id_to_word,'id_to_word')
+app.add_template_global(sites.static.id_to_sign,'id_to_sign')
+app.add_template_global(sites.static.id_to_color,'id_to_color')
+
+def SecurityCheck(app,**extra):
+	def CheckIfLoginIsRequired():
+		if sites.config.config['security']['login_required']:
+			url = request.path
+			if '..' not in url and url.find('/static') == 0: return
+			if url == '/login' or url == '/register': return
+			operator = sites.modules.GetCurrentOperator()
+			if operator != None: return
+			flash('请先登录','error')
+			abort(redirect('/login'))
+	CheckIfLoginIsRequired()
+
+request_started.connect(SecurityCheck)
 
 @app.route('/')
 def Index():

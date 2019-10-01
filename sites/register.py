@@ -1,11 +1,15 @@
 #coding:utf-8
 from flask import *
-import db, modules, hashlib
+import config, db, modules, hashlib
 
 def Run():
 	if request.method == 'GET':
+		if not config.config['security']['allow_registration']:
+			flash('先提醒一句：当前禁止注册。如需要注册，请联系管理员。','error')
 		return render_template('register.html')
 	else:
+		if not config.config['security']['allow_registration']:
+			return modules.ReturnJSON({ 'success': False, 'message': '当前禁止注册' })
 		username, password, repeat_password, salt = \
 			request.form['username'], request.form['password'], request.form['repeat_password'], request.form['salt']
 		if password != repeat_password:

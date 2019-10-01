@@ -3,6 +3,16 @@ from flask import *
 import json, hashlib
 import db, config
 
+def GetColorOfScore(a,fullscore=100):
+	a = float(a)
+	fullscore = float(fullscore)
+	if a <= fullscore/2:
+		g = int( (a/fullscore) * (255+255-80) )
+		return "rgb(255,%d,0)" % g
+	else:
+		r = int( (1.0-a/fullscore) * (255+255) )
+		return "rgb(%d,220,0)" % r
+		
 def IsEmpty(s):
 	return s == None or s.strip() == ''
 def ScoreRounding(score):
@@ -48,7 +58,7 @@ def RedirectBack( error_message = None , ok_message = None ):
 	if url == None or ( request.method == 'GET' and url == request.url ): url = '/'
 	return redirect(url)
 
-def ParseInt( s , default = 0 , limit_l = int(-1e9) ,limit_r = int(1e9) ):
+def ParseInt( s , default = 0 , limit_l = int(-1e9) , limit_r = int(1e9) ):
 	if s == None or not s.isdigit(): return default
 	try:
 		s = int(s)
