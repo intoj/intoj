@@ -63,6 +63,10 @@ def Problem(problem_id):
 	else:
 		return sites.submissions.NewSubmission(problem_id)
 
+@app.route('/problem/<int:problem_id>/download')
+def ProblemTestdataDownload(problem_id):
+	return sites.problems.ProblemTestdataDownloadRun(problem_id)
+
 @app.route('/problemadd',methods=['GET','POST'])
 def ProblemAdd():
 	return sites.problems.ProblemAddRun()

@@ -38,32 +38,28 @@ p.notice{
 				<input type="hidden" name="type" value="data_upload">
 				<button class="button button-action" style="width: 100%" type="submit"> 提交 </button>
 			</div>
+			<div class="row item-centered ivory" style="margin-top: 30px;">
+				<div class="column item-centered" style="width: 100%">
+					<h2 class="title"> 测试点 </h2>
+					<div class="row item-centered">
+						<div class="column item-centered" style="width: 80%;">
+							{% for file in problem.files %}
+							<div class="row hover-animation item-vertical-centered" style="height: 34px;">
+								<span class="row item-left-aligned" style="width: 45%; margin-left: 5%;"> {{file}} </span>
+								<a href="/problem/{{problem.id}}/download?filename={{file}}" class="button button-square button-small"> <i class="fa fa-download fa-fw"></i> </a>
+								<a class="button button-square button-small"> <i class="fa fa-eye fa-fw"></i> </a>
+								<span class="button button-square button-small"> <i class="fa fa-trash fa-fw"></i> </span>
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<div class="column item-centered ivory" style="width: 76%; height: auto !important">
 			<div class="row item-centered ivory">
 				<div class="column item-centered" style="width: 96%">
 					<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
-					<div class="row item-centered">
-						<div class="column item-left-aligned" style="width: 100%">
-							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据 </h2>
-							<button class="button button-action" id="files-trigger"> 显示数据文件 </button>
-							<div class="row item-centered" id="files" style="display: none">
-								<div class="column item-centered" style="width: 100%;">
-									{% for file in problem.files %}
-									<div class="row hover-animation item-vertical-centered" style="height: 38px;">
-										<span class="row item-centered" style="width: 50%"> {{file}} </span>
-									</div>
-									{% endfor %}
-								</div>
-							</div>
-							<script>
-								$("#files-trigger").click(function(e){
-									e.preventDefault()
-									$("#files").slideDown("fast")
-								})
-							</script>
-						</div>
-					</div>
 					<div class="row item-centered">
 						<div class="column item-left-aligned" style="width: 100%">
 							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据配置文件 </h2>

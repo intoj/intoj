@@ -1,5 +1,6 @@
 #coding:utf-8
 from flask import *
+from werkzeug import secure_filename
 import json, os
 import db, modules, config, random
 
@@ -37,6 +38,11 @@ def ProblemRun(problem_id):
 		return modules.RedirectBack(error_message='无此题目')
 	probleminfo['examples'] = GetProblemExamples(problem_id)
 	return render_template('problem.html',problem=probleminfo)
+
+def ProblemTestdataDownloadRun(problem_id):
+	filename = secure_filename(request.args['filename'])
+	testdata_path = os.path.join(config.config['data_path'],str(problem_id))
+	return send_from_directory(testdata_path,filename,as_attachment=True)
 
 def ProblemAddRun():
 	operator = modules.GetCurrentOperator()

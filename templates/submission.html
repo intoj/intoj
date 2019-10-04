@@ -99,13 +99,10 @@
 										},
 										success: function(data){
 											if( data.success == true ){
-												layer.alert(data.message,{
-													title: '成功重测',
-													icon: 1,
-													yes: function(){
-														window.location.href = '/submission/{{submission.id}}'
-													}
-												})
+												layer.msg('成功重测!');
+												setTimeout(function(){
+													window.location.href = '/submission/{{submission.id}}'
+												},600)
 											}else{
 												layer.alert(data.message,{
 													title: '重测失败',
@@ -140,13 +137,10 @@
 										},
 										success: function(data){
 											if( data.success == true ){
-												layer.alert(data.message,{
-													title: '成功删除',
-													icon: 1,
-													yes: function(){
-														window.location.href = '/submissions'
-													}
-												})
+												layer.msg('成功删除')
+												setTimeout(function(){
+													window.location.href = '/submissions'
+												},600)
 											}else{
 												layer.alert(data.message,{
 													title: '删除失败',
