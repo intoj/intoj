@@ -27,6 +27,11 @@
 		}
 	},
 	"limits": {
-		"max_code_length": 100
+		"max_code_length": 100,
+		"max_data_package_size": 256
+	},
+	"security": {
+		"allow_registration": true,
+		"login_required": false
 	}
 }

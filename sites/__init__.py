@@ -5,5 +5,6 @@ from . import login
 from . import problems
 from . import reedis
 from . import register
+from . import static
 from . import submissions
 from . import users
