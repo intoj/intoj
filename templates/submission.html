@@ -32,7 +32,7 @@
 				</span>
 				<span class="column item-centered" style="width: 6%;">
 					<a href="/submission/{{submission.id}}" style="color: {{GetColorOfScore(submission.score)}}">
-						{{ScoreRounding(submission.score)}}
+						{{ScoreRounding(submission.score,2)}}
 					</a>
 				</span>
 				<span class="column item-centered" style="width: 16%; font-size: 16px;">
@@ -172,7 +172,7 @@
 							</span>
 							{% if case.status not in [0,1] %}
 								<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
-									{{ScoreRounding(case.score)}}
+									{{ScoreRounding(case.score,4)}}
 								</span>
 								<span class="column item-centered" style="width: 8%; font-size: 16px;">
 									{{case.time_usage}}ms

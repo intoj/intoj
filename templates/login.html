@@ -49,7 +49,7 @@ function DoLogin(){
 				document.cookie = "client_key="+data.client_key+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"
 				layer.msg('登录成功!');
 				setTimeout(function(){
-					window.location.href = `/`
+					window.location.href = '/'
 				},600)
 			}else{
 				layer.alert(data.message,{

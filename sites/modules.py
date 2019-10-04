@@ -12,12 +12,12 @@ def GetColorOfScore(a,fullscore=100):
 	else:
 		r = int( (1.0-a/fullscore) * (255+255) )
 		return "rgb(%d,220,0)" % r
-		
+
 def IsEmpty(s):
 	return s == None or s.strip() == ''
-def ScoreRounding(score):
+def ScoreRounding( score , precision = 2 ):
 	if score == None: return 0
-	return int(score) if float(score) - int(score) < 0.01 else float(score)
+	return int(score) if float(score) - int(score) < 0.01 else round(float(score),precision)
 def GetArgsAsString(ignore=[]):
 	arg = ""
 	for key,value in request.args.items():
