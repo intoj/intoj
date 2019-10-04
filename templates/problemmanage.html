@@ -42,13 +42,15 @@ p.notice{
 				<div class="column item-centered" style="width: 100%">
 					<h2 class="title"> 测试点 </h2>
 					<div class="row item-centered">
-						<div class="column item-centered" style="width: 80%;">
+						<div class="column item-centered" style="width: 90%;">
 							{% for file in problem.files %}
-							<div class="row hover-animation item-vertical-centered" style="height: 34px;">
-								<span class="row item-left-aligned" style="width: 45%; margin-left: 5%;"> {{file}} </span>
+							<div class="row hover-animation item-vertical-centered" style="height: 34px; justify-content: space-between">
+								<span class="item-left-aligned" style="width: 45%; margin-left: 5%;"> {{file}} </span>
+								<span class="item-centered">
 								<a href="/problem/{{problem.id}}/download?filename={{file}}" class="button button-square button-small"> <i class="fa fa-download fa-fw"></i> </a>
 								<a class="button button-square button-small"> <i class="fa fa-eye fa-fw"></i> </a>
 								<span class="button button-square button-small"> <i class="fa fa-trash fa-fw"></i> </span>
+								</span>
 							</div>
 							{% endfor %}
 						</div>
