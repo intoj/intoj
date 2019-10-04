@@ -20,8 +20,9 @@ def GetUserInfo(username):
 def UserListRun():
 	per_page = config.config['site']['per_page']['user_ranklist']
 	current_page = modules.GetCurrentPage()
+	total_page = (db.Execute('SELECT COUNT(*) FROM users')[0]['COUNT(*)']+per_page-1) / per_page;
 	users = db.Execute('SELECT * FROM users ORDER BY rating DESC LIMIT %s OFFSET %s',(per_page,per_page*(current_page-1)))
-	return render_template('userlist.html',users=users,current_page=current_page)
+	return render_template('userlist.html',users=users,pageinfo={ 'per': per_page, 'tot': total_page })
 
 def UserHomeRun(username):
 	userinfo = GetUserInfo(username)
