@@ -11,7 +11,8 @@ id_to_word = {
 	9: 'Runtime Error',
 	10: 'Partially Accepted',
 	11: 'Accepted',
-	12: 'Compilation Passed'
+	12: 'Compilation Passed',
+	13: 'Skipped'
 }
 id_to_sign = {
 	0: 'fa fa-fw fa-spinner fa-spin',
@@ -26,7 +27,8 @@ id_to_sign = {
 	9: 'fa fa-fw fa-exclamation',
 	10: 'fa fa-fw fa-adjust',
 	11: 'fa fa-fw fa-check',
-	12: 'fa fa-fw fa-check'
+	12: 'fa fa-fw fa-check',
+	13: 'fa fa-fw fa-forward'
 }
 id_to_color = {
 	0: '#66ccff',
@@ -41,5 +43,6 @@ id_to_color = {
 	9: 'purple',
 	10: '#19d960',
 	11: '#1eee1e',
-	12: '#19d960'
+	12: '#19d960',
+	13: '#999'
 }

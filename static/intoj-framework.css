@@ -10,6 +10,9 @@
 	width: 100%;
 	border-radius: 3px;
 }
+button:not(.button-rounded){
+	border-radius: 0px !important;
+}
 .item-vertical-centered:not(.column){	/* 竖直方向上居中 */
 	display: flex;
 	align-items: center;

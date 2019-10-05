@@ -14,7 +14,7 @@
 
 目前上传数据时，请上传一个 `zip` 文件，里面**不要**包含文件夹。上传的 `zip` 文件中的内容将**完全替换**之前上传的，也就是说，之前该题的**所有数据**均会被删除。
 
-目前不支持 subtask 评测，数据配置文件有且只有一种格式：
+对于没有 subtask（子任务）的题目，配置文件可以这样写
 
 ```json
 {
@@ -28,6 +28,53 @@
 `testcasesCount` 表示 一共有 `testcasesCount` 组数据，每组数据的输入文件的文件名是 `prefix+str(id)+inputSuffix`，输出文件的文件名是 `prefix+str(id)+outputSuffix`。`id` 的范围是 $[1,\mathrm{testcasesCount}]$
 
 上面那份配置文件所对应的数据就是 `aplusb1.in`，`aplusb1.out`，`aplusb2.in`，`aplusb2.out`。
+
+```json
+{
+	"subtask": true,
+	"inputSuffix": ".in",
+	"outputSuffix": ".out",
+	"subtasks": [
+		{
+			"name": "Subtask1",
+			"testcasesCount": 5,
+			"prefix": "N1-",
+			"score": 10
+		},
+		{
+			"name": "Subtask2",
+			"testcasesCount": 5,
+			"prefix": "N2-",
+			"score": 10
+		},
+		{
+			"testcasesCount": 7,
+			"prefix": "N3-",
+			"score": 10
+		},
+		{
+			"testcasesCount": 7,
+			"prefix": "N4-",
+			"score": 10
+		},
+		{
+			"testcasesCount": 7,
+			"prefix": "N5-",
+			"score": 10
+		},
+		{
+			"testcasesCount": 7,
+			"prefix": "N6-",
+			"score": 20
+		},
+		{
+			"testcasesCount": 7,
+			"prefix": "N7-",
+			"score": 30
+		}
+	]
+}
+```
 		</div>
 	</div>
 </div>

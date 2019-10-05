@@ -1,3 +1,4 @@
+{% import "submission_macros.html" as submission_macros %}
 {% extends 'base.html' %}
 {% block title %} 提交记录 #{{submission.id}} {% endblock %}
 {% block body %}
@@ -74,152 +75,117 @@
 		<div class="column item-left-aligned" style="width: 96%;">
 			<div class="row item-vertical-centered" style="justify-content: space-between">
 				<h2 class="title" style="margin-left: 30px;"> 测试点信息 </h2>
-				{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
-					<div class="item-centered">
+				<div class="item-centered">
+					{% if submission.detail.get('subtask') == True %}
+						<button class="button button-primary button-small" id="expand-all-subtasks"> 展开所有 </button>
+						<script>
+							var ExpandAll = function(){
+								{% for subtask in submission.detail.subtasks %}
+									ExpandSubtask{{loop.index}}()
+								{% endfor %}
+							}
+							$("#expand-all-subtasks").click(function(){
+								ExpandAll();
+							})
+						</script>
+					{% endif %}
+					{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
 						<button class="button button-primary button-small" id="rejudge-button"> 重新测试 </button>
 						<button class="button button-caution button-small" id="delete-button"> 删除这份提交 </button>
-					</div>
-					<script>
-						var DoRejudge = function(){
-							layer.alert('重测提交 #{{submission.id}} by {{submission.submitter}}?',{
-								title: '确认重测',
-								icon: 3,
-								btn: ['确认','算了'],
-								yes: function(){
-									$.ajax({
-										url: '/submission/{{submission.id}}/rejudge',
-										method: 'GET',
-										error: function(message){
-											console.log('错误：');
-											console.log(message);
-											layer.alert('出现异常。<br />详细信息请查看控制台。',{
-												title: '错误',
-												icon: 2
-											})
-										},
-										success: function(data){
-											if( data.success == true ){
-												layer.msg('成功重测!');
-												setTimeout(function(){
-													window.location.href = '/submission/{{submission.id}}'
-												},600)
-											}else{
-												layer.alert(data.message,{
-													title: '重测失败',
+						<script>
+							var DoRejudge = function(){
+								layer.alert('重测提交 #{{submission.id}} by {{submission.submitter}}?',{
+									title: '确认重测',
+									icon: 3,
+									btn: ['确认','算了'],
+									yes: function(){
+										$.ajax({
+											url: '/submission/{{submission.id}}/rejudge',
+											method: 'GET',
+											error: function(message){
+												console.log('错误：');
+												console.log(message);
+												layer.alert('出现异常。<br />详细信息请查看控制台。',{
+													title: '错误',
 													icon: 2
 												})
+											},
+											success: function(data){
+												if( data.success == true ){
+													layer.msg('成功重测!');
+													setTimeout(function(){
+														window.location.href = '/submission/{{submission.id}}'
+													},600)
+												}else{
+													layer.alert(data.message,{
+														title: '重测失败',
+														icon: 2
+													})
+												}
 											}
-										}
-									})
+										})
 
-								},
-								btn2: function(){
-									return
-								}
-							})
-						}
-						var DoDeleteSubmission = function(){
-							layer.alert('删除提交 #{{submission.id}} by {{submission.submitter}}?',{
-								title: '确认删除',
-								icon: 3,
-								btn: ['确认','算了'],
-								yes: function(){
-									$.ajax({
-										url: '/submission/{{submission.id}}/delete',
-										method: 'GET',
-										error: function(message){
-											console.log('错误：');
-											console.log(message);
-											layer.alert('出现异常。<br />详细信息请查看控制台。',{
-												title: '错误',
-												icon: 2
-											})
-										},
-										success: function(data){
-											if( data.success == true ){
-												layer.msg('成功删除')
-												setTimeout(function(){
-													window.location.href = '/submissions'
-												},600)
-											}else{
-												layer.alert(data.message,{
-													title: '删除失败',
+									},
+									btn2: function(){
+										return
+									}
+								})
+							}
+							var DoDeleteSubmission = function(){
+								layer.alert('删除提交 #{{submission.id}} by {{submission.submitter}}?',{
+									title: '确认删除',
+									icon: 3,
+									btn: ['确认','算了'],
+									yes: function(){
+										$.ajax({
+											url: '/submission/{{submission.id}}/delete',
+											method: 'GET',
+											error: function(message){
+												console.log('错误：');
+												console.log(message);
+												layer.alert('出现异常。<br />详细信息请查看控制台。',{
+													title: '错误',
 													icon: 2
 												})
+											},
+											success: function(data){
+												if( data.success == true ){
+													layer.msg('成功删除')
+													setTimeout(function(){
+														window.location.href = '/submissions'
+													},600)
+												}else{
+													layer.alert(data.message,{
+														title: '删除失败',
+														icon: 2
+													})
+												}
 											}
-										}
-									})
+										})
 
-								},
-								btn2: function(){
-									return
-								}
-							})
-						}
-						$("#rejudge-button").click(function(){DoRejudge();})
-						$("#delete-button").click(function(){DoDeleteSubmission();})
-					</script>
-				{% endif %}
+									},
+									btn2: function(){
+										return
+									}
+								})
+							}
+							$("#rejudge-button").click(function(){DoRejudge();})
+							$("#delete-button").click(function(){DoDeleteSubmission();})
+						</script>
+					{% endif %}
+				</div>
 			</div>
 			<div class="row item-centered">
 				<div class="column item-centered" style="width: 98%; margin-top: 10px; margin-bottom: 20px;">
-					{% for case in submission.detail %}
-						<div id="{{loop.index}}-trigger" class="row hover-animation item-centered" style="height: 48px; flex-grow: 233; justify-content: space-around">
-							<span style="width: 6%; text-align: left;"> #{{loop.index}} </span>
-							<span style="width: 26%; color: {{id_to_color[case.status]}}; align-items: flex-end;">
-								<i class="{{id_to_sign[case.status]}}" style="margin-right: 2px;"> </i>
-								<span style="font-size: 19px;"> {{id_to_word[case.status]}} </span>
-							</span>
-							{% if case.status not in [0,1] %}
-								<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
-									{{ScoreRounding(case.score,4)}}
-								</span>
-								<span class="column item-centered" style="width: 8%; font-size: 16px;">
-									{{case.time_usage}}ms
-								</span>
-								<span class="column item-centered" style="width: 8%; font-size: 16px;">
-									{{case.memory_usage}}K
-								</span>
-							{% else %}
-								<span class="column item-centered" style="width: 8%;"> </span>
-								<span class="column item-centered" style="width: 8%;"> </span>
-								<span class="column item-centered" style="width: 8%;"> </span>
-							{% endif %}
-						</div>
-						<div id="{{loop.index}}-details" style="display: none; width: 100%;" class="item-centered">
-							<div class="row grey item-centered" style="width: 90%; margin-top: 2px; margin-bottom: 10px;">
-								{% macro Previews(name,id,text,width="30%") %}
-									<div id="{{loop.index}}-{{id}}" class="column item-horizontal-centered" style="width: {{width}}; flex-grow: 2; margin: 0px 5px 10px 5px;">
-										<h3 class="row item-left-aligned title" style="margin-left: 10px;"> &nbsp;{{name}} </h3>
-										<pre style="width: 100%;"><code class="hljs plaintext">{{text|e}}</code></pre>
-									</div>
-								{% endmacro %}
-								<div class="column item-centered" style="width: calc( 100% - 20px );">
-									<div class="row" style="justify-content: center">
-										{{Previews('输入文件','input',case.get('input_preview',''))}}
-										{{Previews('答案文件','output',case.get('output_preview',''))}}
-										{{Previews('用户输出','stdout',case.get('stdout_preview',''))}}
-									</div>
-									<div class="row" style="justify-content: space-around;">
-										{% if not IsEmpty(case.get('runner_message','')) %}
-											{{Previews('运行时信息','runner-message',case.get('runner_message',''))}}
-										{% endif %}
-										{% if not IsEmpty(case.get('judger_message','')) %}
-											{{Previews('比较器信息','judger-message',case.get('judger_message',''))}}
-										{% endif %}
-										{% if not IsEmpty(case.get('stderr_preview','')) %}
-											{{Previews('标准错误流','stderr',case.get('stderr_preview',''))}}
-										{% endif %}
-									</div>
-								</div>
-							</div>
-						</div>
-						<script>
-							$("#{{loop.index}}-trigger").click(function(){
-								$("#{{loop.index}}-details").slideToggle("fast")
-							})
-						</script>
-					{% endfor %}
+					{% if submission.detail.get('subtask',False) == False %}
+						{% for case in submission.detail.cases %}
+							{{submission_macros.Case(loop.index,case)}}
+						{% endfor %}
+					{% else %}
+						{% for subtask in submission.detail.subtasks %}
+							{{submission_macros.Subtask(loop.index,subtask)}}
+						{% endfor %}
+					{% endif %}
 				</div>
 			</div>
 		</div>

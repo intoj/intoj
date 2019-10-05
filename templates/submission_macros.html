@@ -1,0 +1,112 @@
+{% macro Case(kth,case,subtask=False) %}
+{% set case_id = randint(1,10000000000) %}
+<div id="case-{{case_id}}-trigger" class="row hover-animation item-centered" style="height: {{ 48 if not subtask else 48 }}px; flex-grow: 233; justify-content: space-around">
+	<span style="width: {{ 6 if not subtask else 14 }}%; text-align: left;"> #{{kth}} </span>
+	<span style="width: 26%; color: {{id_to_color[case.status]}}; align-items: flex-end;">
+		<i class="{{id_to_sign[case.status]}}" style="margin-right: 2px;"> </i>
+		<span style="font-size: 19px;"> {{id_to_word[case.status]}} </span>
+	</span>
+	{% if case.status not in [0,1] %}
+		<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(case.score,case.full_score)}}">
+			{{ScoreRounding(case.score,4)}}
+		</span>
+		<span class="column item-centered" style="width: 8%; font-size: 16px;">
+			{{case.time_usage}}ms
+		</span>
+		<span class="column item-centered" style="width: 8%; font-size: 16px;">
+			{{case.memory_usage}}K
+		</span>
+	{% else %}
+		<span class="column item-centered" style="width: 8%;"> </span>
+		<span class="column item-centered" style="width: 8%;"> </span>
+		<span class="column item-centered" style="width: 8%;"> </span>
+	{% endif %}
+</div>
+<div id="case-{{case_id}}-details" style="display: none; width: 100%;" class="item-centered">
+	<div class="row grey item-centered" style="width: 90%; margin-top: 2px; margin-bottom: 10px;">
+		{% macro Previews(name,id,text,width="30%") %}
+			<div id="case-{{case_id}}-{{id}}" class="column item-horizontal-centered" style="width: {{width}}; flex-grow: 2; margin: 0px 5px 10px 5px;">
+				<h3 class="row item-left-aligned title" style="margin-left: 10px;"> &nbsp;{{name}} </h3>
+				<pre style="width: 100%;"><code class="hljs plaintext">{{text|e}}</code></pre>
+			</div>
+		{% endmacro %}
+		<div class="column item-centered" style="width: calc( 100% - 20px );">
+			<div class="row" style="justify-content: center">
+				{{Previews('输入文件','input',case.get('input_preview',''))}}
+				{{Previews('答案文件','output',case.get('output_preview',''))}}
+				{{Previews('用户输出','stdout',case.get('stdout_preview',''))}}
+			</div>
+			<div class="row" style="justify-content: space-around;">
+				{% if not IsEmpty(case.get('runner_message','')) %}
+					{{Previews('运行时信息','runner-message',case.get('runner_message',''))}}
+				{% endif %}
+				{% if not IsEmpty(case.get('judger_message','')) %}
+					{{Previews('比较器信息','judger-message',case.get('judger_message',''))}}
+				{% endif %}
+				{% if not IsEmpty(case.get('stderr_preview','')) %}
+					{{Previews('标准错误流','stderr',case.get('stderr_preview',''))}}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$("#case-{{case_id}}-trigger").click(function(){
+		$("#case-{{case_id}}-details").slideToggle("fast")
+	})
+</script>
+{% endmacro %}
+
+{% macro Subtask(kth,subtask) %}
+<div class="row item-centered" style="margin-top: 0px;">
+	<div id="subtask-{{kth}}" class="column item-centered" style="width: 100%; padding: 1px;">
+		<div id="subtask-{{kth}}-trigger" class="row item-centered hover-animation" style="height: 50px; flex-grow: 233; justify-content: space-around">
+			<span style="width: 14%; font-size: 20px; text-align: left;"> {{ "Subtask #"+str(kth) if IsEmpty(subtask.name) else subtask.name }} </span>
+			<span style="width: 26%; color: {{id_to_color[subtask.status]}}; align-items: flex-end;">
+				<i class="{{id_to_sign[subtask.status]}}" style="margin-right: 2px;"> </i>
+				<span style="font-size: 19px;"> {{id_to_word[subtask.status]}} </span>
+			</span>
+			<span class="column item-centered" style="width: 8%; color: {{GetColorOfScore(subtask.score,subtask.full_score)}}">
+				{{ScoreRounding(subtask.score,4)}}
+			</span>
+			<span class="column item-centered" style="width: 8%; font-size: 16px;">
+				{{subtask.time_usage}}ms
+			</span>
+			<span class="column item-centered" style="width: 8%; font-size: 16px;">
+				{{subtask.memory_usage}}K
+			</span>
+		</div>
+		<div id="subtask-{{kth}}-detail" class="row item-centered" style="display: none">
+			<div class="column item-centered" style="width: 100%">
+				{% for case in subtask.cases %}
+				{{Case(loop.index,case,True)}}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var ExpandSubtask{{kth}} = function(){
+		$("#subtask-{{kth}}-trigger").addClass("grey")
+		$("#subtask-{{kth}}").css("border","1px dashed #aaa")
+		$("#subtask-{{kth}}").css("padding","0px")
+		$("#subtask-{{kth}}-detail").slideDown(100)
+	}
+	var CollapseSubtask{{kth}} = function(){
+		$("#subtask-{{kth}}-trigger").removeClass("grey")
+		$("#subtask-{{kth}}").css("border","1px")
+		$("#subtask-{{kth}}").css("padding","1px")
+		$("#subtask-{{kth}}-detail").slideUp(100)
+	}
+	var ToggleSubtask{{kth}} = function(){
+		if( $("#subtask-{{kth}}-detail").css("display") == "none" ){
+			ExpandSubtask{{kth}}()
+		}else{
+			CollapseSubtask{{kth}}()
+		}
+	}
+	$("#subtask-{{kth}}-trigger").click(function(){
+		ToggleSubtask{{kth}}()
+	})
+</script>
+{% endmacro %}

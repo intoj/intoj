@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import *
 import werkzeug
-import sys, os, time
+import sys, os, time, random
 reload(sys)
 sys.dont_write_bytecode = True
 sys.setdefaultencoding('utf-8')
@@ -23,6 +23,7 @@ app.add_template_global(max,'max')
 app.add_template_global(len,'len')
 app.add_template_global(str,'str')
 app.add_template_global(round,'round')
+app.add_template_global(random.randint,'randint')
 
 app.add_template_global(sites.config.config,'config')
 app.add_template_global(sites.db.Execute,'dbExecute')

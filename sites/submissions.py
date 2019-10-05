@@ -66,7 +66,7 @@ def SubmissionRejudgeRun(submission_id):
 	db.Execute('UPDATE submissions SET status=1 WHERE id=%s',submission_id)
 
 	redis = reedis.NewConnection()
-	redis.rpush('intoj-waiting-judge',submission_id)
+	redis.rpush('intoj-waiting-rejudge',submission_id)
 
 	return modules.ReturnJSON({ 'success': True, 'message': '成功重测' })
 
@@ -80,4 +80,3 @@ def SubmissionDeleteRun(submission_id):
 
 	db.Execute('DELETE FROM submissions WHERE id=%s',submission_id)
 	return modules.ReturnJSON({ 'success': True, 'message': '成功删除' })
-	
