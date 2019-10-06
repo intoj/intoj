@@ -46,6 +46,16 @@ def CheckPrivilegeOfProblem(username,problem_id):
 	if problem_provider == username:
 		ok_privileges.append('problem_owner')
 	return CheckPrivilege(username,ok_privileges)
+def CheckPrivilegeOfCode(username,submission_id):
+	if config.config['security']['can_view_code'] == True:
+		return True
+	submissions = db.Execute('SELECT submitter,problem_id FROM submissions WHERE id=%s',submission_id)
+	if len(submissions) == 0:
+		return False
+	submitter = submissions[0]['submitter']
+	if submitter == username:
+		return True
+	return False
 
 def ReturnJSON(data):
 	return Response(json.dumps(data),mimetype='application/json')

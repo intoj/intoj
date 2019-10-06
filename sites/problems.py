@@ -99,6 +99,8 @@ def ProblemEditRun(problem_id):
 		db.Execute('DELETE FROM problem_examples WHERE problem_id=%s',problem_id)
 		now_kth = 0
 		for example in examples:
+			if modules.IsEmpty(example['input']) and modules.IsEmpty(example['output']) and modules.IsEmpty(example['explanation']):
+				continue
 			now_kth += 1
 			db.Execute('INSERT INTO problem_examples(problem_id,kth,input,output,explanation) VALUE(%s,%s,%s,%s,%s)',
 					   (new_problem_id,now_kth,example['input'],example['output'],example['explanation']))
@@ -110,6 +112,7 @@ def ProblemDeleteRun(problem_id):
 		return modules.RedirectBack(error_message='无此权限')
 
 	db.Execute('DELETE FROM problems WHERE id=%s',problem_id)
+	db.Execute('DELETE FROM submissions WHERE problem_id=%s',problem_id)
 	os.system('rm -rf %s'%os.path.join(config.config['data_path'],str(problem_id)))
 	flash('成功删除题目 #%d'%problem_id,'ok')
 	return redirect('/problems')
@@ -131,11 +134,12 @@ def ProblemManageRun(problem_id):
 		return modules.render_template('problemmanage.html',problem=problem)
 	else:
 		if request.form['type'] == 'data_upload':
-			open(os.path.join(testdata_path,'config.json'),'w').write(request.form['new_data_config'])
+			config_detail = request.form['new_data_config'].replace('\\',r'\\')
+			open(os.path.join(testdata_path,'config.json'),'w').write(config_detail)
 			try:
-				_tmp = json.loads(request.form['new_data_config'])
-			except:
-				flash('json 格式有误','error')
+				_tmp = json.loads(config_detail)
+			except BaseException as exception:
+				flash('json 格式有误: %s'%exception,'error')
 				return redirect('/problem/%d/manage'%problem_id)
 
 			db.Execute('UPDATE problems SET time_limit=%s, memory_limit=%s WHERE id=%s',

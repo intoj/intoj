@@ -16,7 +16,24 @@ p.notice{
 			<div class="row item-centered ivory">
 				<div class="column item-centered">
 					<h2 class="title" style="font-size: 30px;"> 管理题目 - #{{problem.id}} </h2>
-					<a class="button button-primary button-small" style="margin-bottom: 12px; width: 70%;" href="/problem/{{problem.id}}" target="_blank"> 打开前台 </a>
+					<a class="button button-primary button-small" style="margin-bottom: 12px; width: 70%;" href="/problem/{{problem.id}}" id="goto-frontend"> 打开前台 </a>
+					<script>
+						$("#goto-frontend").click(function(event){
+							if(event.ctrlKey) return
+							event.preventDefault()
+							layer.alert('您确定要离开吗？别忘了提交',{
+								title: '确认离开',
+								icon: 3,
+								btn: ['确定','取消'],
+								yes: function(){
+									window.location.href='/problem/{{problem.id}}'
+								},
+								btn2: function(){
+									return
+								}
+							})
+						})
+					</script>
 				</div>
 			</div>
 			<div class="row item-centered ivory" style="margin-top: 10px;">
@@ -65,7 +82,7 @@ p.notice{
 					<div class="row item-centered">
 						<div class="column item-left-aligned" style="width: 100%">
 							<h2 class="row title" style="font-size: 30px; color: #44aadd"> 数据配置文件 </h2>
-							<textarea id="data-config-editor" name="new_data_config" style="width: 100%;">{{problem.data_config}}</textarea>
+							<textarea id="data-config-editor" name="new_data_config" style="width: 100%;">{{problem.data_config.replace('\\\\','\\')}}</textarea>
 							<script>
 								window.code_editor = CodeMirror.fromTextArea(document.getElementById("data-config-editor"),{
 									mode: "application/json",
@@ -77,9 +94,9 @@ p.notice{
 									matchBrackets: true,
 									indentUnit: 4,
 									indentWithTabs: true,
-									cursorHeight: 0.85
+									cursorHeight: 0.9
 								});
-								code_editor.setSize('100%','300px');
+								code_editor.setSize('100%','600px');
 							</script>
 							<p class="notice"> 详细格式请见<a href="/help">帮助</a> </p>
 						</div>

@@ -90,7 +90,7 @@
 						</script>
 					{% endif %}
 					{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
-						<button class="button button-primary button-small" id="rejudge-button"> 重新测试 </button>
+						<button class="button button-primary button-small" id="rejudge-button"> 重新评测 </button>
 						<button class="button button-caution button-small" id="delete-button"> 删除这份提交 </button>
 						<script>
 							var DoRejudge = function(){
@@ -190,11 +190,13 @@
 			</div>
 		</div>
 	</div>
-	<div class="row item-centered ivory" style="margin-top: 5px;">
-		<div class="column item-left-aligned" style="width: 92%;">
-			<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 源代码 </h2>
-			<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
+	{% if CheckPrivilegeOfCode(nowuser,submission.id) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 源代码 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
+			</div>
 		</div>
-	</div>
+	{% endif %}
 </div>
 {% endblock %}

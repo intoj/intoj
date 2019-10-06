@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
 {% block title %} 编辑 #{{problem.id}}. {{problem.title}} {% endblock %}
+{% block head %}
+<style>
+p.notice{
+	color: #999;
+	margin: 0px 0px;
+	font-size: 12px;
+}
+</style>
+{% endblock %}
 {% block body %}
 <div class="column item-centered" style="width: 1100px;">
 	<div class="row item-centered" style="align-items: flex-start">
@@ -144,9 +153,10 @@
 				</div>
 			</div>
 			<div class="row item-centered">
-				<button class="button button-primary" onclick="AddNewExamples('','','')"> 添加一组样例 </button>
+				<button class="button button-primary button-rounded" onclick="AddNewExamples('','','')"> 添加一组样例 </button>
 			</div>
-			<button class="button button-primary" style="width: 96%; margin-top: 20px;" id="back-to-top"> 返回顶部 </button>
+			<p class="notice"> 将一组样例中三栏全部留空以删除这组样例 </p>
+			<button class="button button-primary button-rounded" style="width: 96%; margin-top: 20px;" id="back-to-top"> 返回顶部 </button>
 			<script>
 				function ScrollToTop(){
 					window.scrollTo(0,0)

@@ -32,6 +32,7 @@
 	},
 	"security": {
 		"allow_registration": true,
-		"login_required": false
+		"login_required": false,
+		"can_view_code": true
 	}
 }

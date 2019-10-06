@@ -34,43 +34,45 @@
 	"subtask": true,
 	"inputSuffix": ".in",
 	"outputSuffix": ".out",
+	"spj": {
+		"filename": "spj.cpp",
+		"language": "cpp",
+		"use_testlib": "true"
+	},
 	"subtasks": [
 		{
-			"name": "Subtask1",
-			"testcasesCount": 5,
-			"prefix": "N1-",
+			"name": "$ n \leq 9 $",
+			"testcasesCount": 31,
+			"prefix": "1-",
 			"score": 10
 		},
 		{
-			"name": "Subtask2",
-			"testcasesCount": 5,
-			"prefix": "N2-",
-			"score": 10
+			"name": "$ n \leq 20 $",
+			"testcasesCount": 25,
+			"prefix": "2-",
+			"score": 15,
+			"rely": [1]
 		},
 		{
-			"testcasesCount": 7,
-			"prefix": "N3-",
-			"score": 10
+			"name": "$ n \leq 50 $",
+			"testcasesCount": 25,
+			"prefix": "3-",
+			"score": 20,
+			"rely": [1,2]
 		},
 		{
-			"testcasesCount": 7,
-			"prefix": "N4-",
-			"score": 10
+			"name": "$ n \leq 400 $",
+			"testcasesCount": 25,
+			"prefix": "4-",
+			"score": 20,
+			"rely": [1,2,3]
 		},
 		{
-			"testcasesCount": 7,
-			"prefix": "N5-",
-			"score": 10
-		},
-		{
-			"testcasesCount": 7,
-			"prefix": "N6-",
-			"score": 20
-		},
-		{
-			"testcasesCount": 7,
-			"prefix": "N7-",
-			"score": 30
+			"name": "Full",
+			"testcasesCount": 25,
+			"prefix": "5-",
+			"score": 35,
+			"rely": [1,2,3,4]
 		}
 	]
 }
