@@ -15,7 +15,7 @@
 		"secret_key": "233",
 		"gravatar_prefix": "https://0.gravatar.com/avatar/",
 		"per_page": {
-			"problem_list": 10,
+			"problem_list": 20,
 			"submission_list": 10,
 			"user_ranklist": 30
 		}
@@ -28,7 +28,8 @@
 	},
 	"limits": {
 		"max_code_length": 100,
-		"max_data_package_size": 256
+		"max_data_package_size": 256,
+		"max_testdata_preview_size_kb": 256
 	},
 	"security": {
 		"allow_registration": true,

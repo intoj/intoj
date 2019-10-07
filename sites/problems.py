@@ -3,6 +3,7 @@ from flask import *
 from werkzeug import secure_filename
 import json, os
 import db, modules, config, random
+import HTMLParser
 
 def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
@@ -42,9 +43,22 @@ def ProblemRun(problem_id):
 	return render_template('problem.html',problem=probleminfo)
 
 def ProblemTestdataDownloadRun(problem_id):
-	filename = secure_filename(request.args['filename'])
+	filename = request.args['path']
+	if not modules.IsSafeFilePath(filename):
+		return "不安全的文件名"
 	testdata_path = os.path.join(config.config['data_path'],str(problem_id))
 	return send_from_directory(testdata_path,filename,as_attachment=True)
+
+def ProblemTestdataPreviewRun(problem_id):
+	filename = request.args['path']
+	if not modules.IsSafeFilePath(filename):
+		return "不安全的文件名"
+	testdata_path = os.path.join(config.config['data_path'],str(problem_id))
+	filepath = os.path.join(testdata_path,filename)
+	filesize = os.path.getsize(filepath)/1000
+	if filesize > config.config['limits']['max_testdata_preview_size_kb']:
+		return "文件过大（限制为 %d KB，实际大小为 %d KB）。请尝试下载。<br />QAQ" % (config.config['limits']['max_testdata_preview_size_kb'],filesize)
+	return Response(open(filepath).read(),mimetype='text/plain')
 
 def ProblemAddRun():
 	operator = modules.GetCurrentOperator()
@@ -83,6 +97,8 @@ def ProblemEditRun(problem_id):
 						(os.path.join(config.config['data_path'],str(problem_id)),
 						os.path.join(config.config['data_path'],str(new_problem_id)))
 					)
+			db.Execute('UPDATE submissions SET problem_id=%s WHERE problem_id=%s',(new_problem_id,problem_id))
+
 		db.Execute('UPDATE problems SET id=%s, title=%s, background=%s, \
 					description=%s, input_format=%s, output_format=%s, \
 					limit_and_hint=%s, is_public=%s WHERE id=%s',
@@ -129,12 +145,37 @@ def ProblemManageRun(problem_id):
 	if request.method == 'GET':
 		try: problem['data_config'] = open(os.path.join(testdata_path,'config.json'),'r').read()
 		except: problem['data_config'] = ''
-		files = sorted(os.listdir(testdata_path))
+		def ListFiles(testdata_path,path):
+			all_items = os.listdir(path)
+			files = []
+			for filename in all_items:
+				filepath = os.path.join(path,filename)
+				if os.path.isdir(filepath):
+					files.append({
+						'type': 'dir',
+						'name': filename,
+						'path': filepath.replace(testdata_path+'/',''),
+						'files': ListFiles(testdata_path,filepath)
+					})
+				else:
+					files.append({
+						'type': 'file',
+						'name': filename,
+						'path': filepath.replace(testdata_path+'/','')
+					})
+			return sorted(files,key = lambda x: '' if x['name'] == 'config.json' else x['name'])
+		files = {
+			'type': 'root_dir',
+			'name': '/',
+			'path': '.',
+			'files': ListFiles(testdata_path,testdata_path)
+		}
+		print(files)
 		problem['files'] = files
 		return modules.render_template('problemmanage.html',problem=problem)
 	else:
 		if request.form['type'] == 'data_upload':
-			config_detail = request.form['new_data_config'].replace('\\',r'\\')
+			config_detail = request.form['new_data_config']
 			open(os.path.join(testdata_path,'config.json'),'w').write(config_detail)
 			try:
 				_tmp = json.loads(config_detail)

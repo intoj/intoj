@@ -3,6 +3,9 @@ from flask import *
 import json, hashlib
 import db, config
 
+def IsSafeFilePath(filepath):
+	return '..' not in filepath
+	
 def GetColorOfScore(a,fullscore=100):
 	a = float(a)
 	fullscore = float(fullscore)

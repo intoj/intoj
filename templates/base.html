@@ -7,10 +7,11 @@
 	<title> {% block title %}{% endblock %} - intoj </title>
 	{% block head %}{% endblock %}
 	{% if config['site']['static_files_location'] == 'online' %}
-		{% include "base_online.html" %}
+		{% set static_files_prefix = "https://cdn.jsdelivr.net/gh/intoj/intoj" %}
 	{% else %}
-		{% include "base_offline.html" %}
+		{% set static_files_prefix = "" %}
 	{% endif %}
+	{% include "base_static_files.html" %}
 </head>
 <body style="margin: 0px; border: 0px; padding: 0px;">
 	{% for error in get_flashed_messages(category_filter=["error"]) %}
@@ -30,8 +31,8 @@
 		</script>
 	{% endfor %}
 	<div class="column">
-		<div class="row item-centered ivory" style="position: absolute; height: 50px; background-color: #ffffffe5 !important">
-			<a href="/" class="topbat-item"> <img src="/static/img/icon1.png" style="height: 50px; position: relative; top: 3px;"></img> </a>
+		<div class="row item-centered ivory" style="position: absolute; height: 50px; background-color: #ffffffe5 !important; border-radius: 0px;">
+			<a href="/" class="topbat-item"> <img src="{{static_files_prefix}}/static/img/icon1.png" style="height: 50px; position: relative; top: 3px;"></img> </a>
 			<a href="/" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-home"></i> 主页 </a>
 			<a href="/problems" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-list"></i> 题库 </a>
 			<a href="/users" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-signal"></i> 排名 </a>
@@ -63,6 +64,12 @@
 						$("body").css('background-image','url("{{background_url}}")')
 					}
 				{% endif %}
+			{% else %}
+				var img = new Image();
+				img.src = '{{static_files_prefix}}/static/img/bg.jpg'
+				img.onload = function(){
+					$("body").css('background-image','url("{{static_files_prefix}}/static/img/bg.jpg")')
+				}
 			{% endif %}
 		</script>
 	{% endif %}

@@ -84,6 +84,10 @@ def Problem(problem_id):
 def ProblemTestdataDownload(problem_id):
 	return sites.problems.ProblemTestdataDownloadRun(problem_id)
 
+@app.route('/problem/<int:problem_id>/preview')
+def ProblemTestdataPreview(problem_id):
+	return sites.problems.ProblemTestdataPreviewRun(problem_id)
+
 @app.route('/problemadd',methods=['GET','POST'])
 def ProblemAdd():
 	return sites.problems.ProblemAddRun()
