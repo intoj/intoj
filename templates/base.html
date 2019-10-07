@@ -52,27 +52,29 @@
 	</div>
 	{% if nowuser != None %}
 		{% set background_url = dbExecute('SELECT `background-url` FROM users WHERE username=%s',nowuser)[0]['background-url'] %}
-		<script>
-			{% if background_url not in [None,''] %}
-				{% if background_url[0] == '#' %}
-					$("body").css('background-color','{{background_url}}')
-					$("body").css('background-image','initial')
-				{% else %}
-					var img = new Image();
-					img.src = '{{background_url}}'
-					img.onload = function(){
-						$("body").css('background-image','url("{{background_url}}")')
-					}
-				{% endif %}
+	{% else %}
+		{% set background_url = '' %}
+	{% endif %}
+	<script>
+		{% if background_url not in [None,''] %}
+			{% if background_url[0] == '#' %}
+				$("body").css('background-color','{{background_url}}')
+				$("body").css('background-image','initial')
 			{% else %}
 				var img = new Image();
-				img.src = '{{static_files_prefix}}/static/img/bg.jpg'
+				img.src = '{{background_url}}'
 				img.onload = function(){
-					$("body").css('background-image','url("{{static_files_prefix}}/static/img/bg.jpg")')
+					$("body").css('background-image','url("{{background_url}}")')
 				}
 			{% endif %}
-		</script>
-	{% endif %}
+		{% else %}
+			var img = new Image();
+			img.src = '{{static_files_prefix}}/static/img/bg.jpg'
+			img.onload = function(){
+				$("body").css('background-image','url("{{static_files_prefix}}/static/img/bg.jpg")')
+			}
+		{% endif %}
+	</script>
 	<script> Render() </script>
 </body>
 </html>
