@@ -9,7 +9,7 @@ def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
 	if len(res) == 0: return None
 	res = res[0]
-	def F(s): return '' if s == None else s
+	def F(s): return '' if s == None else s.decode('utf-8')
 	return {
 		'id': int(problem_id),
 		'title': res['title'],
@@ -81,6 +81,7 @@ def ProblemEditRun(problem_id):
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
 		return modules.RedirectBack(error_message='无此权限')
 	probleminfo = GetProblemInfo(problem_id)
+	print(probleminfo)
 	if probleminfo == None:
 		return modules.RedirectBack(error_message='无此题目')
 	probleminfo['examples'] = GetProblemExamples(problem_id)

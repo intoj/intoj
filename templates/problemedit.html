@@ -91,22 +91,41 @@ p.notice{
 		</div>
 		<div class="column item-centered ivory" style="width: 76%; margin-right: 10px; padding-bottom: 20px;">
 			<div class="row item-centered" style="margin: 14px 0px 0px 0px;"> <h1> #{{problem.id}}. {{problem.title}} </h1> </div>
+			<script>
+				function HTMLDecode(text){
+					var temp = document.createElement("div");
+					temp.innerHTML = text;
+					var output = temp.innerText || temp.textContent;
+					temp = null;
+					return output;
+				}
+			</script>
 			{% macro ContentBlock(name,content,tagname) %}
 				<div class="row item-centered">
 					<div class="column item-centered" style="width: 96%;">
 						<h2 class="row title" style="margin-left: 10px; font-size: 30px; color: #44aadd"> {{name}} </h2>
-						<div id="editor-{{tagname}}">
-							<textarea class="editormd-markdown-textarea" id="editor-{{tagname}}-markdown">{{content|e}}</textarea>
+						<div id="editor-{{tagname}}-container" style="height: 500px; text-align: initial; width: 100%;">
+							<div id="editor-{{tagname}}"></div>
 						</div>
 						<script>
-							var editor = editormd("editor-{{tagname}}",{
-					            width  : "100%",
-					            height : "500px",
-					            path: "/static/modules/editormd/lib/",
-								toolbarAutoFixed: false,
-								tex: true,
-								toolbarIcons: "simple"
-					        });
+							var editor_{{tagname}} = null;
+							function GetEditor{{tagname}}Val(){
+								if(editor_{{tagname}})
+									return editor_{{tagname}}.content
+								else
+									return $("#editor-{{tagname}}").val()
+							}
+							function SetEditor{{tagname}}Val(code){
+								code = HTMLDecode(code)
+								if(editor_{{tagname}})
+									editor_{{tagname}}.content = code
+								else
+									$("#editor-{{tagname}}").val(code)
+							}
+							$(document).ready(function(){
+								editor_{{tagname}} = new MarkdownPalettes("#editor-{{tagname}}")
+								SetEditor{{tagname}}Val("{{repr(content)[2:-1]}}")
+							})
 						</script>
 					</div>
 				</div>
@@ -171,11 +190,11 @@ p.notice{
 var DoCollectInput = function(){
 	var new_problem_id = $("#new-problem-id").val()
 	var new_title = $("#new-title").val()
-	var new_background = $("#editor-background-markdown").val()
-	var new_description = $("#editor-description-markdown").val()
-	var new_input_format = $("#editor-input_format-markdown").val()
-	var new_output_format = $("#editor-output_format-markdown").val()
-	var new_limit_and_hint = $("#editor-limit_and_hint-markdown").val()
+	var new_background = GetEditorbackgroundVal()
+	var new_description = GetEditordescriptionVal()
+	var new_input_format = GetEditorinput_formatVal()
+	var new_output_format = GetEditoroutput_formatVal()
+	var new_limit_and_hint = GetEditorlimit_and_hintVal()
 	var new_is_public = $("#new-is-public").is(":checked") ? 1 : 0
 	var examples = []
 	for( var i = 1 ; i <= window.examplescnt ; ++i ){
