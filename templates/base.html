@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% import "macros.html" as macros %}
+{% set nowuser = GetCurrentOperator() %}
 
 <html>
 <head>
@@ -38,8 +39,11 @@
 			<a href="/users" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-signal"></i> 排名 </a>
 			<a href="/submissions" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-tasks"></i> 评测 </a>
 			<a href="/help" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-question-circle"></i> 帮助 </a>
-			<span class="topbar-item"> </span>
-			{% set nowuser = GetCurrentOperator() %}
+			{% if CheckPrivilege(nowuser,'system_admin') %}
+				<a href="/admin" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-gears"></i> 管理 </a>
+			{% else %}
+				<span class="topbar-item"> </span>
+			{% endif %}
 			{% if nowuser == None %}
 				<a href="/login" class="topbar-item item-centered animation hover-animation"> <i class="fa fa-sign-in"></i> 登录 </a>
 			{% else %}

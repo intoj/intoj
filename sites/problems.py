@@ -2,7 +2,7 @@
 from flask import *
 from werkzeug import secure_filename
 import json, os
-import db, modules, config, random
+import db, modules, config, random, static
 import HTMLParser
 
 def GetProblemInfo(problem_id):
@@ -33,6 +33,15 @@ def ProblemListRun():
 	total_page = (db.Execute('SELECT COUNT(*) FROM problems')[0]['COUNT(*)']+per_page-1) / per_page;
 	problems = db.Execute('SELECT id,title,is_public FROM problems LIMIT %s OFFSET %s',
 							(per_page,per_page*(current_page-1)))
+	nowuser = modules.GetCurrentOperator()
+	if nowuser != None:
+		for problem in problems:
+			latest_submission = db.Execute('SELECT * FROM submissions WHERE submitter=%s AND problem_id=%s AND status != %s \
+											ORDER BY status DESC, score DESC, submit_time ASC \
+											LIMIT 1',
+											(nowuser,problem['id'],static.name_to_id['Skipped']))
+			if len(latest_submission) == 0: continue
+			problem['submission'] = latest_submission[0]
 	return render_template('problemlist.html',problems=problems,pageinfo={ 'per': per_page, 'tot': total_page })
 
 def ProblemRun(problem_id):

@@ -5,7 +5,7 @@ import db, config
 
 def IsSafeFilePath(filepath):
 	return '..' not in filepath
-	
+
 def GetColorOfScore(a,fullscore=100):
 	a = float(a)
 	fullscore = float(fullscore)
@@ -20,7 +20,7 @@ def IsEmpty(s):
 	return s == None or s.strip() == ''
 def ScoreRounding( score , precision = 2 ):
 	if score == None: return 0
-	return int(score) if float(score) - int(score) < 0.01 else round(float(score),precision)
+	return int(score) if float(score) - int(score) < 0.01 or precision == 0 else round(float(score),precision)
 def GetArgsAsString(ignore=[]):
 	arg = ""
 	for key,value in request.args.items():

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="row item-centered" style="align-items: flex-start">
+	<div class="column item-centered ivory" style="width: 300px">
+		<h2 class="title"> 后台管理 </h2>
+		{% macro SidebarItem(name,link) %}
+			<a href="{{link}}" class="row item-centered hover-animation" style="height: 40px">
+				{{name}}
+			</a>
+		{% endmacro %}
+		{{SidebarItem('总览','/admin')}}
+		{{SidebarItem('批量重测','/admin/rejudge')}}
+	</div>
+	<div class="column item-centered ivory" style="width: 900px; margin-left: 10px;">
+		{% block inner_body %}{% endblock %}
+	</div>
+</div>
+{% endblock %}

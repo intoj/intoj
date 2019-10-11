@@ -41,9 +41,8 @@ app.add_template_global(sites.modules.ValidateClientkey,'ValidateClientkey')
 app.add_template_global(sites.modules.CheckPrivilege,'CheckPrivilege')
 app.add_template_global(sites.modules.CheckPrivilegeOfProblem,'CheckPrivilegeOfProblem')
 app.add_template_global(sites.modules.CheckPrivilegeOfCode,'CheckPrivilegeOfCode')
-app.add_template_global(sites.static.id_to_word,'id_to_word')
-app.add_template_global(sites.static.id_to_sign,'id_to_sign')
-app.add_template_global(sites.static.id_to_color,'id_to_color')
+app.add_template_global(sites.static.id_to_info,'id_to_info')
+app.add_template_global(sites.static.name_to_id,'name_to_id')
 
 def SecurityCheck(app,**extra):
 	def CheckIfLoginIsRequired():
@@ -137,3 +136,7 @@ def UserEdit(username):
 @app.route('/help')
 def Help():
 	return render_template('help.html')
+
+@app.route('/admin')
+def AdminHome():
+	return sites.admin.AdminHomeRun()

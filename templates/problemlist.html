@@ -18,15 +18,34 @@
 				{{macros.AutoPagination(pageinfo)}}
 			</div>
 			<div class="row" style="height: 30px; font-size: 18px; font-weight: 500; margin-bottom: 5px;">
-				<span class="column item-centered" style="width: 5%;"> # </span>
-				<span class="column" style="width: 5%;">  </span>
+				{% if nowuser != None %}
+					<span class="column item-centered" style="width: 6%;"> </span>
+				{% endif %}
+				<span class="column item-centered" style="width: 10%;"> # </span>
 				<span class="column item-vertical-centered item-left-aligned" style="width: 40%;"> 题目标题 </span>
 			</div>
 			{% for problem in problems %}
 				<div class="row hover-animation" style="height: 50px;">
-					<span class="column item-centered" style="width: 5%;"> {{problem.id}} </span>
-					<span class="column" style="width: 5%;">  </span>
-					<span class="column item-vertical-centered item-left-aligned" style="width: 40%; font-size: 17px;">
+					{% if problem.get('submission') != None %}
+						<span class="column item-centered" style="width: 6%;">
+							<a class="row item-centered" style="color: {{id_to_info[problem.submission.status].color}}" href="/submission/{{problem.submission.id}}">
+								<span>
+								<i class="{{id_to_info[problem.submission.status].sign}}" style="margin-right: 1px;"> </i>
+								</span>
+								{% if problem.submission.status != name_to_id['Accepted'] %}
+									<span>
+										{{ScoreRounding(problem.submission.score,0)}}
+									</span>
+								{% endif %}
+							</a>
+						</span>
+					{% else %}
+						{% if nowuser != None %}
+							<span class="column item-centered" style="width: 6%;"> </span>
+						{% endif %}
+					{% endif %}
+					<span class="column item-centered" style="width: 10%;"> {{problem.id}} </span>
+					<span class="column item-vertical-centered item-left-aligned" style="width: 40%;">
 						<a href="/problem/{{problem.id}}">
 							{{problem.title}}
 						</a>
