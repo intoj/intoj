@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block title %} 评测记录 {% endblock %}
+{% set filter_keys = ['problem_id','submitter','min_score','max_score'] %}
 {% block body %}
 <div class="column item-centered" style="width: 1400px;">
 	<div class="row item-centered" style="align-items: flex-start">
@@ -79,6 +80,12 @@
 			</div>
 			<script>
 				$("#search-button").click(function(){
+					new_url = '/submissions?' + '{{GetArgsAsString(['page','problem_id','submitter','min_score','max_score'])}}'
+					new_url += 'problem_id=' + $("#problem_id-input").val() + '&'
+					new_url += 'submitter=' + $("#submitter-input").val() + '&'
+					new_url += 'min_score=' + $("#min_score-input").val() + '&'
+					new_url += 'max_score=' + $("#max_score-input").val() + '&'
+					window.location.href = new_url
 				})
 			</script>
 		</div>

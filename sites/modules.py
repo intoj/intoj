@@ -25,8 +25,7 @@ def GetArgsAsString(ignore=[]):
 	arg = ""
 	for key, value in request.args.items():
 		if key in ignore: continue
-		if arg != "": arg += "&"
-		arg += "%s=%s" % (escape(key),escape(value))
+		arg += "%s=%s&" % (escape(key),escape(value))
 	return arg
 
 # privileges

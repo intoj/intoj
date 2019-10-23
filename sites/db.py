@@ -1,5 +1,5 @@
 import pymysql
-import config
+import config, modules
 
 def GetConnection():
 	db_name = config.config['database']['name']
@@ -28,9 +28,9 @@ def GetParameters(args,allow_parameters):
 	result_string = ''
 	result_list = []
 	for key, value in args.items():
-		if key not in allow_parameters: continue
+		if key not in allow_parameters or modules.IsEmpty(value): continue
 		if result_string == '': result_string += 'WHERE '
-		else: result_string += 'AND '
+		else: result_string += ' AND '
 		result_string += allow_parameters[key]['parameter']
 		result_list.append(allow_parameters[key]['type'](value))
 	return result_string, result_list
