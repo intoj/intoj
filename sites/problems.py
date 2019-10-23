@@ -180,7 +180,6 @@ def ProblemManageRun(problem_id):
 			'path': '.',
 			'files': ListFiles(testdata_path,testdata_path)
 		}
-		print(files)
 		problem['files'] = files
 		return modules.render_template('problemmanage.html',problem=problem)
 	else:

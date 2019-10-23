@@ -60,10 +60,27 @@
 				</div>
 			</div>
 		</div>
-		<div class="column item-centered ivory" style="width: 300px; margin-left: 10px; display: none; height: auto;" id="filter">
+		<div class="column item-centered ivory" style="width: 300px; margin-left: 10px; height: auto;" id="filter">
 			<div class="row item-centered"> <h2 class="title"> 筛选 </h2> </div>
-			<div class="row item-centered">
+			{% macro FilterOption(description,id,input_width='50%',description_width='26%') %}
+				<div class="row item-centered" style="margin-bottom: 10px;">
+					<span class="column item-centered" style="font-size: 16px; width: {{description_width}}"> {{description}} </span>
+					<span class="column item-centered" style="width: {{input_width}}; margin-left: 10px;">
+						<input id="{{id}}-input" class="login-input" style="border: 1px solid #aaa; border-radius: 2px; font-size: 16px; text-align: center" value="{{request.args.get(id,'')}}"> </input>
+					</span>
+				</div>
+			{% endmacro %}
+			{{FilterOption('题目 id','problem_id')}}
+			{{FilterOption('提交者','submitter')}}
+			{{FilterOption('最小分数','min_score')}}
+			{{FilterOption('最大分数','max_score')}}
+			<div class="row item-centered" style="margin-bottom: 12px;">
+				<button id="search-button" class="button button-primary button-small" style="width: 76%;"> 查找 </button>
 			</div>
+			<script>
+				$("#search-button").click(function(){
+				})
+			</script>
 		</div>
 	</div>
 </div>

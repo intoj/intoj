@@ -3,9 +3,6 @@ from flask import *
 import json, hashlib
 import db, config
 
-def IsSafeFilePath(filepath):
-	return '..' not in filepath
-
 def GetColorOfScore(a,fullscore=100):
 	a = float(a)
 	fullscore = float(fullscore)
@@ -16,6 +13,9 @@ def GetColorOfScore(a,fullscore=100):
 		r = int( (1.0-a/fullscore) * (255+255) )
 		return "rgb(%d,220,0)" % r
 
+# string
+def IsSafeFilePath(filepath):
+	return '..' not in filepath
 def IsEmpty(s):
 	return s == None or s.strip() == ''
 def ScoreRounding( score , precision = 2 ):
@@ -23,12 +23,13 @@ def ScoreRounding( score , precision = 2 ):
 	return int(score) if float(score) - int(score) < 0.01 or precision == 0 else round(float(score),precision)
 def GetArgsAsString(ignore=[]):
 	arg = ""
-	for key,value in request.args.items():
+	for key, value in request.args.items():
 		if key in ignore: continue
 		if arg != "": arg += "&"
 		arg += "%s=%s" % (escape(key),escape(value))
 	return arg
 
+# privileges
 def CheckPrivilege(username,privileges):
 	def Have(username,privilege):
 		return db.Execute('SELECT COUNT(*) FROM user_privileges WHERE username=%s AND privilege=%s',(username,privilege))[0]['COUNT(*)'] >= 1
@@ -60,6 +61,7 @@ def CheckPrivilegeOfCode(username,submission_id):
 		return True
 	return False
 
+# redirecting
 def ReturnJSON(data):
 	return Response(json.dumps(data),mimetype='application/json')
 def RedirectBack( error_message = None , ok_message = None ):
@@ -71,6 +73,7 @@ def RedirectBack( error_message = None , ok_message = None ):
 	if url == None or ( request.method == 'GET' and url == request.url ): url = '/'
 	return redirect(url)
 
+# pagination
 def ParseInt( s , default = 0 , limit_l = int(-1e9) , limit_r = int(1e9) ):
 	if s == None or not s.isdigit(): return default
 	try:
@@ -82,6 +85,7 @@ def ParseInt( s , default = 0 , limit_l = int(-1e9) , limit_r = int(1e9) ):
 def GetCurrentPage():
 	return ParseInt(request.args.get('page'),1,1,1e9)
 
+# users
 def IsVaildUsername(username):
 	if len(username) == 0 or len(username) > 15:
 		return False

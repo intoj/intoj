@@ -23,3 +23,21 @@ def Execute(cmd,arg=None):
 	res = cur.fetchall()
 	CloseConnection(db,cur)
 	return res
+
+def GetParameters(args,allow_parameters):
+	result_string = ''
+	result_list = []
+	for key, value in args.items():
+		if key not in allow_parameters: continue
+		if result_string == '': result_string += 'WHERE '
+		else: result_string += 'AND '
+		result_string += allow_parameters[key]['parameter']
+		result_list.append(allow_parameters[key]['type'](value))
+	return result_string, result_list
+def ExecuteWithParameters(cmd,args_dict,allow_parameters,arg_list=['PARAMETERS']):
+	arg_list = list(arg_list)
+	parameter_string, parameter_arg = GetParameters(args_dict,allow_parameters)
+	cmd = cmd.format( PARAMETERS = parameter_string )
+	arg_list = arg_list[:arg_list.index('PARAMETERS')] + parameter_arg + arg_list[arg_list.index('PARAMETERS')+1:]
+	# print(cmd,arg_list)
+	return Execute(cmd,arg_list)

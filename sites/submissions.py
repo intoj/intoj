@@ -4,11 +4,23 @@ import datetime, json
 import db, modules, config, reedis
 
 def SubmissionListRun():
+	allow_parameters = {
+		'problem_id': { 'type': int , 'parameter': 'problem_id = %s' },
+		'submitter': { 'type': str , 'parameter': 'submitter = %s' },
+		'min_score': { 'type': float , 'parameter': 'score >= %s' },
+		'max_score': { 'type': float , 'parameter': 'score <= %s' }
+	}
+
 	per_page = config.config['site']['per_page']['submission_list']
 	current_page = modules.GetCurrentPage()
-	total_page = (db.Execute('SELECT COUNT(*) FROM submissions')[0]['COUNT(*)']+per_page-1) / per_page;
-	submissions = db.Execute('SELECT id,problem_id,contest_id,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions ORDER BY id DESC LIMIT %s OFFSET %s',
-							 (per_page,per_page*(current_page-1)))
+	total = db.ExecuteWithParameters('SELECT COUNT(*) FROM submissions {PARAMETERS}',
+					request.args,
+					allow_parameters)[0]['COUNT(*)']
+	total_page = (total+per_page-1) / per_page;
+	submissions = db.ExecuteWithParameters('SELECT id,problem_id,contest_id,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {PARAMETERS} ORDER BY id DESC LIMIT %s OFFSET %s',
+					request.args,
+					allow_parameters,
+					('PARAMETERS',per_page,per_page*(current_page-1)))
 	return render_template('submissionlist.html',submissions=submissions,pageinfo={ 'per': per_page, 'tot': total_page })
 
 def GetSubmissionInfo(submission_id):
