@@ -9,9 +9,9 @@
 				<h1 style="margin-left: 100px;" class="title"> 评测记录 </h1>
 				{% if nowuser != None %}
 					{% if request.args.get('submitter') != nowuser %}
-						<a href="/submissions?{{GetArgsAsString(['submitter'])}}&submitter={{nowuser}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 我的提交 </a>
+						<a href="/submissions?{{GetArgsAsString(['submitter','page'])}}&submitter={{nowuser}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 我的提交 </a>
 					{% else %}
-						<a href="/submissions?{{GetArgsAsString(['submitter'])}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 去除筛选「我的提交」 </a>
+						<a href="/submissions?{{GetArgsAsString(['submitter','page'])}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 去除筛选「我的提交」 </a>
 					{% endif %}
 				{% endif %}
 			</div>
