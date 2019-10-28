@@ -1,7 +1,7 @@
-#coding:utf-8
+# coding: utf-8
 from flask import *
 import datetime, json
-import db, modules, config, reedis, static
+import config, db, modules, reedis, static
 
 def SubmissionListRun():
 	allow_parameters = {

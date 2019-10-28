@@ -1,6 +1,7 @@
-#coding:utf-8
+# coding: utf-8
 from flask import *
-import config, db, modules, hashlib
+import hashlib
+import config, db, modules
 
 def Run():
 	if request.method == 'GET':

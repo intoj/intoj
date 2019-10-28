@@ -1,3 +1,4 @@
+# coding: utf-8
 name_to_id = {
 	'Running': 0,
 	'Waiting': 1,

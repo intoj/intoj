@@ -1,7 +1,7 @@
-#coding:utf-8
+# coding: utf-8
 from flask import *
 import json, hashlib
-import db, config
+import config, db
 
 def GetColorOfScore(a,fullscore=100):
 	a = float(a)

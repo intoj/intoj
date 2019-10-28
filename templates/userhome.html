@@ -12,12 +12,10 @@
 		</div>
 		<div class="column item-centered ivory" style="width: 60%;" id="right-container">
 			<div class="row item-centered">
-				<!-- <div class="column item-centered"> -->
-					<h1 style="letter-spacing: 3px; margin-right: 0px;"> {{user.username}} </h1>
-					{% if not IsEmpty(user.realname) %}
-						<p style="font-size: 14px; color: #666; align-self: flex-end; position: relative; top: -10px;"> / {{user.realname}} </p>
-					{% endif %}
-				<!-- </div> -->
+				<h1 style="letter-spacing: 3px; margin-right: 0px;"> {{user.username}} </h1>
+				{% if not IsEmpty(user.realname) %}
+					<p style="font-size: 14px; color: #666; align-self: flex-end; position: relative; top: -10px;"> / {{user.realname}} </p>
+				{% endif %}
 			</div>
 			{% if user.motto != None and len(user.motto.strip()) != 0 %}
 				<div class="row item-centered">

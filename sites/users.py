@@ -1,7 +1,7 @@
-#coding:utf-8
+# coding: utf-8
 from flask import *
-import db, modules, config
 import hashlib
+import config, db, modules
 
 def GetUserInfo(username):
 	res = db.Execute('SELECT * FROM users WHERE username=%s',username)

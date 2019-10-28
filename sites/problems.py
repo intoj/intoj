@@ -1,9 +1,9 @@
-#coding:utf-8
+# coding: utf-8
 from flask import *
 from werkzeug import secure_filename
 import json, os
-import db, modules, config, random, static
 import HTMLParser
+import config, db, modules, random, static
 
 def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
