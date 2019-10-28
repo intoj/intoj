@@ -41,9 +41,9 @@ id_to_info = {
 		'color': '#ede42b'
 	},
 	5: {
-	'name': 'Compilation Passed',
-	'sign': 'fa fa-fw fa-check',
-	'color': '#19d960'
+		'name': 'Compilation Passed',
+		'sign': 'fa fa-fw fa-check',
+		'color': '#19d960'
 	},
 	6: {
 		'name': 'Wrong Answer',

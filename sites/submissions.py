@@ -1,14 +1,15 @@
 #coding:utf-8
 from flask import *
 import datetime, json
-import db, modules, config, reedis
+import db, modules, config, reedis, static
 
 def SubmissionListRun():
 	allow_parameters = {
-		'problem_id': { 'type': int , 'parameter': 'problem_id = %s' },
-		'submitter': { 'type': str , 'parameter': 'submitter = %s' },
-		'min_score': { 'type': float , 'parameter': 'score >= %s' },
-		'max_score': { 'type': float , 'parameter': 'score <= %s' }
+		'problem_id': { 'checker': int , 'parameter': 'problem_id = %s' },
+		'submitter': { 'checker': str , 'parameter': 'submitter = %s' },
+		'min_score': { 'checker': float , 'parameter': 'score >= %s' },
+		'max_score': { 'checker': float , 'parameter': 'score <= %s' },
+		'status': { 'checker': lambda x: int(x) in static.id_to_info , 'parameter': 'status = %s' }
 	}
 
 	per_page = config.config['site']['per_page']['submission_list']

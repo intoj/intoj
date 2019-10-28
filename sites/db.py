@@ -29,10 +29,15 @@ def GetParameters(args,allow_parameters):
 	result_list = []
 	for key, value in args.items():
 		if key not in allow_parameters or modules.IsEmpty(value): continue
+		try:
+			if allow_parameters[key]['checker'](value) == False:
+				continue
+		except:
+			continue
 		if result_string == '': result_string += 'WHERE '
 		else: result_string += ' AND '
 		result_string += allow_parameters[key]['parameter']
-		result_list.append(allow_parameters[key]['type'](value))
+		result_list.append(value)
 	return result_string, result_list
 def ExecuteWithParameters(cmd,args_dict,allow_parameters,arg_list=['PARAMETERS']):
 	arg_list = list(arg_list)
