@@ -193,9 +193,30 @@
 	{% if CheckPrivilegeOfCode(nowuser,submission.id) %}
 		<div class="row item-centered ivory" style="margin-top: 5px;">
 			<div class="column item-left-aligned" style="width: 92%;">
-				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 源代码 </h2>
-				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
+				<div class="row item-centered" style="justify-content: space-between">
+					<h2 class="title" style="margin-left: 10px;"> 源代码 </h2>
+					<button id="copy-code-btn" class="button button-primary button-small button-rounded" data-clipboard-target="#code"> 复制 </button>
+				</div>
+				<pre id="code" style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
 			</div>
+			<script>
+				if(ClipboardJS.isSupported()){
+					var clipboard = new ClipboardJS('#copy-code-btn');
+					clipboard.on('success',function(e){
+						e.clearSelection();
+						$("#copy-code-btn").text("复制成功")
+						setTimeout(function(){$("#copy-code-btn").text("复制")},500)
+					});
+					clipboard.on('error',function(e){
+						e.clearSelection();
+						$("#copy-code-btn").text("复制失败 QAQ")
+						setTimeout(function(){$("#copy-code-btn").text("复制")},500)
+					});
+				}else{
+					$("#copy-code-btn").removeClass("button-primary")
+					$("#copy-code-btn").text("您的浏览器不支持一键复制代码")
+				}
+			</script>
 		</div>
 	{% endif %}
 </div>
