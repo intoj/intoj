@@ -7,6 +7,13 @@
 		<div class="column item-centered" style="width: 1100px; height: auto;">
 			<div class="row ivory item-vertical-centered" style="justify-content: space-between">
 				<h1 style="margin-left: 100px;" class="title"> 评测记录 </h1>
+				{% if nowuser != None %}
+					{% if request.args.get('submitter') != nowuser %}
+						<a href="/submissions?{{GetArgsAsString(['submitter'])}}&submitter={{nowuser}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 我的提交 </a>
+					{% else %}
+						<a href="/submissions?{{GetArgsAsString(['submitter'])}}" style="margin-right: 50px;" class="button button-small button-primary button-rounded"> 去除筛选「我的提交」 </a>
+					{% endif %}
+				{% endif %}
 			</div>
 			<div class="row ivory item-centered" style="margin-top: 10px">
 				<div class="column" style="width: 92%; padding-top: 24px;">
