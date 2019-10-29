@@ -90,7 +90,6 @@ def ProblemEditRun(problem_id):
 	if not modules.CheckPrivilegeOfProblem(operator,problem_id):
 		return modules.RedirectBack(error_message='无此权限')
 	probleminfo = GetProblemInfo(problem_id)
-	print(probleminfo)
 	if probleminfo == None:
 		return modules.RedirectBack(error_message='无此题目')
 	probleminfo['examples'] = GetProblemExamples(problem_id)
