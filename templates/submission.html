@@ -102,14 +102,7 @@
 										$.ajax({
 											url: '/submission/{{submission.id}}/rejudge',
 											method: 'GET',
-											error: function(message){
-												console.log('错误：');
-												console.log(message);
-												layer.alert('出现异常。<br />详细信息请查看控制台。',{
-													title: '错误',
-													icon: 2
-												})
-											},
+											error: ReportAjaxError,
 											success: function(data){
 												if( data.success == true ){
 													layer.msg('成功重测!');
@@ -140,14 +133,7 @@
 										$.ajax({
 											url: '/submission/{{submission.id}}/delete',
 											method: 'GET',
-											error: function(message){
-												console.log('错误：');
-												console.log(message);
-												layer.alert('出现异常。<br />详细信息请查看控制台。',{
-													title: '错误',
-													icon: 2
-												})
-											},
+											error: ReportAjaxError,
 											success: function(data){
 												if( data.success == true ){
 													layer.msg('成功删除')

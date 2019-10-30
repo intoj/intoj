@@ -35,14 +35,7 @@ function DoLogin(){
 			username: $("#username").val(),
 			password: $("#password").val()
 		},
-		error: function(message){
-			console.log('错误：');
-			console.log(message);
-			layer.alert('出现异常，登录失败。<br />详细信息请查看控制台。',{
-				title: '错误',
-				icon: 2
-			})
-		},
+		error: ReportAjaxError,
 		success: function(data){
 			if( data.success == true ){
 				document.cookie = "username="+data.username+";" + "expires=Wed, 21 Aug 2099 09:28:41 GMT; path=/"

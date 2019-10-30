@@ -221,14 +221,7 @@ var DoSubmit = function(){
 	$.ajax({
 		type: "POST",
 		data: datapack,
-		error: function(message){
-			console.log('错误：');
-			console.log(message);
-			layer.alert('出锅了，提交失败<br />详细信息请查看控制台。<br />不过，输入的数据应该还没丢。',{
-				title: '错误',
-				icon: 2
-			})
-		},
+		error: ReportAjaxError,
 		success: function(data){
 			if( data.success == true ){
 				layer.alert(data.message,{
