@@ -43,11 +43,10 @@ def CheckPrivilege(username,privileges):
 def CheckPrivilegeOfProblem(username,problem_id):
 	ok_privileges = ['problemset_manager']
 	problems = db.Execute('SELECT provider FROM problems WHERE id=%s',problem_id)
-	if len(problems) == 0:
-		return False
-	problem_provider = problems[0]['provider']
-	if problem_provider == username:
-		ok_privileges.append('problem_owner')
+	if len(problems) != 0:
+		problem_provider = problems[0]['provider']
+		if problem_provider == username:
+			ok_privileges.append('problem_owner')
 	return CheckPrivilege(username,ok_privileges)
 def CheckPrivilegeOfCode(username,submission_id):
 	if config.config['security']['can_view_code'] == True:
