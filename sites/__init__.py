@@ -1,5 +1,6 @@
 from . import admin
 from . import config
+from . import custom_test
 from . import db
 from . import index
 from . import login

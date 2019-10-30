@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %} 自定义测试 {% endblock %}
+{% block body %}
+<div class="column item-centered ivory" style="width: 1020px;">
+	<h1 style="margin-top: 20px; margin-bottom: 0px;"> 自定义测试 </h1>
+	<div class="row item-centered" style="margin-bottom: 10px;">
+		<div class="column item-left-aligned" style="width: 94%;">
+			<h2 class="row title" style="margin-left: 10px; margin-bottom: 10px"> 代码 </h2>
+			<textarea id="code-editor" style="width: 100%;"></textarea>
+			<script>
+				window.code_editor = CodeMirror.fromTextArea(document.getElementById("code-editor"),{
+					mode: "text/x-c++src",
+					lineNumbers: true,
+					theme: "solarized light",
+					lineWrapping: true,
+					foldGutter: true,
+					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+					matchBrackets: true,
+					indentUnit: 4,
+					indentWithTabs: true,
+					cursorHeight: 0.85
+				});
+				code_editor.setSize('100%','300px');
+			</script>
+			<h2 class="row title" style="margin-left: 10px; margin-bottom: 10px"> 输入数据 </h2>
+			<textarea id="input_data" style="width: 100%; height: 200px;" placeholder="输入数据"></textarea>
+			<div class="row item-centered" style="margin-top: 10px;">
+				{% if nowuser == None %}
+					<button class="button button-rounded item-centered" id="submit-button" disabled> <i class="fa fa-upload fa-fw" style="margin-right: 4px;"></i> 登录后提交 </button>
+				{% else %}
+					<button class="button button-action button-rounded item-centered" id="submit-button"> <i class="fa fa-upload fa-fw" style="margin-right: 4px;"></i> 提交并运行 </button>
+				{% endif %}
+			</div>
+			<script>
+				var DoSubmitCode = function(){
+					var code = window.code_editor.getValue()
+					var input_data = $("#input_data").val()
+					$.ajax({
+						method: "POST",
+						data: {
+							code: code,
+							input_data: input_data,
+							lang: 'cpp'
+						},
+						error: ReportAjaxError,
+						success: function(data){
+							if( data.success == true ){
+								layer.msg('提交成功！');
+								setTimeout(function(){
+									window.location.href = '/submission/' + data.submission_id
+								},400)
+							}else{
+								layer.alert(data.message,{
+									title: '提交失败',
+									icon: 2
+								})
+							}
+						}
+					})
+				}
+				$("#submit-button").click(function(){ DoSubmitCode(); })
+			</script>
+		</div>
+	</div>
+
+</div>
+{% endblock %}

@@ -18,7 +18,7 @@ def SubmissionListRun():
 					request.args,
 					allow_parameters)[0]['COUNT(*)']
 	total_page = (total+per_page-1) / per_page;
-	submissions = db.ExecuteWithParameters('SELECT id,problem_id,contest_id,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {PARAMETERS} ORDER BY id DESC LIMIT %s OFFSET %s',
+	submissions = db.ExecuteWithParameters('SELECT id,problem_id,contest_id,type,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {PARAMETERS} ORDER BY id DESC LIMIT %s OFFSET %s',
 					request.args,
 					allow_parameters,
 					('PARAMETERS',per_page,per_page*(current_page-1)))
@@ -36,7 +36,12 @@ def SubmissionRun(submission_id):
 	submission_info = GetSubmissionInfo(submission_id)
 	if submission_info == None:
 		return modules.RedirectBack(error_message='无此提交')
-	return render_template('submission.html',submission=submission_info)
+	if submission_info['type'] == 'problem_submission':
+		return render_template('submission.html',submission=submission_info)
+	elif submission_info['type'] == 'custom_test':
+		return render_template('submission_custom_test.html',submission=submission_info)
+	else:
+		raise ValueError('Unknown submission type: %s'%submission_info['type'])
 
 '''
 intoj 评测流程
@@ -46,27 +51,27 @@ intoj 评测流程
 4. 前端轮询 redis 队列 intoj-judgestatus-refreshed，若有变更就通过 websocket 告知客户端
 5. 客户端进行相应处理
 '''
-def NewSubmission(problem_id,contest_id=0):
+def NewSubmission( problem_id = 0 , contest_id = 0 , type = 'problem_submission' ):
 	code, language = request.form['code'], request.form['lang']
 	submitter = modules.GetCurrentOperator()
 	submit_time = datetime.datetime.now().strftime('%Y.%m.%d %H:%M:%S')
 
 	if submitter == None:
-		return modules.ReturnJSON({ 'success': False, 'message': '请先登录' })
+		return { 'success': False, 'message': '请先登录' }
 	if len(code.strip()) == 0:
-		return modules.ReturnJSON({ 'success': False, 'message': '你这么短？emmm....' })
+		return { 'success': False, 'message': '你这么短？emmm....' }
 	if len(code) > config.config['limits']['max_code_length']*1024:
-		return modules.ReturnJSON({ 'success': False, 'message': '代码过长（代码长度限制为 %d KB）'%config.config['limits']['max_code_length'] })
+		return { 'success': False, 'message': '代码过长（代码长度限制为 %d KB）'%config.config['limits']['max_code_length'] }
 
 	id = db.Execute('SELECT MAX(id) FROM submissions')[0]['MAX(id)']
 	id = 1 if id == None else int(id)+1
-	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,submitter,submit_time,language,code,detail) VALUES(%s,%s,%s,%s,%s,%s,%s,"{}")',
-				(id,problem_id,contest_id,submitter,submit_time,language,code))
+	db.Execute('INSERT INTO submissions(id,problem_id,contest_id,type,submitter,submit_time,language,code,detail) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,"{}")',
+				(id,problem_id,contest_id,type,submitter,submit_time,language,code))
 
 	redis = reedis.NewConnection()
 	redis.rpush('intoj-waiting-judge',id)
 
-	return modules.ReturnJSON({ 'success': True, 'message': '提交成功', 'submission_id': id })
+	return { 'success': True, 'message': '提交成功', 'submission_id': id }
 
 def SubmissionRejudgeRun(submission_id):
 	submission_info = GetSubmissionInfo(submission_id)

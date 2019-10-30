@@ -34,9 +34,15 @@
 								</a>
 							</span>
 							<span class="column item-centered" style="width: 27%; font-size: 17px;">
-								<a href="/problem/{{submission.problem_id}}">
-									#{{submission.problem_id}}. {{dbExecute('SELECT title FROM problems WHERE id=%s',submission.problem_id)[0].get('title')}}
-								</a>
+								{% if submission.type == 'problem_submission' %}
+									<a href="/problem/{{submission.problem_id}}">
+										#{{submission.problem_id}}. {{dbExecute('SELECT title FROM problems WHERE id=%s',submission.problem_id)[0].get('title')}}
+									</a>
+								{% elif submission.type == 'custom_test' %}
+									<a href="/custom-test">
+										Custom Test
+									</a>
+								{% endif %}
 							</span>
 							<span class="column item-centered" style="width: 29%;">
 								<a href="/submission/{{submission.id}}" style="color: {{id_to_info[submission.status].color}}; align-items: flex-end;" class="">
@@ -45,9 +51,15 @@
 								</a>
 							</span>
 							<span class="column item-centered" style="width: 6%;">
-								<a href="/submission/{{submission.id}}" style="color: {{GetColorOfScore(submission.score)}}">
-									{{ScoreRounding(submission.score)}}
-								</a>
+								{% if submission.type == 'problem_submission' %}
+									<a href="/submission/{{submission.id}}" style="color: {{GetColorOfScore(submission.score)}}">
+										{{ScoreRounding(submission.score)}}
+									</a>
+								{% elif submission.type == 'custom_test' %}
+									<a href="/submission/{{submission.id}}">
+										/
+									</a>
+								{% endif %}
 							</span>
 							<span class="column item-centered" style="width: 15%;">
 								<a href="/user/{{submission.submitter}}">

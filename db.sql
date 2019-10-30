@@ -58,6 +58,7 @@ CREATE TABLE submissions(
 	`id`            INT NOT NULL PRIMARY KEY auto_increment,
 	`problem_id`    INT NOT NULL,
 	`contest_id`    INT DEFAULT 0,
+	`type`			VARCHAR(30),
 	`submitter`     VARCHAR(30),
 	`submit_time`   DATETIME,
 	`language`      VARCHAR(20),
@@ -69,4 +70,15 @@ CREATE TABLE submissions(
 	`code`          MEDIUMTEXT,
 	`compilier_message` LONGTEXT DEFAULT '',
 	`system_message`    TEXT DEFAULT ''
+);
+/*
+`type` 列表：
+problem_submission
+custom_test
+*/
+
+CREATE TABLE custom_tests(
+	`id`     INT NOT NULL PRIMARY KEY auto_increment,
+	`input`  LONGTEXT,
+	`output` LONGTEXT
 );

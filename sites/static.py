@@ -13,7 +13,8 @@ name_to_id = {
 	'Runtime Error': 10,
 	'Partially Accepted': 11,
 	'Accepted': 12,
-	'Skipped': 13
+	'Skipped': 13,
+	'Done': 14
 }
 id_to_info = {
 	0: {
@@ -85,5 +86,10 @@ id_to_info = {
 		'name': 'Skipped',
 		'sign': 'fa fa-fw fa-forward',
 		'color': '#999'
+	},
+	14: {
+		'name': 'Done',
+		'sign': 'fa fa-fw fa-check',
+		'color': '#1eee1e'
 	},
 }

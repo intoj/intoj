@@ -29,7 +29,8 @@
 	"limits": {
 		"max_code_length": 100,
 		"max_data_package_size": 256,
-		"max_testdata_preview_size_kb": 256
+		"max_testdata_preview_size_kb": 256,
+		"max_custom_test_input_length": 128
 	},
 	"security": {
 		"allow_registration": true,

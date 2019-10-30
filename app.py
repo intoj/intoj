@@ -79,7 +79,7 @@ def Problem(problem_id):
 	if request.method == 'GET':
 		return sites.problems.ProblemRun(problem_id)
 	else:
-		return sites.submissions.NewSubmission(problem_id)
+		return sites.problems.SubmitRun(problem_id)
 
 @app.route('/problem/<int:problem_id>/download')
 def ProblemTestdataDownload(problem_id):
@@ -104,6 +104,10 @@ def ProblemDelete(problem_id):
 @app.route('/problem/<int:problem_id>/manage',methods=['GET','POST'])
 def ProblemManage(problem_id):
 	return sites.problems.ProblemManageRun(problem_id)
+
+@app.route('/custom-test',methods=['GET','POST'])
+def CustomTest():
+	return sites.custom_test.CustomTestRun()
 
 @app.route('/submissions')
 def SubmissionList():

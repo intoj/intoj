@@ -1,9 +1,9 @@
 # coding: utf-8
 from flask import *
 from werkzeug import secure_filename
-import json, os
+import json, os, random
 import HTMLParser
-import config, db, modules, random, static
+import config, db, modules, static, submissions
 
 def GetProblemInfo(problem_id):
 	res = db.Execute('SELECT * FROM problems WHERE id=%s',problem_id)
@@ -26,6 +26,11 @@ def GetProblemInfo(problem_id):
 def GetProblemExamples(problem_id):
 	res = db.Execute('SELECT kth,input,output,explanation FROM problem_examples WHERE problem_id=%s ORDER BY kth ASC',problem_id)
 	return res
+
+def SubmitRun(problem_id):
+	return modules.ReturnJSON(submissions.NewSubmission(
+		problem_id = problem_id
+	))
 
 def ProblemListRun():
 	per_page = config.config['site']['per_page']['problem_list']

@@ -1,0 +1,196 @@
+{% import "submission_macros.html" as submission_macros %}
+{% extends 'base.html' %}
+{% block title %} 提交记录 #{{submission.id}} {% endblock %}
+{% block body %}
+<div class="column item-centered" style="width: 1100px;">
+	<div class="row item-centered ivory">
+		<div class="column item-centered" style="width: 96%; padding-top: 17px;">
+			<div class="row item-centered" style="height: 30px; font-size: 18px; font-weight: 500;">
+				<span class="column item-centered" style="width: 6%;"> # </span>
+				<span class="column item-centered" style="width: 20%;"> 题目 </span>
+				<span class="column item-centered" style="width: 26%;"> 状态 </span>
+				<span class="column item-centered" style="width: 16%;"> 战绩 </span>
+				<span class="column item-centered" style="width: 12%;"> 提交者 </span>
+				<span class="column item-centered" style="width: 14%;"> 提交时间 </span>
+			</div>
+			<div class="row item-centered" style="height: 70px;">
+				<span class="column item-centered" style="width: 6%; font-size: 16px;">
+					<a href="/submission/{{submission.id}}">
+						{{submission.id}}
+					</a>
+				</span>
+				<span class="column item-centered" style="width: 20%; font-size: 16px;">
+					<a href="/custom-test">
+						Custom Test
+					</a>
+				</span>
+				<span class="column item-centered" style="width: 26%;">
+					<a href="/submission/{{submission.id}}" style="color: {{id_to_info[submission.status].color}}; align-items: flex-end;" class="">
+						<i class="{{id_to_info[submission.status].sign}}" style="margin-right: 2px;"> </i>
+						<span style="font-size: 19px;"> {{id_to_info[submission.status].name}} </span>
+					</a>
+				</span>
+				<span class="column item-centered" style="width: 16%; font-size: 16px;">
+					{{submission.time_usage}} ms /
+					{% if submission.memory_usage >= 1024 %} {{round(submission.memory_usage/1024.0,1)}} M {% else %} {{submission.memory_usage}} K {% endif %} <br />
+					{{submission.language}} /
+					{% if submission.length >= 1024 %} {{round(submission.length/1024.0,1)}} K {% else %} {{submission.length}} B {% endif %}
+				</span>
+				<span class="column item-centered" style="width: 12%; font-size: 16px;">
+					<a href="/user/{{submission.submitter}}">
+						{{submission.submitter}}
+					</a>
+				</span>
+				<span class="column item-centered" style="width: 14%;">
+					<a href="/submission/{{submission.id}}" style="font-size: 12px;">
+						{{submission.submit_time}}
+					</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	{% if not IsEmpty(submission.compilier_message) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 编译信息 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.compilier_message|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
+	{% if not IsEmpty(submission.system_message) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 系统信息 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.system_message|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
+	<div class="row item-centered ivory" style="margin-top: 5px;">
+		<div class="column item-left-aligned" style="width: 96%;">
+			<div class="row item-vertical-centered" style="justify-content: space-between">
+				<h2 class="title" style="margin-left: 30px;"> 运行结果 </h2>
+				<div class="item-centered">
+					{% if CheckPrivilegeOfProblem(nowuser,submission.problem_id) %}
+						<button class="button button-primary button-small" id="rejudge-button"> 重新评测 </button>
+						<button class="button button-caution button-small" id="delete-button"> 删除这份提交 </button>
+						<script>
+							var DoRejudge = function(){
+								layer.alert('重测提交 #{{submission.id}} by {{submission.submitter}}?',{
+									title: '确认重测',
+									icon: 3,
+									btn: ['确认','算了'],
+									yes: function(){
+										$.ajax({
+											url: '/submission/{{submission.id}}/rejudge',
+											method: 'GET',
+											error: ReportAjaxError,
+											success: function(data){
+												if( data.success == true ){
+													layer.msg('成功重测!');
+													setTimeout(function(){
+														window.location.href = '/submission/{{submission.id}}'
+													},600)
+												}else{
+													layer.alert(data.message,{
+														title: '重测失败',
+														icon: 2
+													})
+												}
+											}
+										})
+
+									},
+									btn2: function(){
+										return
+									}
+								})
+							}
+							var DoDeleteSubmission = function(){
+								layer.alert('删除提交 #{{submission.id}} by {{submission.submitter}}?',{
+									title: '确认删除',
+									icon: 3,
+									btn: ['确认','算了'],
+									yes: function(){
+										$.ajax({
+											url: '/submission/{{submission.id}}/delete',
+											method: 'GET',
+											error: ReportAjaxError,
+											success: function(data){
+												if( data.success == true ){
+													layer.msg('成功删除')
+													setTimeout(function(){
+														window.location.href = '/submissions'
+													},600)
+												}else{
+													layer.alert(data.message,{
+														title: '删除失败',
+														icon: 2
+													})
+												}
+											}
+										})
+
+									},
+									btn2: function(){
+										return
+									}
+								})
+							}
+							$("#rejudge-button").click(function(){DoRejudge();})
+							$("#delete-button").click(function(){DoDeleteSubmission();})
+						</script>
+					{% endif %}
+				</div>
+			</div>
+			<div class="row item-centered" style="margin-bottom: 10px;">
+				{% set custom_test_info = dbExecute('SELECT * FROM custom_tests WHERE id=%s',submission.id)[0] %}
+				<div class="column item-centered" style="width: 50%">
+					<h2 class="title"> 输入数据 </h2>
+					<textarea style="width: 100%; height: 400px">{{ '' if custom_test_info.input == None else custom_test_info.input }}</textarea>
+				</div>
+				<div class="column item-centered" style="width: 50%">
+					<h2 class="title"> 输出数据 </h2>
+					<textarea style="width: 100%; height: 400px">{{ '' if custom_test_info.output == None else custom_test_info.output }}</textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% if not IsEmpty(submission.detail.stderr_preview) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 标准错误流 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.detail.stderr_preview|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
+	{% if CheckPrivilegeOfCode(nowuser,submission.id) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<div class="row item-centered" style="justify-content: space-between">
+					<h2 class="title" style="margin-left: 10px;"> 源代码 </h2>
+					<button id="copy-code-btn" class="button button-primary button-small button-rounded" data-clipboard-target="#code"> 复制 </button>
+				</div>
+				<pre id="code" style="width: 100%; margin-bottom: 12px;"><code class="hljs {{submission.language}}" style="background-color: #fff; padding: 10px 0px 10px 12px; font-family: monospace consolas">{{submission.code|e}}</code></pre>
+			</div>
+			<script>
+				if(ClipboardJS.isSupported()){
+					var clipboard = new ClipboardJS('#copy-code-btn');
+					clipboard.on('success',function(e){
+						e.clearSelection();
+						$("#copy-code-btn").text("复制成功")
+						setTimeout(function(){$("#copy-code-btn").text("复制")},500)
+					});
+					clipboard.on('error',function(e){
+						e.clearSelection();
+						$("#copy-code-btn").text("复制失败 QAQ")
+						setTimeout(function(){$("#copy-code-btn").text("复制")},500)
+					});
+				}else{
+					$("#copy-code-btn").removeClass("button-primary")
+					$("#copy-code-btn").text("您的浏览器不支持一键复制代码")
+				}
+			</script>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}

@@ -4,13 +4,20 @@
 <div class="column item-centered" style="width: 1100px;">
 	<div class="row ivory item-vertical-centered" style="justify-content: space-between">
 		<h1 style="margin-left: 100px;" class="title"> 题目列表 </h1>
-		{% if CheckPrivilege(nowuser,['problemset_manager','problem_owner']) %}
-			<div class="column item-centered">
-				<div class="row item-centered">
-					<a href="/problemadd" class="button button-primary button-small button-rounded" style="margin-right: 50px;"> 添加题目 </a>
-				</div>
+		<div class="column item-centered">
+			<div class="row item-centered">
+				<a href="/custom-test" alt="custom-test" class="button button-primary button-small button-rounded" style="margin-right: 50px;">
+					<i class="fa fa-terminal" style="margin-right: 4px;"></i>
+					自定义测试
+				</a>
+				{% if CheckPrivilege(nowuser,['problemset_manager','problem_owner']) %}
+					<a href="/problemadd" class="button button-primary button-small button-rounded" style="margin-right: 50px;">
+						<i class="fa fa-plus"></i>
+						添加题目
+					</a>
+				{% endif %}
 			</div>
-		{% endif %}
+		</div>
 	</div>
 	<div class="row ivory item-centered" style="margin-top: 10px">
 		<div class="column" style="width: 90%; padding-top: 24px;">
