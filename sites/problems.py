@@ -99,6 +99,8 @@ def ProblemEditRun(problem_id):
 	else:
 		new_problem_id = int(request.form['new_problem_id'])
 		if new_problem_id != problem_id:
+			if new_problem_id <= 0:
+				return modules.ReturnJSON({ 'success': False, 'message': 'id 必须是正整数' })
 			is_duplicate = db.Execute('SELECT COUNT(*) FROM problems WHERE id=%s',new_problem_id)[0]['COUNT(*)']
 			if is_duplicate:
 				return modules.ReturnJSON({ 'success': False, 'message': '新 id 已存在' })
