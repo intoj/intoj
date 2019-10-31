@@ -155,11 +155,19 @@
 			</div>
 		</div>
 	</div>
-	{% if not IsEmpty(submission.detail.stderr_preview) %}
+	{% if not IsEmpty(submission.detail.get('stderr_preview','')) %}
 		<div class="row item-centered ivory" style="margin-top: 5px;">
 			<div class="column item-left-aligned" style="width: 92%;">
 				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 标准错误流 </h2>
 				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.detail.stderr_preview|e}}</code></pre>
+			</div>
+		</div>
+	{% endif %}
+	{% if not IsEmpty(submission.detail.get('runner_message','')) %}
+		<div class="row item-centered ivory" style="margin-top: 5px;">
+			<div class="column item-left-aligned" style="width: 92%;">
+				<h2 class="row title item-left-aligned" style="margin-left: 10px;"> 运行时信息 </h2>
+				<pre style="width: 100%; margin-bottom: 12px;"><code class="hljs plaintext">{{submission.detail.runner_message|e}}</code></pre>
 			</div>
 		</div>
 	{% endif %}
