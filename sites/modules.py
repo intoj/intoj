@@ -4,6 +4,8 @@ import json, hashlib
 import config, db
 
 def GetColorOfScore(a,fullscore=100):
+	if fullscore < 0.01:
+		return "rgb(255,0,0)"
 	a = float(a)
 	fullscore = float(fullscore)
 	if a <= fullscore/2:
