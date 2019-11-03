@@ -1,5 +1,7 @@
 # Mine
 /config.json
+/data
+/session
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
