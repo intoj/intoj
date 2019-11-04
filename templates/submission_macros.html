@@ -61,7 +61,7 @@
 <div class="row item-centered" style="margin-top: 0px;">
 	<div id="subtask-{{kth}}" class="column item-centered" style="width: 100%; padding: 1px;">
 		<div id="subtask-{{kth}}-trigger" class="row item-centered hover-animation" style="height: 50px; flex-grow: 233; justify-content: space-around">
-			<span style="width: 14%; font-size: 20px; text-align: left;"> {{ "Subtask #"+str(kth) if IsEmpty(subtask.name) else subtask.name }} </span>
+			<span style="width: 14%; font-size: 18px; text-align: left; white-space: nowrap"> {{ "Subtask #"+str(kth) if IsEmpty(subtask.name) else subtask.name }} </span>
 			<span style="width: 26%; color: {{id_to_info[subtask.status].color}}; align-items: flex-end;">
 				<i class="{{id_to_info[subtask.status].sign}}" style="margin-right: 2px;"> </i>
 				<span style="font-size: 19px;"> {{id_to_info[subtask.status].name}} </span>
