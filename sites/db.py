@@ -25,25 +25,24 @@ def Execute(cmd,arg=None):
 	CloseConnection(db,cur)
 	return res
 
-def GetParameters(args,allow_parameters):
+def GetFilters(args,allowed_filters):
 	result_string = ''
 	result_list = []
 	for key, value in args.items():
-		if key not in allow_parameters or modules.IsEmpty(value): continue
+		if key not in allowed_filters or modules.IsEmpty(value): continue
 		try:
-			if allow_parameters[key]['checker'](value) == False:
+			if allowed_filters[key]['checker'](value) == False:
 				continue
 		except:
 			continue
 		if result_string == '': result_string += 'WHERE '
 		else: result_string += ' AND '
-		result_string += allow_parameters[key]['parameter']
+		result_string += allowed_filters[key]['filter']
 		result_list.append(value)
 	return result_string, result_list
-def ExecuteWithParameters(cmd,args_dict,allow_parameters,arg_list=['PARAMETERS']):
+def ExecuteWithFilters(cmd,args_dict,allowed_filters,arg_list=['FILTERS']):
+	filter_string, filter_arg = GetFilters(args_dict,allowed_filters)
+	cmd = cmd.format( FILTERS = filter_string )
 	arg_list = list(arg_list)
-	parameter_string, parameter_arg = GetParameters(args_dict,allow_parameters)
-	cmd = cmd.format( PARAMETERS = parameter_string )
-	arg_list = arg_list[:arg_list.index('PARAMETERS')] + parameter_arg + arg_list[arg_list.index('PARAMETERS')+1:]
-	# print(cmd,arg_list)
+	arg_list = arg_list[:arg_list.index('FILTERS')] + filter_arg + arg_list[arg_list.index('FILTERS')+1:]
 	return Execute(cmd,arg_list)

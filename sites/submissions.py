@@ -5,23 +5,23 @@ import config, db, modules, reedis, static
 
 def SubmissionListRun():
 	allow_parameters = {
-		'problem_id': { 'checker': int , 'parameter': 'problem_id = %s' },
-		'submitter': { 'checker': str , 'parameter': 'submitter = %s' },
-		'min_score': { 'checker': float , 'parameter': 'score >= %s' },
-		'max_score': { 'checker': float , 'parameter': 'score <= %s' },
-		'status': { 'checker': lambda x: int(x) in static.id_to_info , 'parameter': 'status = %s' }
+		'problem_id': { 'checker': int , 'filter': 'problem_id = %s' },
+		'submitter': { 'checker': str , 'filter': 'submitter = %s' },
+		'min_score': { 'checker': float , 'filter': 'score >= %s' },
+		'max_score': { 'checker': float , 'filter': 'score <= %s' },
+		'status': { 'checker': lambda x: int(x) in static.id_to_info , 'filter': 'status = %s' }
 	}
 
 	per_page = config.config['site']['per_page']['submission_list']
 	current_page = modules.GetCurrentPage()
-	total = db.ExecuteWithParameters('SELECT COUNT(*) FROM submissions {PARAMETERS}',
+	total = db.ExecuteWithFilters('SELECT COUNT(*) FROM submissions {FILTERS}',
 					request.args,
 					allow_parameters)[0]['COUNT(*)']
 	total_page = (total+per_page-1) / per_page;
-	submissions = db.ExecuteWithParameters('SELECT id,problem_id,contest_id,type,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {PARAMETERS} ORDER BY id DESC LIMIT %s OFFSET %s',
+	submissions = db.ExecuteWithFilters('SELECT id,problem_id,contest_id,type,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {FILTERS} ORDER BY id DESC LIMIT %s OFFSET %s',
 					request.args,
 					allow_parameters,
-					('PARAMETERS',per_page,per_page*(current_page-1)))
+					('FILTERS',per_page,per_page*(current_page-1)))
 	return render_template('submissionlist.html',submissions=submissions,pageinfo={ 'per': per_page, 'tot': total_page })
 
 def GetSubmissionInfo(submission_id):
