@@ -1,14 +1,5 @@
 {% extends 'base.html' %}
 {% block title %} 管理 #{{problem.id}}. {{problem.title}} {% endblock %}
-{% block head %}
-<style>
-p.notice{
-	color: #999;
-	margin: 0px 0px;
-	font-size: 12px;
-}
-</style>
-{% endblock %}
 {% block body %}
 <div class="column item-centered" style="width: 1300px;">
 	<form method="POST" class="row item-centered" style="align-items: flex-start" enctype=multipart/form-data>

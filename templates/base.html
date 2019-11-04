@@ -15,6 +15,7 @@
 	{% include "base_static_files.html" %}
 </head>
 <body style="margin: 0px; border: 0px; padding: 0px;">
+	<span class="auto-font-size"> <!--- 为了修复第一个 auto-font-size 无效的问题 ---> </span>
 	{% for error in get_flashed_messages(category_filter=["error"]) %}
 		<script>
 			layer.alert('{{error}}',{

@@ -116,7 +116,7 @@
 					<a class="button button-plain" style="width: 100%; color: #1B9AF7; margin-top: 2px;" href="#submit"> <i class="fa fa-upload fa-fw"></i> 提交代码 </a>
 					<a class="button button-plain" style="width: 100%; color: #a5de37" href="/submissions?problem_id={{problem.id}}"> <i class="fa fa-list fa-fw"></i> 提交记录 </a>
 					<a class="button button-plain" style="width: 100%; color: #FEAE1B" href="/problem/{{problem.id}}/statistics"> <i class="fa fa-pie-chart fa-fw"></i> 统计信息 </a>
-					<a class="button button-plain" style="width: 100%; color: #a49ef0; margin-bottom: 2px;" href="/problem/{{problem.id}}/ranklist"> <i class="fa fa-signal fa-fw"></i> 排行榜 </a>
+					<a class="button button-plain" style="width: 100%; color: #a49ef0; margin-bottom: 2px;" href="/submissions?problem_id={{problem.id}}&status={{name_to_id['Accepted']}}&sorting=time_usage ASC"> <i class="fa fa-signal fa-fw"></i> 排行榜 </a>
 				</div>
 			</div>
 			{% if CheckPrivilegeOfProblem(nowuser,problem.id) %}

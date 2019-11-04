@@ -36,6 +36,11 @@ p{
 pre{
 	margin: 0px;
 }
+p.notice{
+	color: #999;
+	margin: 0px 0px;
+	font-size: 12px;
+}
 
 body{
 	background-color: #eaeaea;

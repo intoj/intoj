@@ -2,27 +2,48 @@
 from flask import *
 import datetime, json
 import config, db, modules, reedis, static
+import collections
 
 def SubmissionListRun():
-	allow_parameters = {
+	allowed_filters = {
 		'problem_id': { 'checker': int , 'filter': 'problem_id = %s' },
 		'submitter': { 'checker': str , 'filter': 'submitter = %s' },
 		'min_score': { 'checker': float , 'filter': 'score >= %s' },
 		'max_score': { 'checker': float , 'filter': 'score <= %s' },
 		'status': { 'checker': lambda x: int(x) in static.id_to_info , 'filter': 'status = %s' }
 	}
+	allowed_sortings = collections.OrderedDict()
+	allowed_sortings['id DESC'] = '编号递减'
+	allowed_sortings['time_usage ASC'] = '最快'
+	allowed_sortings['time_usage DESC'] = '最慢'
+	allowed_sortings['LENGTH(code) ASC'] = '最短'
+	allowed_sortings['LENGTH(code) DESC'] = '最长'
+	allowed_sortings['memory_usage ASC'] = '最小内存'
+	allowed_sortings['memory_usage DESC'] = '最大内存'
+	is_sorting_allowed = False
+	try:
+		if allowed_filters['problem_id']['checker'](request.args.get('problem_id',None)):
+			is_sorting_allowed = True
+	except: pass
+	sorting = 'id DESC'
+	if is_sorting_allowed and request.args.get('sorting') in allowed_sortings:
+		sorting = request.args.get('sorting')
 
 	per_page = config.config['site']['per_page']['submission_list']
 	current_page = modules.GetCurrentPage()
 	total = db.ExecuteWithFilters('SELECT COUNT(*) FROM submissions {FILTERS}',
 					request.args,
-					allow_parameters)[0]['COUNT(*)']
+					allowed_filters)[0]['COUNT(*)']
 	total_page = (total+per_page-1) / per_page;
-	submissions = db.ExecuteWithFilters('SELECT id,problem_id,contest_id,type,submitter,submit_time,language,status,score,time_usage,memory_usage FROM submissions {FILTERS} ORDER BY id DESC LIMIT %s OFFSET %s',
+	submissions = db.ExecuteWithFilters('SELECT id,problem_id,contest_id,type,submitter,submit_time,language,status,score,time_usage,memory_usage,LENGTH(code) as code_length FROM submissions {FILTERS} ORDER BY %s LIMIT %s OFFSET %s'%(sorting,per_page,per_page*(current_page-1)),
 					request.args,
-					allow_parameters,
-					('FILTERS',per_page,per_page*(current_page-1)))
-	return render_template('submissionlist.html',submissions=submissions,pageinfo={ 'per': per_page, 'tot': total_page })
+					allowed_filters)
+
+	return render_template('submissionlist.html',
+		submissions = submissions,
+		pageinfo = { 'per': per_page, 'tot': total_page },
+		allowed_sortings = allowed_sortings
+	)
 
 def GetSubmissionInfo(submission_id):
 	res = db.Execute('SELECT * FROM submissions WHERE id=%s',submission_id)

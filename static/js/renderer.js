@@ -31,15 +31,15 @@ function RenderMarkdown(){
 function AutoFontSize(){
 	$(".auto-font-size").each(function(index,cur){
 		cur = $(cur)
-		cur.css("white-space","nowrap")
 		cur.css("font-size","0px")
+		cur.css("white-space","nowrap")
 		var fa = cur.parent()
 		var fa_width = parseInt(fa.css("width"))
 		var fa_height = parseInt(fa.css("height"))
 		var font_size = 8
 		function CheckOk(font_size){
 			cur.css("font-size",font_size.toString()+"px")
-			return Math.max(parseInt(fa.css("width")),parseInt(cur.css("width"))) <= fa_width && font_size <= 19;
+			return Math.max(parseInt(fa.css("width")),parseInt(cur.css("width"))) <= fa_width;
 		}
 		var font_size_l = 8
 		var font_size_r = 19

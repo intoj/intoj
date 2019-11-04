@@ -15,14 +15,24 @@
 					{% endif %}
 				{% endif %}
 			</div>
+			{% set now_sorting = request.args.get('sorting','id DESC') %}
 			<div class="row ivory item-centered" style="margin-top: 10px">
 				<div class="column" style="width: 92%; padding-top: 24px;">
 					<div class="row item-centered" style="height: 30px; font-size: 18px; font-weight: 500; margin-bottom: 5px;">
 						<span class="column item-centered" style="width: 8%;"> # </span>
 						<span class="column item-centered" style="width: 27%;"> 题目 </span>
 						<span class="column item-centered" style="width: 29%;"> 状态 </span>
-						<span class="column item-centered" style="width: 6%;"> 分数 </span>
-						<span class="column item-centered" style="width: 15%;"> 提交者 </span>
+						<span class="column item-centered" style="width: 10%;"> 分数 </span>
+						{% if now_sorting != 'id DESC' %}
+							<span class="column item-centered" style="width: 8%;">
+								<span class="row item-centered">
+									{% if 'time' in now_sorting %} 时间 <span style="font-size: 13px; align-self: flex-end"> /ms </span> {% endif %}
+									{% if 'memory' in now_sorting %} 内存 <span style="font-size: 13px; align-self: flex-end"> /M </span> {% endif %}
+									{% if 'LENGTH' in now_sorting %} 代码长度 <span style="font-size: 13px; align-self: flex-end"> </span> {% endif %}
+								</span>
+							</span>
+						{% endif %}
+						<span class="column item-centered" style="width: 14%;"> 提交者 </span>
 						<span class="column item-centered" style="width: 13%;"> 提交时间 </span>
 						<span class="column item-centered" style="width: 2%;"> </span>
 					</div>
@@ -50,7 +60,7 @@
 									<span style="font-size: 19px;"> {{id_to_info[submission.status].name}} </span>
 								</a>
 							</span>
-							<span class="column item-centered" style="width: 6%;">
+							<span class="column item-centered" style="width: 10%;">
 								{% if submission.type == 'problem_submission' %}
 									<a href="/submission/{{submission.id}}" style="color: {{GetColorOfScore(submission.score)}}">
 										{{ScoreRounding(submission.score)}}
@@ -61,8 +71,15 @@
 									</a>
 								{% endif %}
 							</span>
-							<span class="column item-centered" style="width: 15%;">
-								<a href="/user/{{submission.submitter}}">
+							{% if now_sorting != 'id DESC' %}
+								<span class="column item-centered" style="width: 8%; font-size: 14px;">
+									{% if 'time' in now_sorting %} {{submission.time_usage}} {% endif %}
+									{% if 'memory' in now_sorting %} {{submission.memory_usage}} {% endif %}
+									{% if 'LENGTH' in now_sorting %} {% if submission.code_length < 1000 %} {{submission.code_length}} B {% else %} {{round(submission.code_length/1024,2)}} K {% endif %} {% endif %}
+								</span>
+							{% endif %}
+							<span class="column item-centered" style="width: 14%;">
+								<a href="/user/{{submission.submitter}}" class="auto-font-size">
 									{{submission.submitter}}
 								</a>
 							</span>
@@ -80,47 +97,69 @@
 				</div>
 			</div>
 		</div>
-		<div class="column item-centered ivory" style="width: 300px; margin-left: 10px; height: auto;" id="filter">
-			<div class="row item-centered"> <h2 class="title"> 筛选 </h2> </div>
-			{% macro FilterOption(description,id,input_width='50%',description_width='26%') %}
-				<div class="row item-centered" style="margin-bottom: 10px;">
-					<span class="column item-centered" style="font-size: 16px; width: {{description_width}}"> {{description}} </span>
-					<span class="column item-centered" style="width: {{input_width}}; margin-left: 10px;">
-						<input id="{{id}}-input" class="login-input" style="border: 1px solid #aaa; border-radius: 2px; font-size: 16px; text-align: center" value="{{request.args.get(id,'')}}"> </input>
-					</span>
+		<div class="column item-centered" style="width: 300px; margin-left: 10px; height: auto;" id="filter">
+			<div class="row item-centered ivory">
+				<div class="column" style="width: 100%">
+					<div class="row item-centered"> <h2 class="title"> 筛选 </h2> </div>
+					{% macro FilterOption(description,id,input_width='50%',description_width='26%') %}
+						<div class="row item-centered" style="margin-bottom: 10px;">
+							<span class="column item-centered" style="font-size: 16px; width: {{description_width}}"> {{description}} </span>
+							<span class="column item-centered" style="width: {{input_width}}; margin-left: 10px;">
+								<input id="{{id}}-input" class="login-input" style="border: 1px solid #aaa; border-radius: 2px; font-size: 16px; text-align: center" value="{{request.args.get(id,'')}}"> </input>
+							</span>
+						</div>
+					{% endmacro %}
+					{{FilterOption('题目 id','problem_id')}}
+					{{FilterOption('提交者','submitter')}}
+					{{FilterOption('最小分数','min_score')}}
+					{{FilterOption('最大分数','max_score')}}
+					<div class="row item-centered" style="margin-bottom: 10px;">
+						<span class="column item-centered" style="font-size: 16px; width: 26%"> 评测状态 </span>
+						<span class="column item-centered" style="width: 50%; margin-left: 10px;">
+							<select id="status-input" style="width: 100%;">
+								{% set now_selected_status = request.args.get('status') %}
+								<option value="-2333" {{ 'selected' if now_selected_status not in id_to_info.keys() else '' }}> - </option>
+								{% for status_id,status_info in id_to_info.items() %}
+									<option value="{{status_id}}" {{ 'selected' if now_selected_status == str(status_id) else '' }}> {{status_info.name}} </option>
+								{% endfor %}
+							</select>
+						</span>
+					</div>
+					<div class="row item-centered" style="margin-bottom: 4px;">
+						<span class="column item-centered" style="font-size: 15px; width: 26%"> 排序关键字 </span>
+						<span class="column item-centered" style="width: 50%; margin-left: 10px;">
+							<select id="sorting-input" style="width: 100%;">
+								{% set now_selected_sorting = request.args.get('sorting') %}
+								{% for code, name in allowed_sortings.items() %}
+								<option value="{{code}}" {{ 'selected' if now_selected_sorting == code else '' }}> {{name}} </option>
+								{% endfor %}
+							</select>
+						</span>
+					</div>
+					<div class="row item-centered" style="margin-bottom: 4px;">
+						<p class="notice"> 如果想排序，请指定题目编号 </p>
+					</div>
+					<div class="row item-centered" style="margin-bottom: 12px;">
+						<button id="search-button" class="button button-primary button-small" style="width: 76%;"> 查找 </button>
+					</div>
 				</div>
-			{% endmacro %}
-			{{FilterOption('题目 id','problem_id')}}
-			{{FilterOption('提交者','submitter')}}
-			{{FilterOption('最小分数','min_score')}}
-			{{FilterOption('最大分数','max_score')}}
-			<div class="row item-centered" style="margin-bottom: 10px;">
-				<span class="column item-centered" style="font-size: 16px; width: 26%"> 评测状态 </span>
-				<span class="column item-centered" style="width: 50%; margin-left: 10px;">
-					<select id="status-input" style="width: 100%;">
-						{% set now_selected_status = request.args.get('status') %}
-						<option value="-2333" {{ 'selected' if now_selected_status not in id_to_info.keys() else '' }}> - </option>
-						{% for status_id,status_info in id_to_info.items() %}
-							<option value="{{status_id}}" {{ 'selected' if now_selected_status == str(status_id) else '' }}> {{status_info.name}} </option>
-						{% endfor %}
-					</select>
-				</span>
 			</div>
-			<div class="row item-centered" style="margin-bottom: 12px;">
-				<button id="search-button" class="button button-primary button-small" style="width: 76%;"> 查找 </button>
-			</div>
-			<script>
-				$("#search-button").click(function(){
-					new_url = '/submissions?' + '{{GetArgsAsString(['page','problem_id','submitter','min_score','max_score','status'])}}'
-					new_url += 'problem_id=' + $("#problem_id-input").val() + '&'
-					new_url += 'submitter=' + $("#submitter-input").val() + '&'
-					new_url += 'min_score=' + $("#min_score-input").val() + '&'
-					new_url += 'max_score=' + $("#max_score-input").val() + '&'
-					new_url += 'status=' + $("#status-input").val() + '&'
-					window.location.href = new_url
-				})
-			</script>
 		</div>
+		<script>
+			var DoSearch = function(){
+				new_url = '/submissions?' + '{{GetArgsAsString(['page','problem_id','submitter','min_score','max_score','status','sorting'])}}'.replace(/amp;/g,'')
+				if(isNaN(parseInt($("#problem_id-input").val())))
+					$("#sorting-input").val('id DESC')
+				new_url += 'problem_id=' + $("#problem_id-input").val() + '&'
+				new_url += 'submitter=' + $("#submitter-input").val() + '&'
+				new_url += 'min_score=' + $("#min_score-input").val() + '&'
+				new_url += 'max_score=' + $("#max_score-input").val() + '&'
+				new_url += 'status=' + $("#status-input").val() + '&'
+				new_url += 'sorting=' + $("#sorting-input").val() + '&'
+				window.location.href = new_url
+			}
+			$("#search-button").click(function(){ DoSearch() })
+		</script>
 	</div>
 </div>
 {% endblock %}
