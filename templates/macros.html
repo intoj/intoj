@@ -25,3 +25,52 @@
 	{% set cur = request.args.get('page',1)|int %}
 	{{Pagination(pageinfo.per,cur,pageinfo.tot)}}
 {% endmacro %}
+
+{% macro CodeEditor(languages,id="code_editor") %}
+<div class="row item-left-aligned item-verticle-aligned">
+	<select id="{{id}}-language-selector">
+		{% for language in languages %}
+			<option value="{{language.name}}"> {{language.word}} </option>
+		{% endfor %}
+	</select>
+	<script>
+		var lastlang = GetCookie("lastlang")
+		var SelectOneByValue = function(value){
+			var found = false
+			$("#{{id}}-language-selector").children().each(function(kth,t){
+				t = $(t)
+				if( t.attr("value") == value ){
+					t.attr("selected","selected")
+					found = true
+				}
+			})
+			return found
+		}
+		var found = SelectOneByValue(lastlang)
+		if(!found) SelectOneByValue("cpp11")
+	</script>
+</div>
+<textarea id="{{id}}" style="width: 100%;"></textarea>
+<script>
+	window.{{id}} = CodeMirror.fromTextArea(document.getElementById("{{id}}"),{
+		mode: "text/x-c++src",
+		lineNumbers: true,
+		theme: "solarized light",
+		lineWrapping: true,
+		foldGutter: true,
+		gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+		matchBrackets: true,
+		indentUnit: 4,
+		indentWithTabs: true,
+		cursorHeight: 0.85
+	});
+	window.{{id}}.setSize('100%','300px');
+</script>
+<div class="row item-centered" style="margin-top: 10px;">
+	{% if nowuser == None %}
+		<button class="button button-rounded item-centered" id="{{id}}-submit-button" disabled> <i class="fa fa-upload fa-fw"></i> 登录后提交 </button>
+	{% else %}
+		<button class="button button-action button-rounded item-centered" id="{{id}}-submit-button"> <i class="fa fa-upload fa-fw"></i> 提交代码 </button>
+	{% endif %}
+</div>
+{% endmacro %}

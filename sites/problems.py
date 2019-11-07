@@ -54,7 +54,7 @@ def ProblemRun(problem_id):
 	if probleminfo == None:
 		return modules.RedirectBack(error_message='无此题目')
 	probleminfo['examples'] = GetProblemExamples(problem_id)
-	return render_template('problem.html',problem=probleminfo)
+	return render_template('problem.html',problem=probleminfo,languages=config.config['languages'])
 
 def ProblemTestdataDownloadRun(problem_id):
 	filename = request.args['path']

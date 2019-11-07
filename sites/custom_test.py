@@ -4,7 +4,7 @@ import config, db, modules, static, submissions
 
 def CustomTestRun():
 	if request.method == 'GET':
-		return render_template('custom-test.html')
+		return render_template('custom-test.html',languages=config.config['languages'])
 	else:
 		input_data = request.form['input_data']
 		if len(input_data) > config.config['limits']['max_custom_test_input_length']*1024:

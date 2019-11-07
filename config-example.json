@@ -36,5 +36,19 @@
 		"allow_registration": true,
 		"login_required": false,
 		"can_view_code": true
-	}
+	},
+	"languages": [
+		{
+			"name": "cpp11",
+			"word": "C++11"
+		},
+		{
+			"name": "cpp",
+			"word": "C++"
+		},
+		{
+			"name": "cpp17",
+			"word": "C++17"
+		}
+	]
 }

@@ -49,37 +49,17 @@
 			<div class="row item-centered" id="submit">
 				<div class="column item-left-aligned" style="width: 94%;">
 					<h2 class="row title" style="margin-left: 10px; margin-bottom: 10px"> 提交代码 </h2>
-					<textarea id="code-editor" style="width: 100%;"></textarea>
-					<script>
-						window.code_editor = CodeMirror.fromTextArea(document.getElementById("code-editor"),{
-							mode: "text/x-c++src",
-							lineNumbers: true,
-							theme: "solarized light",
-							lineWrapping: true,
-							foldGutter: true,
-							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-							matchBrackets: true,
-							indentUnit: 4,
-							indentWithTabs: true,
-							cursorHeight: 0.85
-						});
-						code_editor.setSize('100%','300px');
-					</script>
-					<div class="row item-centered" style="margin-top: 10px;">
-						{% if nowuser == None %}
-							<button class="button button-rounded item-centered" id="submit-button" disabled> <i class="fa fa-upload fa-fw"></i> 登录后提交 </button>
-						{% else %}
-							<button class="button button-action button-rounded item-centered" id="submit-button"> <i class="fa fa-upload fa-fw"></i> 提交代码 </button>
-						{% endif %}
-					</div>
+					{{macros.CodeEditor(languages,"code_editor")}}
 					<script>
 						var DoSubmitCode = function(){
 							var code = window.code_editor.getValue()
+							var lang = $("#code_editor-language-selector").val()
+							document.cookie = "lastlang=" + lang
 							$.ajax({
 								method: "POST",
 								data: {
 									code: code,
-									lang: 'cpp'
+									lang: lang
 								},
 								error: ReportAjaxError,
 								success: function(data){
@@ -97,7 +77,7 @@
 								}
 							})
 						}
-						$("#submit-button").click(function(){ DoSubmitCode(); })
+						$("#code_editor-submit-button").click(function(){ DoSubmitCode(); })
 					</script>
 				</div>
 			</div>
