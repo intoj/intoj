@@ -16,7 +16,7 @@
 					var code = window.code_editor.getValue()
 					var input_data = $("#input_data").val()
 					var lang = $("#code_editor-language-selector").val()
-					document.cookie = "lastlang=" + lang
+					document.cookie = "lastlang=" + lang + "; expires=Wed, 21 Aug 2030 09:28:41 GMT;"
 					$.ajax({
 						method: "POST",
 						data: {
