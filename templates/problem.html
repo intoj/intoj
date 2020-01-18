@@ -54,7 +54,7 @@
 						var DoSubmitCode = function(){
 							var code = window.code_editor.getValue()
 							var lang = $("#code_editor-language-selector").val()
-							document.cookie = "lastlang=" + lang + "; expires=Wed, 21 Aug 2030 09:28:41 GMT;"
+							document.cookie = "lastlang=" + lang + "; expires=Wed, 21 Aug 2030 09:28:41 GMT; path=/"
 							$.ajax({
 								method: "POST",
 								data: {
