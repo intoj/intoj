@@ -1,5 +1,28 @@
 {% extends 'admin_base.html' %}
 {% block title %} 后台管理 {% endblock %}
 {% block inner_body %}
-	<h1> intoj 后台管理 </h1>
+	<h1 class="row item-centered" style="margin-top: 24px;"> intoj 后台管理 </h1>
+	<h2 class="row item-centered" style="margin-top: 20px; margin-bottom: 10px"> 统计信息 </h2>
+	<div class="row item-vertical-aligned" style="justify-content: space-around; margin-top: 10px;">
+		{% macro Item(name,data) %}
+			<div class="column item-centered">
+				<div class="row item-centered" style="font-size: 20px">
+					{{name}}
+				</div>
+				<div class="row item-centered" style="font-size: 48px; margin-top: 10px">
+					{{data}}
+				</div>
+			</div>
+		{% endmacro %}
+		{{Item('题目总数',statistic_datas['problems_count'])}}
+		{{Item('总评测量',statistic_datas['submissions_count'])}}
+		{{Item('用户总数',statistic_datas['users_count'])}}
+	</div>
+	<h2 class="row item-centered" style="margin-top: 20px;"> 系统信息 </h2>
+	<div style="row item-centered">
+		自豪地使用 intoj
+	</div>
+	<div class="row item-centered" style=" margin-bottom: 20px">
+		版本号（最后一次 commit 的 id）：<code>{{system_infos['version_number']}}</code>
+	</div>
 {% endblock %}
