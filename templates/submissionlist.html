@@ -74,7 +74,7 @@
 							{% if now_sorting != 'id DESC' %}
 								<span class="column item-centered" style="width: 8%; font-size: 14px;">
 									{% if 'time' in now_sorting %} {{submission.time_usage}} {% endif %}
-									{% if 'memory' in now_sorting %} {{submission.memory_usage}} {% endif %}
+									{% if 'memory' in now_sorting %} {{round(submission.memory_usage/1024.0,1)}} {% endif %}
 									{% if 'LENGTH' in now_sorting %} {% if submission.code_length < 1000 %} {{submission.code_length}} B {% else %} {{round(submission.code_length/1024,2)}} K {% endif %} {% endif %}
 								</span>
 							{% endif %}
