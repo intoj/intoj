@@ -95,15 +95,15 @@ def ProblemAdd():
 
 @app.route('/problem/<int:problem_id>/edit',methods=['GET','POST'])
 def ProblemEdit(problem_id):
-	return sites.problems.ProblemEditRun(problem_id)
+	return sites.problems_manage.ProblemEditRun(problem_id)
 
 @app.route('/problem/<int:problem_id>/delete')
 def ProblemDelete(problem_id):
-	return sites.problems.ProblemDeleteRun(problem_id)
+	return sites.problems_manage.ProblemDeleteRun(problem_id)
 
 @app.route('/problem/<int:problem_id>/manage',methods=['GET','POST'])
 def ProblemManage(problem_id):
-	return sites.problems.ProblemManageRun(problem_id)
+	return sites.problems_manage.ProblemManageRun(problem_id)
 
 @app.route('/custom-test',methods=['GET','POST'])
 def CustomTest():
